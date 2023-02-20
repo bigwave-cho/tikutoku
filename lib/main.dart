@@ -1,20 +1,34 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok/constants/gaps.dart';
+import 'package:tiktok/constants/sizes.dart';
 
 void main() {
-  runApp(const TilTokApp());
+  runApp(const TikTokApp());
 }
 
-class TilTokApp extends StatelessWidget {
-  const TilTokApp({super.key});
+class TikTokApp extends StatelessWidget {
+  const TikTokApp({super.key});
 
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
       title: 'TikTok',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primaryColor: const Color(0xFFE9435A),
       ),
-      home: Container(),
+      home: Padding(
+        // sizes.dart 사용 예
+        padding: const EdgeInsets.all(Sizes.size14),
+        child: Container(
+            child: Row(
+          children: const [
+            // gaps.dart 사용 예
+            Text('hello'),
+            Gaps.h20,
+            Text('hello'),
+          ],
+        )),
+      ),
     );
   }
 }
