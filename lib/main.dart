@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:tiktok/constants/gaps.dart';
-import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/screens/sign_up/sign_up_screen.dart';
 
 void main() {
   runApp(const TikTokApp());
@@ -16,19 +15,10 @@ class TikTokApp extends StatelessWidget {
       theme: ThemeData(
         primaryColor: const Color(0xFFE9435A),
       ),
-      home: Padding(
-        // sizes.dart 사용 예
-        padding: const EdgeInsets.all(Sizes.size14),
-        child: Container(
-            child: Row(
-          children: const [
-            // gaps.dart 사용 예
-            Text('hello'),
-            Gaps.h20,
-            Text('hello'),
-          ],
-        )),
-      ),
+      // SignUpScreen()넣기 전에 Scaffold 없이 Padding위젯부터 시작했는데
+      // 이 때 빨간 텍스트에 노란 밑줄로 표시가 되고 이는 이 위젯이
+      // Scaffold 내에 위치하지 않음을 의미
+      home: const SignUpScreen(),
     );
   }
 }
