@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:tiktok/screens/sign_up/sign_up_screen.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
+//# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
+// 그 아래에 스크린과 공용 위젯으로 분리
 
 void main() {
   runApp(const TikTokApp());

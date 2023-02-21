@@ -1,15 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/authentication/login_screen.dart';
+import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
+//BuildContext : A handle to the location of a widget in the widget tree.
+  void onLoginTap(BuildContext context) {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const LoginScreen(),
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    //SafeArea : 안에 있는 모든 곳은 특정 공간에 있음을 보장
-    // 즉, 그 공간은 무언가에 가려지지 않게 !
-    // 상태바에 가려지고 있었는데 짜잔
     return Scaffold(
       body: SafeArea(
         child: Padding(
@@ -34,12 +42,14 @@ class SignUpScreen extends StatelessWidget {
                   color: Colors.black45,
                 ),
                 textAlign: TextAlign.center,
-              )
+              ),
+              Gaps.v40,
+              AuthButton(text: 'Use phone or email'),
+              AuthButton(text: 'Continue with Apple'),
             ],
           ),
         ),
       ),
-      // 화면 하단에 고정할 수 있는 Scaffold 옵션
       bottomNavigationBar: BottomAppBar(
         color: Colors.grey.shade100,
         elevation: 2,
@@ -50,13 +60,15 @@ class SignUpScreen extends StatelessWidget {
             children: [
               const Text('Already have an account?'),
               Gaps.h5,
-              Text(
-                'Log in',
-                style: TextStyle(
-                    //Theme 사용하기.
-                    //https://github.com/bigwave-cho/pomodoro/commit/153b91121f6f1454b1b407ded86a1e3ac0b3e189
-                    color: Theme.of(context).primaryColor,
-                    fontWeight: FontWeight.w600),
+              GestureDetector(
+                //여기서 build의 context를 전달.
+                onTap: () => onLoginTap(context),
+                child: Text(
+                  'Log in',
+                  style: TextStyle(
+                      color: Theme.of(context).primaryColor,
+                      fontWeight: FontWeight.w600),
+                ),
               ),
             ],
           ),
