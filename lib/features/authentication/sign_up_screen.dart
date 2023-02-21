@@ -1,13 +1,15 @@
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/login_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 
+// font_awesome_flutter : 설치
+
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
-//BuildContext : A handle to the location of a widget in the widget tree.
   void onLoginTap(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(
@@ -21,8 +23,8 @@ class SignUpScreen extends StatelessWidget {
     return Scaffold(
       body: SafeArea(
         child: Padding(
-          padding: const EdgeInsets.symmetric(
-            horizontal: Sizes.size40,
+          padding: const EdgeInsets.all(
+            Sizes.size14,
           ),
           child: Column(
             children: const [
@@ -44,8 +46,14 @@ class SignUpScreen extends StatelessWidget {
                 textAlign: TextAlign.center,
               ),
               Gaps.v40,
-              AuthButton(text: 'Use phone or email'),
-              AuthButton(text: 'Continue with Apple'),
+              AuthButton(
+                icon: FaIcon(FontAwesomeIcons.user),
+                text: 'Use phone or email',
+              ),
+              Gaps.v16,
+              AuthButton(
+                  icon: FaIcon(FontAwesomeIcons.apple),
+                  text: 'Continue with Apple'),
             ],
           ),
         ),
