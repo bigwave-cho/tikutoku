@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/authentication/email_screen.dart';
+import 'package:tiktok/features/authentication/widgets/form_button.dart';
 
 //Controller : 코드나 메서드 등으로 TextField와 같은 위젯을 컨트롤 가능하게 해줌.
 //StatelessWidget의 TextField는 입력만 가능하지 다른 기능을 못하는 상태.
@@ -26,6 +28,23 @@ class _UsernameScreen extends State<UsernameScreen> {
         _username = _usernameController.text;
       });
     });
+  }
+
+  @override
+  void dispose() {
+    //이 스크린을 벗어날 때 컨트롤러를 dispose해주지 않으면
+    // 리스너들이 메모리에 남아있어 나중에 앱이 크래쉬날 수 있음.
+    _usernameController.dispose();
+    super.dispose();
+  }
+
+  void _onNextTap() {
+    if (_username.isEmpty) return;
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => const EmailScreen(),
+      ),
+    );
   }
 
   @override
@@ -77,29 +96,13 @@ class _UsernameScreen extends State<UsernameScreen> {
               cursorColor: Theme.of(context).primaryColor,
             ),
             Gaps.v16,
-            FractionallySizedBox(
-              widthFactor: 1,
-              //AnimatedContainer : deco가 바뀌면 애니메이션 효과 부여 가능
-              child: AnimatedContainer(
-                duration: const Duration(milliseconds: 300),
-                padding: const EdgeInsets.symmetric(
-                  vertical: Sizes.size16,
-                ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(Sizes.size10),
-                  color: _username.isEmpty
-                      ? Colors.grey.shade300
-                      : Theme.of(context).primaryColor,
-                ),
-                child: const Text(
-                  'Next',
-                  textAlign: TextAlign.center,
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontWeight: FontWeight.w600,
-                  ),
-                ),
-              ),
+            GestureDetector(
+              //StateFul widget의 State내에서는 context를 어디서나 사용가능해서
+              // 따로 넘겨줄 필요가 없음.
+              //Stateless widget에서의 navigator
+              //lib/features/authentication/widgets/auth_button.dart
+              onTap: _onNextTap,
+              child: FromButton(disabled: _username.isEmpty),
             )
           ],
         ),
