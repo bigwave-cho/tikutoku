@@ -102,7 +102,7 @@ class _UsernameScreen extends State<UsernameScreen> {
               //Stateless widget에서의 navigator
               //lib/features/authentication/widgets/auth_button.dart
               onTap: _onNextTap,
-              child: FromButton(disabled: _username.isEmpty),
+              child: FormButton(disabled: _username.isEmpty),
             )
           ],
         ),

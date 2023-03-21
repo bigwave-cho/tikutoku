@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/sizes.dart';
 
-class FromButton extends StatelessWidget {
+class FormButton extends StatelessWidget {
   //VSCode가 부모위젯의 _username을 그대로 가지고 오면서 아래와 같은
   //생성자가 생성됨. 생성자 파라미터로 private을 정의하는 것은 허용되지 않기 때문에
   // 인자로 _username을 받아 _username에 할당해주는 방식을 선택함.
@@ -15,7 +15,7 @@ class FromButton extends StatelessWidget {
   final String _username;
   */
   // 대신, boolean을 받는 방법
-  const FromButton({
+  const FormButton({
     super.key,
     required this.disabled,
   });
