@@ -39,7 +39,6 @@ class _BirthdayScreen extends State<BirthdayScreen> {
   }
 
   void _setTextFieldDate(DateTime date) {
-    print(date.toString().split(" ")); //[2023-03-22, 22:49:17.201390]
     final textDate = date.toString().split(" ").first; // P1. 2023-03-22
 
     // _birthdayController의 value에 할당하여 초기화
