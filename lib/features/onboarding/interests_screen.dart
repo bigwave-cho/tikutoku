@@ -1,6 +1,8 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/onboarding/widgets/interest_button.dart';
 
 const interests = [
   "Daily Life",
@@ -43,107 +45,115 @@ const interests = [
   "Home & Garden",
 ];
 
-class InterestsScreen extends StatelessWidget {
+class InterestsScreen extends StatefulWidget {
   const InterestsScreen({super.key});
+
+  @override
+  State<InterestsScreen> createState() => _InterestsScreenState();
+}
+
+class _InterestsScreenState extends State<InterestsScreen> {
+  // scrollController
+  // 1. statefulwidget
+  // 2. 아래와 같이 선언
+  final ScrollController _scrollController = ScrollController();
+
+  bool _showTitle = false;
+
+  void _onScroll() {
+    if (_scrollController.offset > 100) {
+      if (_showTitle) return; // 100넘어가면 매순간 setState호출 방지
+      setState(() {
+        _showTitle = true;
+      });
+    } else {
+      setState(() {
+        _showTitle = false;
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _scrollController.addListener(_onScroll);
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose(); //dispose시켜줘야 앱 크래쉬 예방
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Choose your interests'),
+        title: AnimatedOpacity(
+          opacity: _showTitle ? 1 : 0,
+          duration: const Duration(milliseconds: 300),
+          child: const Text('Choose your interests'),
+        ),
       ),
-      body: SingleChildScrollView(
-        child: Padding(
-          padding: const EdgeInsets.only(
-            left: Sizes.size24,
-            right: Sizes.size24,
-            bottom: Sizes.size16,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Gaps.v32,
-              const Text(
-                'Choose your interests',
-                style: TextStyle(
-                  fontSize: Sizes.size40,
-                  fontWeight: FontWeight.bold,
+      body: Scrollbar(
+        // scrollbar추가하기. 같은 controller를 공유해야함
+        controller: _scrollController,
+        child: SingleChildScrollView(
+          //3. 컨트롤러 할당
+          controller: _scrollController,
+          child: Padding(
+            padding: const EdgeInsets.only(
+              left: Sizes.size24,
+              right: Sizes.size24,
+              bottom: Sizes.size16,
+            ),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Gaps.v32,
+                const Text(
+                  'Choose your interests',
+                  style: TextStyle(
+                    fontSize: Sizes.size40,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
-              ),
-              Gaps.v20,
-              const Text(
-                'Get better video recommendations',
-                style: TextStyle(
-                  fontSize: Sizes.size20,
+                Gaps.v20,
+                const Text(
+                  'Get better video recommendations',
+                  style: TextStyle(
+                    fontSize: Sizes.size20,
+                  ),
                 ),
-              ),
-              Gaps.v64,
-              Wrap(
-                // Wrap은 자식요소를 가로로 배치하며 너비를 넘어가면 다음 줄에 배치
-                runSpacing: 15, // y축
-                spacing: 15, // x축
-                children: [
-                  for (var interest in interests) // collection for
-                    //ListViewbuilder를 쓰지 않은 이유: 그리 무겁지 않음
-                    // ListViewbuilder는 viewport 내의 자식들만 렌더링
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                        vertical: Sizes.size16,
-                        horizontal: Sizes.size24,
-                      ),
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius: BorderRadius.circular(Sizes.size32),
-                        border: Border.all(
-                          color: Colors.black.withOpacity(0.1),
-                        ),
-                        boxShadow: [
-                          BoxShadow(
-                            color: Colors.black.withOpacity(0.05),
-                            blurRadius: 5,
-                            spreadRadius: 5,
-                          ),
-                        ],
-                      ),
-                      child: Text(
-                        interest,
-                        style: const TextStyle(
-                          fontWeight: FontWeight.bold,
-                        ),
-                      ),
-                    )
-                ],
-              ),
-            ],
+                Gaps.v64,
+                Wrap(
+                  runSpacing: 15, // y축
+                  spacing: 15, // x축
+                  children: [
+                    for (var interest in interests)
+                      InterestButton(interest: interest)
+                  ],
+                ),
+              ],
+            ),
           ),
         ),
       ),
       bottomNavigationBar: BottomAppBar(
         elevation: 1,
         child: Padding(
-          padding: const EdgeInsets.only(
-            bottom: Sizes.size40,
-            top: Sizes.size16,
-            left: Sizes.size24,
-            right: Sizes.size24,
-          ),
-          child: Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: Sizes.size20,
+            padding: const EdgeInsets.only(
+              bottom: Sizes.size40,
+              top: Sizes.size16,
+              left: Sizes.size24,
+              right: Sizes.size24,
             ),
-            decoration: BoxDecoration(
+            child: CupertinoButton(
+              // TextButton은 구글스럽고 얘는 애플스러움. 취향대로
+              onPressed: () {},
               color: Theme.of(context).primaryColor,
-            ),
-            child: const Text(
-              'Next',
-              textAlign: TextAlign.center,
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: Sizes.size16,
-              ),
-            ),
-          ),
-        ),
+              child: const Text("Next"),
+            )),
       ),
     );
   }
