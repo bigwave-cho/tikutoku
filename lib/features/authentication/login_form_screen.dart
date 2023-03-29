@@ -26,10 +26,12 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         // 유효성 통과하면 해당 값 save
         _formKey.currentState!.save();
-        Navigator.of(context).push(
+        Navigator.of(context).pushAndRemoveUntil(
           MaterialPageRoute(
             builder: (context) => const InterestsScreen(),
           ),
+          ((route) => false),
+          // true를 반환하면 이전 페이지 지우지 않음
         );
       }
     }

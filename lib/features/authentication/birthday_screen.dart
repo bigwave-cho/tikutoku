@@ -31,10 +31,11 @@ class _BirthdayScreen extends State<BirthdayScreen> {
   }
 
   void _onNextTap() {
-    Navigator.of(context).push(
+    Navigator.of(context).pushAndRemoveUntil(
       MaterialPageRoute(
         builder: (context) => const InterestsScreen(),
       ),
+      ((route) => false), //마찬가지.
     );
   }
 
