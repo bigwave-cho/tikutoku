@@ -39,48 +39,27 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: screens[_selectedIndex], // index에 따라 보여지는 화면
-      bottomNavigationBar: BottomNavigationBar(
-        type: BottomNavigationBarType.fixed,
-        // 배경색 변화에 대한 타입 지정
-        // fixed 배경색 안바뀜
-        // shifting 바뀜
-        currentIndex: _selectedIndex,
-        onTap: _onTap, // tap하면 index를 arg로 전달
-        // selectedItemColor: Theme.of(context).primaryColor,
-        items: const [
-          // Nav 아이템은 2개 이상
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.house),
+      bottomNavigationBar: NavigationBar(
+        //bottomNavigationBar는 material 2 버전
+        //이거는 material 3 버전
+        //https://m3.material.io/components/navigation-bar/overview
+        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
+        selectedIndex: _selectedIndex,
+        onDestinationSelected: _onTap,
+        destinations: const [
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.house,
+              color: Colors.white,
+            ),
             label: "Home",
-            tooltip: "WW?",
-            backgroundColor: Colors.amber,
-            //선택됐을 때 nav의 배경색.
-            // 주의: 4개 이상일 때 자동 활성화됨
-            // 강제 적용할 수 있는 방법도 있음.
           ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
+          NavigationDestination(
+            icon: FaIcon(
+              FontAwesomeIcons.magnifyingGlass,
+              color: Colors.white,
+            ),
             label: "Search",
-            tooltip: "WW?",
-            backgroundColor: Colors.blue,
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.house),
-            label: "Home",
-            tooltip: "WW?",
-            backgroundColor: Colors.pink,
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
-            label: "Search",
-            tooltip: "WW?",
-            backgroundColor: Colors.yellow,
-          ),
-          BottomNavigationBarItem(
-            icon: FaIcon(FontAwesomeIcons.magnifyingGlass),
-            label: "Search",
-            tooltip: "WW?",
-            backgroundColor: Colors.teal,
           ),
         ],
       ),
