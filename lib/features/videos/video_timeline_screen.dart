@@ -8,6 +8,8 @@ class VideoTimelineScreen extends StatefulWidget {
 }
 
 class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
+  int _itemCount = 4;
+
   List<Color> colors = [
     Colors.blue,
     Colors.red,
@@ -15,37 +17,38 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
     Colors.yellow,
   ];
 
+  void _onPageChanged(int page) {
+    if (page == _itemCount - 1) {
+      setState(() {});
+      _itemCount = _itemCount + 4;
+      //addAll(list) : 리스트에 다른 리스트를 추가해줌.
+      colors.addAll([
+        Colors.blue,
+        Colors.red,
+        Colors.teal,
+        Colors.yellow,
+      ]);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    // PageView : 자식요소들을 꽉 채운 슬라이드뷰로 만들어줌.
-    // listview와 마찬가지로 builder메서드가 있어서 뷰포트에 보일 때 해당 자식 요소를 렌더링하게 됨.
-
     return PageView.builder(
-      //pageSnapping : 슬라이드가 넘어가지 않고 중간에 멈춤
-      //기본값: true - 일정 비율 넘어가면 슬라이드 넘어감)
-      pageSnapping: true,
-      //scrollDirection : 슬라이드 방향
       scrollDirection: Axis.vertical,
-      // itemCount : 요소 개수 설정
-      itemCount: 4,
+      // onPagechanged : 페이지의 인덱스를 전달해줌.
+      onPageChanged: _onPageChanged,
+      itemCount: _itemCount,
       itemBuilder: (context, index) => Container(
         color: colors[index],
+        child: Center(
+          child: Text(
+            'Screen $index',
+            style: const TextStyle(
+              fontSize: 68,
+            ),
+          ),
+        ),
       ),
-      // 아래 children : 그냥 PageView 사용할 때
-      // children: [
-      //   Container(
-      //     color: Colors.blue,
-      //   ),
-      //   Container(
-      //     color: Colors.teal,
-      //   ),
-      //   Container(
-      //     color: Colors.yellow,
-      //   ),
-      //   Container(
-      //     color: Colors.pink,
-      //   ),
-      // ],
     );
   }
 }
