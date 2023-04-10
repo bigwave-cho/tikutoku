@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/main_navigation/stf_screen.dart';
 import 'package:tiktok/features/main_navigation/widgets/nav_tab.dart';
+import 'package:tiktok/features/main_navigation/widgets/post_video_button.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -20,17 +22,28 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
     });
   }
 
+  void _onPostVideoButtonTap() {
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: (context) => Scaffold(
+          appBar: AppBar(
+            title: const Text(
+              "Record Video",
+            ),
+          ),
+        ),
+        // fullscreenDialog : 전체화면 전환
+        fullscreenDialog: true,
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      //현재 상황 : 탭에 따라 하나의 화면만 렌더링.
-      //목표 : 모든 위젯을 존재하게 해놓고 원할때만 보이게 하자.
       body: Stack(
         children: [
-          // Offstage: build되었지만 보이지 않는 상태
-          //주의 : 너무 많은 child가 있으면 앱이 무거워질 가능성이 있음.
           Offstage(
-            // offstage : hide- true/false
             offstage: _selectedIndex != 0,
             child: const StfScreen(),
           ),
@@ -54,6 +67,7 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           padding: const EdgeInsets.all(Sizes.size12),
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               NavTab(
                 text: "Home",
@@ -69,6 +83,10 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
                 selectedIcon: FontAwesomeIcons.solidCompass,
                 onTap: () => _onTap(1),
               ),
+              Gaps.h24,
+              GestureDetector(
+                  onTap: _onPostVideoButtonTap, child: const PostVideoButton()),
+              Gaps.h24,
               NavTab(
                 text: "Inbox",
                 isSelected: _selectedIndex == 3,
