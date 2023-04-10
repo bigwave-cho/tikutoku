@@ -1,5 +1,4 @@
-import 'package:flutter/material.dart';
-import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:flutter/cupertino.dart';
 
 class MainNavigationScreen extends StatefulWidget {
   const MainNavigationScreen({super.key});
@@ -37,32 +36,21 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: screens[_selectedIndex], // index에 따라 보여지는 화면
-      bottomNavigationBar: NavigationBar(
-        //bottomNavigationBar는 material 2 버전
-        //이거는 material 3 버전
-        //https://m3.material.io/components/navigation-bar/overview
-        labelBehavior: NavigationDestinationLabelBehavior.onlyShowSelected,
-        selectedIndex: _selectedIndex,
-        onDestinationSelected: _onTap,
-        destinations: const [
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.house,
-              color: Colors.white,
-            ),
-            label: "Home",
+    // Cupertino style이지만 완전히 애플 스타일로 만들고 싶다면
+    // main의 MaterialApp을 CupertinoApp으로 바꿔야 함.
+    return CupertinoTabScaffold(
+      tabBar: CupertinoTabBar(
+        items: const [
+          BottomNavigationBarItem(
+            icon: Icon(CupertinoIcons.home),
+            label: 'Home',
           ),
-          NavigationDestination(
-            icon: FaIcon(
-              FontAwesomeIcons.magnifyingGlass,
-              color: Colors.white,
-            ),
-            label: "Search",
-          ),
+          BottomNavigationBarItem(
+              icon: Icon(CupertinoIcons.search), label: "Search"),
         ],
       ),
+      // tabBuilder : 해당 index 스크린
+      tabBuilder: (context, index) => screens[index],
     );
   }
 }
