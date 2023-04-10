@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok/features/videos/widgets/video_post.dart';
 
 class VideoTimelineScreen extends StatefulWidget {
   const VideoTimelineScreen({super.key});
@@ -12,18 +13,14 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   final PageController _pageController = PageController();
 
-  List<Color> colors = [
-    Colors.blue,
-    Colors.red,
-    Colors.teal,
-    Colors.yellow,
-  ];
+  final Duration _scrollDuration = const Duration(milliseconds: 250);
+  final Curve _scrollCurve = Curves.linear;
 
   void _onPageChanged(int page) {
     //페이지 전환을 틱톡처럼 빠르게 하는 방법
     _pageController.animateToPage(
       page,
-      duration: const Duration(milliseconds: 150),
+      duration: const Duration(milliseconds: 250),
       curve: Curves.linear,
     );
     if (page == _itemCount - 1) {
@@ -37,14 +34,24 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
       );
       */
       _itemCount = _itemCount + 4;
-      colors.addAll([
-        Colors.blue,
-        Colors.red,
-        Colors.teal,
-        Colors.yellow,
-      ]);
+
       setState(() {});
     }
+  }
+
+  //영상이 끝나면 다음 페이지로 넘기는 메서드
+  void _onVideoFinished() {
+    _pageController.nextPage(
+      duration: _scrollDuration,
+      curve: _scrollCurve,
+    );
+  }
+
+  @override
+  void dispose() {
+    // controller는 항상 dispose() 잊지 맙시다.
+    _pageController.dispose();
+    super.dispose();
   }
 
   @override
@@ -56,17 +63,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
       controller: _pageController,
       onPageChanged: _onPageChanged,
       itemCount: _itemCount,
-      itemBuilder: (context, index) => Container(
-        color: colors[index],
-        child: Center(
-          child: Text(
-            'Screen $index',
-            style: const TextStyle(
-              fontSize: 68,
-            ),
-          ),
-        ),
-      ),
+      itemBuilder: (context, index) =>
+          VideoPost(onVideoFinished: _onVideoFinished),
     );
   }
 }
