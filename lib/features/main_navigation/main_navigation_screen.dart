@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/main_navigation/stf_screen.dart';
 import 'package:tiktok/features/main_navigation/widgets/nav_tab.dart';
 
 class MainNavigationScreen extends StatefulWidget {
@@ -15,21 +15,14 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   int _selectedIndex = 0;
 
   final screens = [
-    const Center(
-      child: Text("Home"),
-    ),
-    const Center(
-      child: Text("Search"),
-    ),
-    const Center(
-      child: Text("Home"),
-    ),
-    const Center(
-      child: Text("Search"),
-    ),
-    const Center(
-      child: Text("Search"),
-    ),
+    // 탭 이동을 했음에도 이전 탭의 숫자가 그대로 남아있음.
+    // 해결: key로 globalKey를 넘겨주면 각각 다른 위젯임을
+    // 플러터에게 인지
+    StfScreen(key: GlobalKey()),
+    StfScreen(key: GlobalKey()),
+    Container(),
+    StfScreen(key: GlobalKey()),
+    StfScreen(key: GlobalKey()),
   ];
 
   void _onTap(int index) {
@@ -41,6 +34,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      // body: screens[_selectedIndex],
+      // elementAt(index) : 위랑 같은 용도
+      body: screens.elementAt(_selectedIndex),
       bottomNavigationBar: BottomAppBar(
         color: Colors.black,
         child: Padding(
@@ -48,46 +44,32 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                //bottomNavBar에 Column이 들어가게 되면
-                //화면 전체를 덮어버리기 때문에
-                // mainAxisSize를 최소로 설정
-                mainAxisSize: MainAxisSize.min,
-                children: const [
-                  FaIcon(
-                    FontAwesomeIcons.house,
-                    color: Colors.white,
-                  ),
-                  Gaps.v5,
-                  Text(
-                    'Home',
-                    style: TextStyle(color: Colors.white),
-                  )
-                ],
-              ),
-              // 위 Column을 위젯화
               NavTab(
                 text: "Home",
                 isSelected: _selectedIndex == 0,
                 icon: FontAwesomeIcons.house,
+                selectedIcon: FontAwesomeIcons.house,
                 onTap: () => _onTap(0),
               ),
               NavTab(
                 text: "Discover",
                 isSelected: _selectedIndex == 1,
                 icon: FontAwesomeIcons.magnifyingGlass,
+                selectedIcon: FontAwesomeIcons.solidCompass,
                 onTap: () => _onTap(1),
               ),
               NavTab(
                 text: "Inbox",
                 isSelected: _selectedIndex == 3,
                 icon: FontAwesomeIcons.message,
+                selectedIcon: FontAwesomeIcons.solidMessage,
                 onTap: () => _onTap(3),
               ),
               NavTab(
                 text: "Profile",
                 isSelected: _selectedIndex == 4,
                 icon: FontAwesomeIcons.user,
+                selectedIcon: FontAwesomeIcons.solidUser,
                 onTap: () => _onTap(4),
               ),
             ],

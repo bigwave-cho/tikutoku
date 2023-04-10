@@ -3,27 +3,28 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 
 class NavTab extends StatelessWidget {
-  const NavTab(
-      {super.key,
-      required this.text,
-      required this.isSelected,
-      required this.icon,
-      required this.onTap});
+  const NavTab({
+    super.key,
+    required this.text,
+    required this.isSelected,
+    required this.icon,
+    required this.onTap,
+    required this.selectedIcon,
+  });
 
   final String text;
   final bool isSelected;
   final IconData icon;
+  final IconData selectedIcon;
   final Function onTap;
 
   @override
   Widget build(BuildContext context) {
-    //아이콘과 텍스트 부분만 tap 이벤트를 감지하기 때문에
-    //container와 expanded를 이용해서 터치 영역을 넓혔음.
     return Expanded(
       child: GestureDetector(
         onTap: () => onTap(),
         child: Container(
-          color: Colors.red,
+          color: Colors.black,
           child: AnimatedOpacity(
             duration: const Duration(milliseconds: 200),
             opacity: isSelected ? 1 : 0.6,
@@ -31,7 +32,7 @@ class NavTab extends StatelessWidget {
               mainAxisSize: MainAxisSize.min,
               children: [
                 FaIcon(
-                  icon,
+                  isSelected ? selectedIcon : icon,
                   color: Colors.white,
                 ),
                 Gaps.v5,
