@@ -80,7 +80,7 @@ class LoginScreen extends StatelessWidget {
               GestureDetector(
                 onTap: () => _onSignupTap(context),
                 child: Text(
-                  'Log out',
+                  'Sign Up',
                   style: TextStyle(
                       color: Theme.of(context).primaryColor,
                       fontWeight: FontWeight.w600),
