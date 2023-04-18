@@ -49,7 +49,6 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   @override
   void dispose() {
-    // controller는 항상 dispose() 잊지 맙시다.
     _pageController.dispose();
     super.dispose();
   }
@@ -58,13 +57,11 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   Widget build(BuildContext context) {
     return PageView.builder(
       scrollDirection: Axis.vertical,
-      // PageController? controller,
-      // Page controller를 이용해서 페이지를 컨트롤할 수 있음.
       controller: _pageController,
       onPageChanged: _onPageChanged,
       itemCount: _itemCount,
       itemBuilder: (context, index) =>
-          VideoPost(onVideoFinished: _onVideoFinished),
+          VideoPost(onVideoFinished: _onVideoFinished, index: index),
     );
   }
 }
