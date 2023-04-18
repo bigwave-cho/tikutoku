@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/widgets/video_button.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -16,27 +18,6 @@ class VideoPost extends StatefulWidget {
   @override
   State<VideoPost> createState() => _VideoPostState();
 }
-
-/*
- ## mixin
- class ... with A : class A의 메서드와 프로퍼티를 모두 복사
-
- ## SingleTickerProviderStateMixin
- Provides a single [Ticker] that is configured to only tick while the current tree is enabled
- 싱클 티커는 해당 위젯이 current tree(화면에 보일 때)만 tick(시계가 틱틱 - 작동)하게 함.
-
- ### vsync : 해당 애니메이션의 프레임마다 작동함
-   vsync에 할당한 this는 해당 class를 참조하고 해당 클래스는 ticker 클래스를 mixin하고있어
-   Ticker를 호출한다.
-
-  ### 요약
-  애니메이션은 모든 애니메이션 프레임을 보여주기 위해 매프레임마다 작동할 ticker가 필요하고 
-  이 티커는 위젯이 화면에 렌더링 됐을 때만 불러와서 작동한다.(위젯이 사라지면 killed).
-  하지만 매 프레임마다 작동하는 함수는 리소스를 많이 잡아먹기 때문에 current tree에 있을 때만
-  티커가 작동하게 하는 것이 중요하고 SingleTickerProviderStateMixin이 이를 가능하게 해준다.
-
-  참고 : TickerProviderStateMixin 은 여러 애니메이션 컨트롤러가 있을 때 사용
- */
 
 class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
@@ -61,9 +42,21 @@ class _VideoPostState extends State<VideoPost>
   void _initVideoPlayer() async {
     await _videoPlayerController.initialize();
     setState(() {});
-
+    // 영상 반복 재생
+    await _videoPlayerController.setLooping(true);
     _videoPlayerController.addListener(() {
       _onVideoChange();
+    });
+  }
+
+  // 글자 수에 따른 더보기 기능
+  bool _isSeeMore = false;
+  final String _hashtagText = '#분위기 #좋다 #아아 ##맛없다';
+  bool _isLognerTen = false;
+
+  void _seeMore() {
+    setState(() {
+      _isSeeMore = !_isSeeMore;
     });
   }
 
@@ -79,6 +72,10 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
+
+    if (_hashtagText.length > 10) {
+      _isLognerTen = true;
+    }
   }
 
   @override
@@ -155,7 +152,91 @@ class _VideoPostState extends State<VideoPost>
                 ),
               ),
             ),
-          )
+          ),
+          // Positioned : Stack내에서 원하는 곳에 위치 가능
+          Positioned(
+            bottom: 20,
+            left: 10,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  '@JH',
+                  style: TextStyle(
+                    fontSize: Sizes.size20,
+                    color: Colors.white,
+                    fontWeight: FontWeight.bold,
+                  ),
+                ),
+                Gaps.v10,
+                const Text(
+                  "Delicious Coffee!@@!",
+                  style: TextStyle(
+                    fontSize: Sizes.size16,
+                    color: Colors.white,
+                  ),
+                ),
+                Gaps.v10,
+                GestureDetector(
+                  onTap: _seeMore,
+                  child: RichText(
+                    text: TextSpan(
+                      style: const TextStyle(
+                        fontSize: Sizes.size16,
+                        color: Colors.white,
+                      ),
+                      children: [
+                        TextSpan(
+                          text: _isSeeMore || !_isLognerTen
+                              ? _hashtagText
+                              : '${_hashtagText.substring(0, 10)}...',
+                        ),
+                        if (!_isSeeMore && _isLognerTen)
+                          const TextSpan(
+                            text: "See more",
+                            style: TextStyle(
+                              decoration: TextDecoration.underline,
+                            ),
+                          )
+                      ],
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+          Positioned(
+              bottom: 20,
+              right: 10,
+              child: Column(
+                children: const [
+                  //CircleAvatar : 원 모양 아바타
+                  CircleAvatar(
+                    radius: 25,
+                    backgroundColor: Colors.black,
+                    foregroundColor: Colors.white,
+                    foregroundImage: NetworkImage(
+                      "https://avatars.githubusercontent.com/u/105909665?v=4",
+                    ),
+                    child: Text('JH'),
+                  ),
+                  Gaps.v20,
+                  VideoButton(
+                    icon: FontAwesomeIcons.solidHeart,
+                    text: "2.9M",
+                  ),
+                  Gaps.v20,
+                  VideoButton(
+                    icon: FontAwesomeIcons.solidComment,
+                    text: "33K",
+                  ),
+                  Gaps.v20,
+                  VideoButton(
+                    icon: FontAwesomeIcons.share,
+                    text: "share",
+                  ),
+                ],
+              ))
         ],
       ),
     );

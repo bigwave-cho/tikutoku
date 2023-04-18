@@ -41,6 +41,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   //영상이 끝나면 다음 페이지로 넘기는 메서드
   void _onVideoFinished() {
+    return;
+    // ticktok은 영상 끝나고 다음 영상으로 자동 스킵안하기 때문에 수정
     _pageController.nextPage(
       duration: _scrollDuration,
       curve: _scrollCurve,
