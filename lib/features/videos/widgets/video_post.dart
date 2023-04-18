@@ -17,6 +17,27 @@ class VideoPost extends StatefulWidget {
   State<VideoPost> createState() => _VideoPostState();
 }
 
+/*
+ ## mixin
+ class ... with A : class A의 메서드와 프로퍼티를 모두 복사
+
+ ## SingleTickerProviderStateMixin
+ Provides a single [Ticker] that is configured to only tick while the current tree is enabled
+ 싱클 티커는 해당 위젯이 current tree(화면에 보일 때)만 tick(시계가 틱틱 - 작동)하게 함.
+
+ ### vsync : 해당 애니메이션의 프레임마다 작동함
+   vsync에 할당한 this는 해당 class를 참조하고 해당 클래스는 ticker 클래스를 mixin하고있어
+   Ticker를 호출한다.
+
+  ### 요약
+  애니메이션은 모든 애니메이션 프레임을 보여주기 위해 매프레임마다 작동할 ticker가 필요하고 
+  이 티커는 위젯이 화면에 렌더링 됐을 때만 불러와서 작동한다.(위젯이 사라지면 killed).
+  하지만 매 프레임마다 작동하는 함수는 리소스를 많이 잡아먹기 때문에 current tree에 있을 때만
+  티커가 작동하게 하는 것이 중요하고 SingleTickerProviderStateMixin이 이를 가능하게 해준다.
+
+  참고 : TickerProviderStateMixin 은 여러 애니메이션 컨트롤러가 있을 때 사용
+ */
+
 class _VideoPostState extends State<VideoPost>
     with SingleTickerProviderStateMixin {
   final VideoPlayerController _videoPlayerController =
