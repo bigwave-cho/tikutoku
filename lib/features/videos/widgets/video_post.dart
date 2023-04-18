@@ -17,9 +17,15 @@ class VideoPost extends StatefulWidget {
   State<VideoPost> createState() => _VideoPostState();
 }
 
-class _VideoPostState extends State<VideoPost> {
+class _VideoPostState extends State<VideoPost>
+    with SingleTickerProviderStateMixin {
   final VideoPlayerController _videoPlayerController =
       VideoPlayerController.asset("assets/videos/video.mov");
+  final Duration _animationDuration = const Duration(milliseconds: 200);
+
+  bool _isPaused = false;
+
+  late final AnimationController _animationController;
 
   void _onVideoChange() {
     if (_videoPlayerController.value.isInitialized) {
@@ -44,6 +50,24 @@ class _VideoPostState extends State<VideoPost> {
   void initState() {
     super.initState();
     _initVideoPlayer();
+
+    _animationController = AnimationController(
+      vsync: this,
+      // 기본적으로 scale에 할당된 _animationController.value는 lowerBound가 기본값
+      lowerBound: 1.0,
+      upperBound: 1.5,
+      // value 넣어주면 해당 value가 기본값
+      value: 1.5,
+      duration: _animationDuration,
+    );
+
+    // 리스너를 달고 setState를 호출해 1 -> 1.01...->1.5 매 순간 빌드를 호출하도록 한다.
+    // 아래처럼 하지 않으면 1 -> 1.5 -> 1 로 value가 변하고 나서 build가 작동되기 때문에
+    // transition이 보이지 않음.
+    _animationController.addListener(() {
+      setState(() {});
+      print(_animationController.value);
+    });
   }
 
   @override
@@ -54,11 +78,6 @@ class _VideoPostState extends State<VideoPost> {
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    // info.visibleFraction : Widget이 화면 100퍼센트 채우면 재생.
-    print("video: ${widget.index} is ${info.visibleFraction * 100}");
-
-    // _onVideoChange 함수에서 동영상이 끝나면 finished되기 때문에
-    // 아래 조건이 만족됨.
     if (info.visibleFraction == 1 && !_videoPlayerController.value.isPlaying) {
       _videoPlayerController.play();
     }
@@ -68,21 +87,25 @@ class _VideoPostState extends State<VideoPost> {
   void _togglePause() {
     if (_videoPlayerController.value.isPlaying) {
       _videoPlayerController.pause();
+      // reverse() : lowerBound 값으로
+      _animationController.reverse();
     } else {
       _videoPlayerController.play();
+      // forward() : lowerBound 값으로
+      _animationController.forward();
     }
+    setState(() {
+      _isPaused = !_isPaused;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
-    // VisibilityDetector를 설치하고 자식을 감싸면
-    // 자식이 화면에 얼마나 나오는지(0~1)로 반환
     return VisibilityDetector(
       key: Key("${widget.index}"),
       onVisibilityChanged: _onVisibilityChanged,
       child: Stack(
         children: [
-          //Positioned.fill() : Stack 자식요소를 화면에 꽉채움.
           Positioned.fill(
             child: _videoPlayerController.value.isInitialized
                 ? VideoPlayer(_videoPlayerController)
@@ -95,14 +118,21 @@ class _VideoPostState extends State<VideoPost> {
               onTap: _togglePause,
             ),
           ),
-          const Positioned.fill(
-            //IgnorePointer : 자식 요소에 event 무시되고 통과되도록.
+          Positioned.fill(
             child: IgnorePointer(
               child: Center(
-                child: FaIcon(
-                  FontAwesomeIcons.play,
-                  color: Colors.white,
-                  size: Sizes.size52,
+                // Transform.scale : scale만큼 크게 만드는 위젯으로 감싸기
+                child: Transform.scale(
+                  scale: _animationController.value,
+                  child: AnimatedOpacity(
+                    opacity: _isPaused ? 1 : 0,
+                    duration: _animationDuration,
+                    child: const FaIcon(
+                      FontAwesomeIcons.play,
+                      color: Colors.white,
+                      size: Sizes.size52,
+                    ),
+                  ),
                 ),
               ),
             ),
