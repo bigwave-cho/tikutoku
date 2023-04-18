@@ -53,21 +53,11 @@ class _VideoPostState extends State<VideoPost>
 
     _animationController = AnimationController(
       vsync: this,
-      // 기본적으로 scale에 할당된 _animationController.value는 lowerBound가 기본값
       lowerBound: 1.0,
       upperBound: 1.5,
-      // value 넣어주면 해당 value가 기본값
       value: 1.5,
       duration: _animationDuration,
     );
-
-    // 리스너를 달고 setState를 호출해 1 -> 1.01...->1.5 매 순간 빌드를 호출하도록 한다.
-    // 아래처럼 하지 않으면 1 -> 1.5 -> 1 로 value가 변하고 나서 build가 작동되기 때문에
-    // transition이 보이지 않음.
-    _animationController.addListener(() {
-      setState(() {});
-      print(_animationController.value);
-    });
   }
 
   @override
@@ -121,9 +111,17 @@ class _VideoPostState extends State<VideoPost>
           Positioned.fill(
             child: IgnorePointer(
               child: Center(
-                // Transform.scale : scale만큼 크게 만드는 위젯으로 감싸기
-                child: Transform.scale(
-                  scale: _animationController.value,
+                // AnimatedBuilder: 리스너에 setState 대신 사용할 수 있는 Widget
+                child: AnimatedBuilder(
+                  //_animationController 값 변화 감지
+                  animation: _animationController,
+                  builder: ((context, child) {
+                    return Transform.scale(
+                      // 해당 컨트롤러의 최신 값 참조
+                      scale: _animationController.value,
+                      child: child, // child는 아래의 child를 참조
+                    );
+                  }),
                   child: AnimatedOpacity(
                     opacity: _isPaused ? 1 : 0,
                     duration: _animationDuration,
