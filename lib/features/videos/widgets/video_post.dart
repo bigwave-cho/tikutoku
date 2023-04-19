@@ -126,6 +126,9 @@ class _VideoPostState extends State<VideoPost>
         ),
       ),
       context: context,
+      // isScrollControlled : 자식으로 ListView나 GridView를 가지고 있고 draggable하게 하려면
+      // true로 설정해야함.
+      isScrollControlled: true,
       builder: ((context) => const VideoComments()),
     );
     // 모달 닫히면 재생

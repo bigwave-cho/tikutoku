@@ -41,6 +41,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //resizeToAvoidBottomInset: 키보드가 나타나도 리사이징 되지 않도록 설정
+      resizeToAvoidBottomInset: false,
+
       // scaffold BG 기본값이 white라 tab위치가 video Timeline일 때만 배경 black
       backgroundColor: _selectedIndex == 0 ? Colors.black : Colors.white,
       body: Stack(
