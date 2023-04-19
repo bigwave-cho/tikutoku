@@ -11,6 +11,8 @@ class VideoComments extends StatefulWidget {
 }
 
 class _VideoCommentsState extends State<VideoComments> {
+  bool _isWriting = false;
+
   void _onClosePressed() {
     Navigator.of(context).pop();
   }
@@ -27,6 +29,16 @@ class _VideoCommentsState extends State<VideoComments> {
       */
 
     final size = MediaQuery.of(context).size;
+
+    // 인풋 바깥 클릭하면 키보드 닫히는 함수
+    void _stopWriting() {
+      FocusScope.of(context).unfocus();
+      _isWriting = false; // unfocus되면 비활성
+    }
+
+    void _onStartWriting() {
+      _isWriting = true;
+    }
 
     // showModalBottomSheet은 실제로 새로운 스크린을 push하는 것
     return Container(
@@ -52,114 +64,162 @@ class _VideoCommentsState extends State<VideoComments> {
             ),
           ],
         ),
-        body: Stack(
-          children: [
-            ListView.separated(
-              padding: const EdgeInsets.symmetric(
-                vertical: Sizes.size10,
-                horizontal: Sizes.size16,
+        body: GestureDetector(
+          onTap: _stopWriting,
+          child: Stack(
+            children: [
+              ListView.separated(
+                padding: const EdgeInsets.symmetric(
+                  vertical: Sizes.size10,
+                  horizontal: Sizes.size16,
+                ),
+                separatorBuilder: (context, index) => Gaps.v10,
+                itemCount: 10,
+                itemBuilder: ((context, index) => Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        const CircleAvatar(
+                          radius: 18,
+                          child: Text(
+                            'JH',
+                          ),
+                        ),
+                        Gaps.h10,
+                        Expanded(
+                            child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'JH',
+                              style: TextStyle(
+                                fontWeight: FontWeight.bold,
+                                fontSize: Sizes.size14,
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                            Gaps.v3,
+                            const Text(
+                              "that that that dkdkdkddkdkd slkfanlsdf sldkfnasdfkjlndslf lsadkfn!!",
+                            )
+                          ],
+                        )),
+                        Gaps.h10,
+                        Column(
+                          children: [
+                            FaIcon(
+                              FontAwesomeIcons.heart,
+                              size: Sizes.size20,
+                              color: Colors.grey.shade500,
+                            ),
+                            Gaps.v2,
+                            Text(
+                              '52.2k',
+                              style: TextStyle(
+                                color: Colors.grey.shade500,
+                              ),
+                            ),
+                          ],
+                        ),
+                      ],
+                    )),
               ),
-              separatorBuilder: (context, index) => Gaps.v10,
-              itemCount: 10,
-              itemBuilder: ((context, index) => Row(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      const CircleAvatar(
+              Positioned(
+                bottom: 0,
+                // Positioned width 없으면 에러뜸.
+                width: size.width,
+
+                child: BottomAppBar(
+                  color: Colors.white,
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(
+                      horizontal: Sizes.size16,
+                      vertical: Sizes.size8,
+                    ),
+                    child: Row(children: [
+                      CircleAvatar(
                         radius: 18,
-                        child: Text(
+                        foregroundColor: Colors.white,
+                        backgroundColor: Colors.grey.shade500,
+                        child: const Text(
                           'JH',
                         ),
                       ),
                       Gaps.h10,
                       Expanded(
-                          child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'JH',
-                            style: TextStyle(
-                              fontWeight: FontWeight.bold,
-                              fontSize: Sizes.size14,
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                          Gaps.v3,
-                          const Text(
-                            "that that that dkdkdkddkdkd slkfanlsdf sldkfnasdfkjlndslf lsadkfn!!",
-                          )
-                        ],
-                      )),
-                      Gaps.h10,
-                      Column(
-                        children: [
-                          FaIcon(
-                            FontAwesomeIcons.heart,
-                            size: Sizes.size20,
-                            color: Colors.grey.shade500,
-                          ),
-                          Gaps.v2,
-                          Text(
-                            '52.2k',
-                            style: TextStyle(
-                              color: Colors.grey.shade500,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
-                  )),
-            ),
-            Positioned(
-              bottom: 0,
-              // Positioned width 없으면 에러뜸.
-              width: size.width,
+                        //TextField는 그냥 쓰면 남은 공간을 다 차지하려 해서 에러가 뜬다(unbound)
+                        // SizedBox로 감싸서 너비를 정해주거나 Expanded로 남은 공간을 차지하도록 하면 됨
 
-              child: BottomAppBar(
-                color: Colors.white,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(
-                    horizontal: Sizes.size16,
-                    vertical: Sizes.size8,
-                  ),
-                  child: Row(children: [
-                    CircleAvatar(
-                      radius: 18,
-                      foregroundColor: Colors.white,
-                      backgroundColor: Colors.grey.shade500,
-                      child: const Text(
-                        'JH',
-                      ),
-                    ),
-                    Gaps.h10,
-                    Expanded(
-                      //TextField는 그냥 쓰면 남은 공간을 다 차지하려 해서 에러가 뜬다(unbound)
-                      // SizedBox로 감싸서 너비를 정해주거나 Expanded로 남은 공간을 차지하도록 하면 됨
-
-                      // 가상키보드 : 키보드가 나타나면 플러터는 기본적으로 body를 리사이징하고
-                      //             바텀 네비를 슬라이드 아웃 & 인 시킴
-                      //resizeToAvoidBottomInset : false로 리사이징 비활성화.
-                      child: TextField(
-                        cursorColor: Theme.of(context).primaryColor,
-                        decoration: InputDecoration(
-                          hintText: 'Write a commnet...',
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(Sizes.size12),
-                            borderSide: BorderSide.none,
-                          ),
-                          filled: true,
-                          fillColor: Colors.grey.shade200,
-                          contentPadding: const EdgeInsets.symmetric(
-                            horizontal: Sizes.size12,
-                            vertical: Sizes.size10,
+                        // 가상키보드 : 키보드가 나타나면 플러터는 기본적으로 body를 리사이징하고
+                        //             바텀 네비를 슬라이드 아웃 & 인 시킴
+                        //resizeToAvoidBottomInset : false로 리사이징 비활성화.
+                        child: SizedBox(
+                          // SizedBox이용 높이 조절
+                          height: Sizes.size44,
+                          child: TextField(
+                            onTap: _onStartWriting,
+                            expands: true, // minLines&maxLines null 필요
+                            minLines: null,
+                            maxLines: null,
+                            // 키보드 enter누르면 줄바꿈 설정
+                            textInputAction: TextInputAction.newline,
+                            cursorColor: Theme.of(context).primaryColor,
+                            decoration: InputDecoration(
+                              hintText: 'Write a commnet...',
+                              border: OutlineInputBorder(
+                                borderRadius:
+                                    BorderRadius.circular(Sizes.size12),
+                                borderSide: BorderSide.none,
+                              ),
+                              filled: true,
+                              fillColor: Colors.grey.shade200,
+                              contentPadding: const EdgeInsets.symmetric(
+                                horizontal: Sizes.size12,
+                              ),
+                              suffixIcon: Padding(
+                                padding: const EdgeInsets.only(
+                                  right: Sizes.size14,
+                                ),
+                                child: Row(
+                                  // Row는 기본적으로 수평공간을 다 차지하니까 min
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    FaIcon(
+                                      FontAwesomeIcons.at,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                    Gaps.h14,
+                                    FaIcon(
+                                      FontAwesomeIcons.gift,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                    Gaps.h14,
+                                    FaIcon(
+                                      FontAwesomeIcons.faceSmile,
+                                      color: Colors.grey.shade900,
+                                    ),
+                                    Gaps.h14,
+                                    if (_isWriting)
+                                      GestureDetector(
+                                        // 임시로 onBodyTap사용
+                                        onTap: _stopWriting,
+                                        child: FaIcon(
+                                          FontAwesomeIcons.circleArrowUp,
+                                          color: Theme.of(context).primaryColor,
+                                        ),
+                                      ),
+                                  ],
+                                ),
+                              ),
+                            ),
                           ),
                         ),
-                      ),
-                    )
-                  ]),
+                      )
+                    ]),
+                  ),
                 ),
-              ),
-            )
-          ],
+              )
+            ],
+          ),
         ),
       ),
     );
