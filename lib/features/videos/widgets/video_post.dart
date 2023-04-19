@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/videos/widgets/video_button.dart';
+import 'package:tiktok/features/videos/widgets/vidoe_comments.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
 
@@ -86,9 +87,11 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
-    if (info.visibleFraction == 1 && !_videoPlayerController.value.isPlaying) {
+    if (info.visibleFraction == 1 &&
+        !_isPaused &&
+        !_videoPlayerController.value.isPlaying) {
       _videoPlayerController.play();
-    }
+    } // 일시정지 후 새로고침하면 재생버튼이 보이는채로 영상재생되는 버그 수정
   }
 
   // 탭 정지-재생 함수
@@ -105,6 +108,28 @@ class _VideoPostState extends State<VideoPost>
     setState(() {
       _isPaused = !_isPaused;
     });
+  }
+
+// 코멘트누르면 modalsheet이 튀어나오는 함수
+  void _onCommentsTap(BuildContext context) async {
+    if (_videoPlayerController.value.isPlaying) {
+      //영상 재생중이면 정지
+      _togglePause();
+    }
+    // Future를 반환하고 있어 await를 적용하면
+    // 모달이 사라질 때 future가 resolve 되고 다음 코드가 실행됨.
+    await showModalBottomSheet(
+      //웬지 모르겠는데 Container에만 라디우스주면 안먹어서 추가
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(
+          Sizes.size10,
+        ),
+      ),
+      context: context,
+      builder: ((context) => const VideoComments()),
+    );
+    // 모달 닫히면 재생
+    _togglePause();
   }
 
   @override
@@ -209,9 +234,9 @@ class _VideoPostState extends State<VideoPost>
               bottom: 20,
               right: 10,
               child: Column(
-                children: const [
+                children: [
                   //CircleAvatar : 원 모양 아바타
-                  CircleAvatar(
+                  const CircleAvatar(
                     radius: 25,
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
@@ -221,17 +246,20 @@ class _VideoPostState extends State<VideoPost>
                     child: Text('JH'),
                   ),
                   Gaps.v20,
-                  VideoButton(
+                  const VideoButton(
                     icon: FontAwesomeIcons.solidHeart,
                     text: "2.9M",
                   ),
                   Gaps.v20,
-                  VideoButton(
-                    icon: FontAwesomeIcons.solidComment,
-                    text: "33K",
+                  GestureDetector(
+                    onTap: () => _onCommentsTap(context),
+                    child: const VideoButton(
+                      icon: FontAwesomeIcons.solidComment,
+                      text: "33K",
+                    ),
                   ),
                   Gaps.v20,
-                  VideoButton(
+                  const VideoButton(
                     icon: FontAwesomeIcons.share,
                     text: "share",
                   ),
