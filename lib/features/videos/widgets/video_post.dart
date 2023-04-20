@@ -92,6 +92,13 @@ class _VideoPostState extends State<VideoPost>
         !_videoPlayerController.value.isPlaying) {
       _videoPlayerController.play();
     } // 일시정지 후 새로고침하면 재생버튼이 보이는채로 영상재생되는 버그 수정
+
+    // offstage는 화면이 dispose되지 않고 탭이 변경되도 남아있는다.(계속 재생할거)
+    //그래서 탭 변경하여 안보이면 멈추게 할거다.
+    if (!mounted) return;
+    if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
+      _togglePause();
+    }
   }
 
   // 탭 정지-재생 함수
