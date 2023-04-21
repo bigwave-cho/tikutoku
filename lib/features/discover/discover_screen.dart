@@ -23,7 +23,7 @@ class DiscoverScreen extends StatelessWidget {
         // PrefferdWidgetSize 위젯으로 감싸면 사용가능
         appBar: AppBar(
           title: const Text("Discover"),
-          elevation: 1,
+          elevation: 1, // AppBar 밑줄 구분선
           bottom: TabBar(
             //splashFactory :TabBar 클릭 애니메이션 설정 : NoSplach 물결 없앰
             splashFactory: NoSplash.splashFactory,
@@ -48,7 +48,28 @@ class DiscoverScreen extends StatelessWidget {
           ),
         ),
         body: TabBarView(children: [
-          for (var tab in tabs)
+          GridView.builder(
+            padding: const EdgeInsets.all(
+              Sizes.size6,
+            ),
+            itemCount: 20,
+            //SliverGridDelegateWithFixedCrossAxisCount : 고정된 개수의 grid-col
+            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 2,
+              crossAxisSpacing: Sizes.size10,
+              mainAxisSpacing: Sizes.size10,
+              // 자식요소의 비율도 정하기 가능
+              childAspectRatio: 9 / 16,
+            ),
+            itemBuilder: ((context, index) => Container(
+                  color: Colors.teal,
+                  child: Text(
+                    "$index",
+                  ),
+                )),
+          ),
+          //skip(int) - 해당 순서 건너뛰어라
+          for (var tab in tabs.skip(1))
             Center(
               child: Text(
                 tab,
