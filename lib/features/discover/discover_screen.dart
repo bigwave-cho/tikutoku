@@ -1,4 +1,3 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
@@ -15,7 +14,7 @@ class DiscoverScreen extends StatefulWidget {
 
 class _DiscoverScreenState extends State<DiscoverScreen> {
   final TextEditingController _textEditingController =
-      TextEditingController(text: "Initial Text"); //기본값 가능한지 첨 알았네
+      TextEditingController(text: "food tiktok"); //기본값 가능한지 첨 알았네
   void _onSearchChanged(String value) {
     print(value);
   }
@@ -37,13 +36,65 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: CupertinoSearchTextField(
-            controller: _textEditingController,
-            onChanged: _onSearchChanged,
-            onSubmitted: _onSearchSubmitted,
+          title: SizedBox(
+            height: 40,
+            child: TextField(
+              controller: _textEditingController,
+              onChanged: _onSearchChanged,
+              onSubmitted: _onSearchSubmitted,
+              decoration: InputDecoration(
+                prefixIconConstraints: const BoxConstraints(maxWidth: 35),
+                prefixIcon: const Padding(
+                  padding: EdgeInsets.all(12),
+                  child: FaIcon(
+                    FontAwesomeIcons.magnifyingGlass,
+                    color: Colors.black,
+                    size: Sizes.size16,
+                  ),
+                ),
+                contentPadding: const EdgeInsets.symmetric(
+                  vertical: 15.0,
+                ),
+                suffixIcon: Padding(
+                  padding: const EdgeInsets.all(12),
+                  child: GestureDetector(
+                    onTap: () {
+                      _textEditingController.text = "";
+                    },
+                    child: const FaIcon(
+                      FontAwesomeIcons.solidCircleXmark,
+                      color: Colors.black,
+                      size: Sizes.size16,
+                    ),
+                  ),
+                ),
+                border: InputBorder.none,
+                filled: true,
+                fillColor: Colors.grey.shade100,
+              ),
+            ),
           ),
+          // title: CupertinoSearchTextField(
+          //   controller: _textEditingController,
+          //   onChanged: _onSearchChanged,
+          //   onSubmitted: _onSearchSubmitted,
+          // ),
           elevation: 1, // AppBar 밑줄 구분선
+          actions: [
+            IconButton(
+              onPressed: () {
+                print('clicked');
+              },
+              icon: const FaIcon(
+                FontAwesomeIcons.sliders,
+                size: Sizes.size20,
+              ),
+            )
+          ],
           bottom: TabBar(
+            onTap: (value) {
+              FocusScope.of(context).unfocus();
+            },
             //splashFactory :TabBar 클릭 애니메이션 설정 : NoSplach 물결 없앰
             splashFactory: NoSplash.splashFactory,
             padding: const EdgeInsets.symmetric(
