@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
@@ -5,31 +6,42 @@ import 'package:tiktok/constants/sizes.dart';
 
 final tabs = ["Top", "Users", "Videos", "Sounds", "LIVE", "Shopping", "Brands"];
 
-class DiscoverScreen extends StatelessWidget {
+class DiscoverScreen extends StatefulWidget {
   const DiscoverScreen({super.key});
 
   @override
+  State<DiscoverScreen> createState() => _DiscoverScreenState();
+}
+
+class _DiscoverScreenState extends State<DiscoverScreen> {
+  final TextEditingController _textEditingController =
+      TextEditingController(text: "Initial Text"); //기본값 가능한지 첨 알았네
+  void _onSearchChanged(String value) {
+    print(value);
+  }
+
+  void _onSearchSubmitted(String value) {
+    print(value);
+  }
+
+  @override
+  void dispose() {
+    _textEditingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    /*
-    TabBar 위젯 사용할 때 뜨는 에러 문구
-    When creating a TabBar, you must either provide an explicit TabController using the "controller" property, or you must ensure that there is a DefaultTabController above the TabBar.
-
-    해결: DefaultTabController위젯으로 감싸기
-
-    추가 : DefaultTabController
-    탭바와 탭바뷰의 기본 컨트롤러를 적용해주는 위젯이다.
-    2개 이상의 length를 가져야 하고
-    tabBar와 tabBarView의 수가 일치해야 한다.
-     */
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
-        // AppBar는 preferredSizWidget으로 특정 크기를 가지려하지만
-        // 자식도 prefeerdSizeWidget이어야 하지만
-        // 해당 위젯이 아닌 예시) Container의 경우라도
-        // PrefferdWidgetSize 위젯으로 감싸면 사용가능
+        resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: const Text("Discover"),
+          title: CupertinoSearchTextField(
+            controller: _textEditingController,
+            onChanged: _onSearchChanged,
+            onSubmitted: _onSearchSubmitted,
+          ),
           elevation: 1, // AppBar 밑줄 구분선
           bottom: TabBar(
             //splashFactory :TabBar 클릭 애니메이션 설정 : NoSplach 물결 없앰
@@ -56,6 +68,8 @@ class DiscoverScreen extends StatelessWidget {
         ),
         body: TabBarView(children: [
           GridView.builder(
+            // listview도 가지고 있음. 드래그 감지해서 키보드 사라지도록.
+            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
             padding: const EdgeInsets.all(
               Sizes.size6,
             ),
@@ -71,15 +85,21 @@ class DiscoverScreen extends StatelessWidget {
             itemBuilder: ((context, index) {
               return Column(
                 children: [
-                  AspectRatio(
-                    //AspectRatio : 원하는 비율로 이미지를 맞춤.
-                    aspectRatio: 9 / 16,
-                    child: FadeInImage.assetNetwork(
-                        // 네트워크 이미지의 로딩 시간동안 에셋의 플레이스홀더 이미지를 보여줌
-                        fit: BoxFit.cover,
-                        placeholder: "assets/images/placeholder.jpg",
-                        image:
-                            "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                  Container(
+                    clipBehavior: Clip.hardEdge,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(4),
+                    ),
+                    child: AspectRatio(
+                      //AspectRatio : 원하는 비율로 이미지를 맞춤.
+                      aspectRatio: 9 / 16,
+                      child: FadeInImage.assetNetwork(
+                          // 네트워크 이미지의 로딩 시간동안 에셋의 플레이스홀더 이미지를 보여줌
+                          fit: BoxFit.cover,
+                          placeholder: "assets/images/placeholder.jpg",
+                          image:
+                              "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                    ),
                   ),
                   Gaps.v8,
                   const Text(
