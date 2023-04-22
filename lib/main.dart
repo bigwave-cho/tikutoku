@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/features/inbox/activity_screen.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
 
@@ -41,7 +41,7 @@ class TikTokApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigationScreen(), //로그인 생략위해 잠시 바꿈.
+      home: const ActivityScreen(), //로그인 생략위해 잠시 바꿈.
     );
   }
 }
