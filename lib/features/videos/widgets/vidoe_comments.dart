@@ -17,6 +17,15 @@ class _VideoCommentsState extends State<VideoComments> {
     Navigator.of(context).pop();
   }
 
+  void _stopWriting() {
+    FocusScope.of(context).unfocus();
+    _isWriting = false; // unfocus되면 비활성
+  }
+
+  void _onStartWriting() {
+    _isWriting = true;
+  }
+
   @override
   Widget build(BuildContext context) {
     /*
@@ -29,16 +38,6 @@ class _VideoCommentsState extends State<VideoComments> {
       */
 
     final size = MediaQuery.of(context).size;
-
-    // 인풋 바깥 클릭하면 키보드 닫히는 함수
-    void _stopWriting() {
-      FocusScope.of(context).unfocus();
-      _isWriting = false; // unfocus되면 비활성
-    }
-
-    void _onStartWriting() {
-      _isWriting = true;
-    }
 
     // showModalBottomSheet은 실제로 새로운 스크린을 push하는 것
     return Container(

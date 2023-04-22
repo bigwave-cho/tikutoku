@@ -20,7 +20,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
   Page _showingPage = Page.first;
 
   void _onPanUpdate(DragUpdateDetails details) {
-    print(details); // drag info를 알 수 있음.
+    debugPrint("$details"); // drag info를 알 수 있음.
     if (details.delta.dx > 0) {
       //to the right
       setState(() {

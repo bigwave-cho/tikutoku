@@ -68,7 +68,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                   },
                   //onSaved: save() 된 값 확인
                   onSaved: ((newValue) {
-                    print(newValue);
+                    debugPrint(newValue);
                     if (newValue != null) {
                       formData['email'] = newValue;
                     }
@@ -84,7 +84,7 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                     // return "Wrong password";
                   },
                   onSaved: ((newValue) {
-                    print(newValue);
+                    debugPrint(newValue);
                     if (newValue != null) {
                       formData['password'] = newValue;
                     }

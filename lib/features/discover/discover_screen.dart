@@ -16,11 +16,11 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
   final TextEditingController _textEditingController =
       TextEditingController(text: "food tiktok"); //기본값 가능한지 첨 알았네
   void _onSearchChanged(String value) {
-    print(value);
+    debugPrint(value);
   }
 
   void _onSearchSubmitted(String value) {
-    print(value);
+    debugPrint(value);
   }
 
   @override
@@ -83,7 +83,7 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
           actions: [
             IconButton(
               onPressed: () {
-                print('clicked');
+                debugPrint('clicked');
               },
               icon: const FaIcon(
                 FontAwesomeIcons.sliders,

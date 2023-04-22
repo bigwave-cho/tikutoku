@@ -13,8 +13,8 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
 
   final PageController _pageController = PageController();
 
-  final Duration _scrollDuration = const Duration(milliseconds: 250);
-  final Curve _scrollCurve = Curves.linear;
+  // final Duration _scrollDuration = const Duration(milliseconds: 250);
+  // final Curve _scrollCurve = Curves.linear;
 
   void _onPageChanged(int page) {
     //페이지 전환을 틱톡처럼 빠르게 하는 방법
@@ -43,10 +43,10 @@ class _VideoTimelineScreenState extends State<VideoTimelineScreen> {
   void _onVideoFinished() {
     return;
     // ticktok은 영상 끝나고 다음 영상으로 자동 스킵안하기 때문에 수정
-    _pageController.nextPage(
-      duration: _scrollDuration,
-      curve: _scrollCurve,
-    );
+    // _pageController.nextPage(
+    //   duration: _scrollDuration,
+    //   curve: _scrollCurve,
+    // );
   }
 
   @override
