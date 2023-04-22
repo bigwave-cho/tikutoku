@@ -42,10 +42,13 @@ class _ActivityScreenState extends State<ActivityScreen>
     }
   ];
 
+// 베리어가 없어졌을 때 베리어 기능을 없애기 위해서
+  bool _showBarrier = false;
+
   late final AnimationController _animationController = AnimationController(
       vsync: this,
       duration: const Duration(
-        milliseconds: 300,
+        milliseconds: 200,
       ));
 
   late final Animation<double> _arrowAnimation =
@@ -56,17 +59,33 @@ class _ActivityScreenState extends State<ActivityScreen>
     end: Offset.zero,
   ).animate(_animationController);
 
+  late final Animation<Color?> _barrierAnimation =
+      ColorTween(begin: Colors.transparent, end: Colors.black38)
+          .animate(_animationController);
+
   void _onDismissed(String notification) {
     _notifications.remove(notification);
     setState(() {});
   }
 
-  void _onTitleTap() {
+  void _toggleAnimation() async {
     if (_animationController.isCompleted) {
-      _animationController.reverse(); //isCompleted false
+      //rever, forward는 Future를 반환 따라서 트랜지션이 완료됨을 기다릴 수 있다.
+      //지금은 reverse만 기다리면 되니까 await 걸어주자.
+      await _animationController.reverse(); //isCompleted false
     } else {
       _animationController.forward(); //isCompleted true
     }
+
+    setState(() {
+      _showBarrier = !_showBarrier;
+    });
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
   }
 
   @override
@@ -75,7 +94,7 @@ class _ActivityScreenState extends State<ActivityScreen>
     return Scaffold(
       appBar: AppBar(
         title: GestureDetector(
-          onTap: _onTitleTap,
+          onTap: _toggleAnimation,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
@@ -196,6 +215,15 @@ class _ActivityScreenState extends State<ActivityScreen>
                 ),
             ],
           ),
+          //AnimatedModalBarrier : 베리어 뒤 위젯들에 이벤트 발생 X
+          // 베리어 전 : 아래 , 베리어 후 : 위
+          if (_showBarrier)
+            AnimatedModalBarrier(
+              color: _barrierAnimation,
+              // 베리어 클릭하면 베리어 없어지도록
+              dismissible: true,
+              onDismiss: _toggleAnimation,
+            ),
           SlideTransition(
             position: _panelAnimation,
             child: Container(
