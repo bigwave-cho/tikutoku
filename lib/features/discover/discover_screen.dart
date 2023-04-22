@@ -44,8 +44,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
       child: Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
-          title: SizedBox(
-            height: 40,
+          //ConstrainedBox: 너비나 높이를 제한할 수 있는 위젯
+          // Container도 constraints 가지고 있음.
+          // 또한 더 많은 설정을 건드릴 수 있어서 Container가 나을듯.
+          title: Container(
+            constraints: const BoxConstraints(
+              maxWidth: Breakpoints.sm,
+            ),
             child: TextField(
               controller: _textEditingController,
               onChanged: _onSearchChanged,
