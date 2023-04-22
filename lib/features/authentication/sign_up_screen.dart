@@ -40,7 +40,7 @@ class SignUpScreen extends StatelessWidget {
           );
         }
 
-        print(orientation);
+        debugPrint("$orientation");
         return Scaffold(
           body: SafeArea(
             child: Padding(

@@ -67,14 +67,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 firstDate: DateTime(1987),
                 lastDate: DateTime(2030),
               );
-              print(date); //2023-04-22 00:00:00.000
+              debugPrint('$date'); //2023-04-22 00:00:00.000
 
               //시간피커
               final time = await showTimePicker(
                 context: context,
                 initialTime: TimeOfDay.now(),
               );
-              print(time); //TimeOfDay(22:46)
+              debugPrint('$time'); //TimeOfDay(22:46)
 
               final booking = await showDateRangePicker(
                 context: context,
@@ -92,7 +92,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   );
                 },
               );
-              print(booking);
+              debugPrint("$booking");
             },
             title: const Text("What is your birthday?"),
           ),
@@ -177,7 +177,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         //sheet용
                         CupertinoActionSheetAction(
                           onPressed: () {
-                            print('hhk');
+                            debugPrint('hhk');
                           },
                           isDefaultAction: true, //글자가 좀 더 굵음
                           child: const Text(
