@@ -30,69 +30,119 @@ class SignUpScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.all(
-            Sizes.size14,
+    //OrientationBuilder : 폰 방향 감지
+    return OrientationBuilder(
+      builder: (context, orientation) {
+        // 랜드스케이프 방지 방법 1.
+        if (orientation == Orientation.landscape) {
+          return const Scaffold(
+            body: Center(child: Text("plz rotate your phone.")),
+          );
+        }
+
+        print(orientation);
+        return Scaffold(
+          body: SafeArea(
+            child: Padding(
+              padding: const EdgeInsets.all(
+                Sizes.size14,
+              ),
+              child: Column(
+                children: [
+                  Gaps.v80,
+                  const Text(
+                    "Sign up for TikTok",
+                    style: TextStyle(
+                      fontSize: Sizes.size24,
+                      fontWeight: FontWeight.w700,
+                    ),
+                  ),
+                  Gaps.v8,
+                  const Text(
+                    "Create a profile, follow other accounts, make your own videos, and more.",
+                    style: TextStyle(
+                      fontSize: Sizes.size16,
+                      color: Colors.black45,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                  Gaps.v40,
+                  // collection if를 사용해서 하나가 아닌 여러개에 적용하기
+                  // [] 리스트로 감싸고 "..." 전개해주면 됨.
+                  if (orientation == Orientation.portrait) ...[
+                    GestureDetector(
+                      onTap: () => _onEmailTap(context),
+                      child: const AuthButton(
+                        icon: FaIcon(FontAwesomeIcons.user),
+                        text: 'Use phone or email',
+                      ),
+                    ),
+                    Gaps.v16,
+                    GestureDetector(
+                      // onTap: () => _onEmailTap(context),
+                      child: const AuthButton(
+                        icon: FaIcon(FontAwesomeIcons.apple),
+                        text: 'Continue with Apple',
+                      ),
+                    ),
+                  ],
+                  if (orientation == Orientation.landscape)
+                    Row(
+                      //현재 Row로 감쌌는데 자식 위젯들이
+                      // FractionallySizedBox라 제한되지 않은 부모 때문에
+                      // 에러를 뿜음
+                      /// 해결 : Expanded
+                      children: [
+                        Expanded(
+                          child: GestureDetector(
+                            onTap: () => _onEmailTap(context),
+                            child: const AuthButton(
+                              icon: FaIcon(FontAwesomeIcons.user),
+                              text: 'Use phone or email',
+                            ),
+                          ),
+                        ),
+                        Gaps.h16,
+                        Expanded(
+                          child: GestureDetector(
+                            // onTap: () => _onEmailTap(context),
+                            child: const AuthButton(
+                              icon: FaIcon(FontAwesomeIcons.apple),
+                              text: 'Continue with Apple',
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                ],
+              ),
+            ),
           ),
-          child: Column(
-            children: [
-              Gaps.v80,
-              const Text(
-                "Sign up for TikTok",
-                style: TextStyle(
-                  fontSize: Sizes.size24,
-                  fontWeight: FontWeight.w700,
-                ),
+          bottomNavigationBar: BottomAppBar(
+            color: Colors.grey.shade50,
+            elevation: 2,
+            child: Padding(
+              padding: const EdgeInsets.symmetric(vertical: Sizes.size32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  const Text('Already have an account?'),
+                  Gaps.h5,
+                  GestureDetector(
+                    onTap: () => _onLoginTap(context),
+                    child: Text(
+                      'Log in',
+                      style: TextStyle(
+                          color: Theme.of(context).primaryColor,
+                          fontWeight: FontWeight.w600),
+                    ),
+                  ),
+                ],
               ),
-              Gaps.v20,
-              const Text(
-                "Create a profile, follow other accounts, make your own videos, and more.",
-                style: TextStyle(
-                  fontSize: Sizes.size16,
-                  color: Colors.black45,
-                ),
-                textAlign: TextAlign.center,
-              ),
-              Gaps.v40,
-              AuthButton(
-                onEmailTap: _onEmailTap,
-                icon: const FaIcon(FontAwesomeIcons.user),
-                text: 'Use phone or email',
-              ),
-              Gaps.v16,
-              AuthButton(
-                  onEmailTap: _onEmailTap,
-                  icon: const FaIcon(FontAwesomeIcons.apple),
-                  text: 'Continue with Apple'),
-            ],
+            ),
           ),
-        ),
-      ),
-      bottomNavigationBar: BottomAppBar(
-        color: Colors.grey.shade50,
-        elevation: 2,
-        child: Padding(
-          padding: const EdgeInsets.symmetric(vertical: Sizes.size32),
-          child: Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              const Text('Already have an account?'),
-              Gaps.h5,
-              GestureDetector(
-                onTap: () => _onLoginTap(context),
-                child: Text(
-                  'Log in',
-                  style: TextStyle(
-                      color: Theme.of(context).primaryColor,
-                      fontWeight: FontWeight.w600),
-                ),
-              ),
-            ],
-          ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
