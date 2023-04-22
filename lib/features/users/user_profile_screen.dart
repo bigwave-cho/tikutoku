@@ -14,10 +14,16 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
       // slivers의 자식위젯으로는 sliver와 관련된 위젯만 가능
       slivers: [
         SliverAppBar(
+          //floating, pinned, snap  기본값 false
+          // floating: true, // 스크롤이 어디있든 스크롤 방향에 따라 나타남
+          // pinned: true, // backgroundColor와 title 보여줌
+
+          // floating에 snap을 추가하면 약간만 위로 스크롤해도 appbar가 나옴
+          snap: true,
           floating: true,
-          //stretch :false - 기본값 아래로 늘어나는 것 false
+
           stretch: true,
-          pinned: true,
+
           //앱바인데도 스크롤 가능
           backgroundColor: Colors.teal,
           elevation: 1,
@@ -40,6 +46,19 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title: const Text("hello!"),
           ),
         ),
+        SliverFixedExtentList(
+          delegate: SliverChildBuilderDelegate(
+            childCount: 50, //자식 몇개인지
+            (context, index) => Container(
+              color: Colors.amber[100 * (index % 9)],
+              child: Align(
+                alignment: Alignment.center,
+                child: Text("Item $index"),
+              ),
+            ),
+          ),
+          itemExtent: 100,
+        ) //item 높이
       ],
     );
   }
