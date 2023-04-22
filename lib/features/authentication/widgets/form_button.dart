@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/utils.dart';
 
 class FormButton extends StatelessWidget {
   //VSCode가 부모위젯의 _username을 그대로 가지고 오면서 아래와 같은
@@ -33,8 +34,11 @@ class FormButton extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(Sizes.size10),
-          color:
-              disabled ? Colors.grey.shade300 : Theme.of(context).primaryColor,
+          color: disabled
+              ? isDarkMode(context)
+                  ? Colors.grey.shade800
+                  : Colors.grey.shade300
+              : Theme.of(context).primaryColor,
         ),
         //AimatedContainer는 자신만을 애니메이팅하고 자식컴포는 안함.
         //따라서 자식도 애니메이트 위젯으로 감싸주기 and 스타일도 빼주기.

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/utils.dart';
 
 enum Direction { right, left }
 
@@ -117,6 +118,7 @@ class _TutorialScreenState extends State<TutorialScreen> {
         ),
         // second page에서만 버튼 나타나도록.
         bottomNavigationBar: BottomAppBar(
+          color: isDarkMode(context) ? Colors.black : Colors.white,
           child: Padding(
             padding: const EdgeInsets.symmetric(
                 horizontal: Sizes.size24, vertical: Sizes.size24),

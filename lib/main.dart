@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/sign_up_screen.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
@@ -38,10 +37,9 @@ class TikTokApp extends StatelessWidget {
       themeMode: ThemeMode.system, // system: 시스템설정 따라가기
 
       theme: ThemeData(
-        // 구글폰트 사용방법.  https://fonts.google.com/
-        //여기서 이름 그대로 쓰면 됨(다 있는건 아님.)
-        textTheme: GoogleFonts.itimTextTheme(),
-
+        textTheme: Typography.blackMountainView,
+        //A Material Design text theme with dark glyphs based on San Francisco.
+        // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
         brightness: Brightness.light,
 
         // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
@@ -80,15 +78,13 @@ class TikTokApp extends StatelessWidget {
         bottomAppBarTheme: BottomAppBarTheme(
           color: Colors.grey.shade900,
         ),
+        appBarTheme: AppBarTheme(
+          backgroundColor: Colors.grey.shade900,
+        ),
         scaffoldBackgroundColor: Colors.black,
         primaryColor: const Color(0xFFE9435A),
         brightness: Brightness.dark,
-        // 해당 구글폰트를 커스터마이징하는 방법
-        textTheme: GoogleFonts.itimTextTheme(
-          ThemeData(
-            brightness: Brightness.dark,
-          ).textTheme,
-        ),
+        textTheme: Typography.whiteMountainView,
       ),
       home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
     );
