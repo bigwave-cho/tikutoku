@@ -51,12 +51,12 @@ class SignUpScreen extends StatelessWidget {
               child: Column(
                 children: [
                   Gaps.v80,
-                  const Text(
+                  Text(
                     "Sign up for TikTok",
-                    style: TextStyle(
-                      fontSize: Sizes.size24,
-                      fontWeight: FontWeight.w700,
-                    ),
+                    //.copyWith() 전역 설정된 띰에 copyWith를 이용해서 추가 변경도 가능
+                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
+                          color: Colors.red,
+                        ),
                   ),
                   Gaps.v8,
                   const Opacity(
