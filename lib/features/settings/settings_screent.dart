@@ -1,5 +1,5 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsScreen extends StatelessWidget {
   const SettingsScreen({super.key});
@@ -12,48 +12,30 @@ class SettingsScreen extends StatelessWidget {
           "Settings",
         ),
       ),
-      // CloseButton 위젯
-      // body: Column(
-      //   children: const [
-      //     //CloseButton pop이 내장되어있음
-      //     CloseButton(),
-      //   ],
-      // ),
-
-      //ListWheelScrollView : 휠처럼 생긴 위젯 ㅋㅋ
-      // body: ListWheelScrollView(
-      //   itemExtent: 200, //아이템 높이
-      //   offAxisFraction: 1.5,
-      //   //돋보기 기능ㅋㅋㅋ
-      //   useMagnifier: true,
-      //   magnification: 1.5,
-      //   children: [
-      //     for (var x in [1, 2, 3, 4, 5, 6, 7, 8, 1, 2, 3, 4, 5])
-      //       FractionallySizedBox(
-      //         widthFactor: 1,
-      //         child: Container(
-      //           color: Colors.teal,
-      //           alignment: Alignment.center,
-      //           child: const Text(
-      //             "pick me",
-      //             style: TextStyle(
-      //               color: Colors.white,
-      //               fontSize: 39,
-      //             ),
-      //           ),
-      //         ),
-      //       ),
-      //   ],
-      // ),
-
-      body: Column(
-        children: const [
-          CupertinoActivityIndicator(
-            radius: 40,
-            animating: false,
-          ), // ios 프로그레스 인디케이터
-          CircularProgressIndicator(), // 구글꺼
-          CircularProgressIndicator.adaptive(), //유저의 플랫폼에 따라 알아서 정해줌
+      body: ListView(
+        children: [
+          ListTile(
+            //showAboutDialog() 내장함수 . 앱에 대한 정보를 띄울 수 있음.
+            //오픈소스라이브러리에 대한 정보도 다 구현돼있어서 일일이 목록 만들 필요 없어짐
+            onTap: (() => showAboutDialog(
+                  context: context,
+                  applicationVersion: "1.0",
+                  applicationLegalese: "All rights reserved.",
+                  applicationName: "TIKUTOKU",
+                  applicationIcon: const FaIcon(
+                    FontAwesomeIcons.cableCar,
+                  ),
+                )),
+            title: const Text(
+              "About",
+              style: TextStyle(
+                fontWeight: FontWeight.w600,
+              ),
+            ),
+            subtitle: const Text("About this app..."),
+          ),
+          // AboutListTile: 함수 만들필요 없음 걍 클릭 ㄱㄴ
+          const AboutListTile(applicationName: "TIKUTOKU"),
         ],
       ),
     );
