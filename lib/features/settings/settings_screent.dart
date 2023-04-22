@@ -157,6 +157,65 @@ class _SettingsScreenState extends State<SettingsScreen> {
               );
             },
           ),
+          ListTile(
+            title: const Text(
+              "Log out (ios / bottom)",
+            ),
+            textColor: Colors.red,
+            onTap: () async {
+              //아래에서 모달이 팝업됨
+              // dialog와 차이는 영역 밖을 클릭하면 pop됨
+              //ShowCupertinoDialog 쓰면 위쪽에 뜸
+              await showCupertinoModalPopup(
+                context: context,
+                //CupertinoAlertDialog, AlertDialog, 도 잘 작동
+                builder: ((context) => CupertinoActionSheet(
+                      title: const Text("Are you sure?"),
+                      message: const Text("plz dont ogogogogg"),
+                      // content: const Text("Plz don't go!!"),
+                      actions: [
+                        //sheet용
+                        CupertinoActionSheetAction(
+                          onPressed: () {
+                            print('hhk');
+                          },
+                          isDefaultAction: true, //글자가 좀 더 굵음
+                          child: const Text(
+                            "Not log out!",
+                          ),
+                        ),
+                        CupertinoActionSheetAction(
+                          onPressed: () {},
+                          isDestructiveAction: true,
+                          child: const Text(
+                            "YES!!",
+                          ),
+                        ),
+
+                        //dialog용 sheet에서도 작동하긴 함.
+                        CupertinoDialogAction(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          child: const Text(
+                            "No",
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        CupertinoDialogAction(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          //isDestructiveAction
+                          //: true면 해당 액션이 중요하다고 판단, 빨간 텍스트로 표시됨
+                          isDestructiveAction: true,
+                          child: const Text(
+                            "Yes",
+                          ),
+                        ),
+                      ],
+                    )),
+              );
+            },
+          ),
           const AboutListTile(applicationName: "TIKUTOKU"),
         ],
       ),
