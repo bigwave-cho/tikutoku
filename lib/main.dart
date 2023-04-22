@@ -16,6 +16,10 @@ class TikTokApp extends StatelessWidget {
     return MaterialApp(
       title: 'TikTok',
       theme: ThemeData(
+        // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
+        splashColor: Colors.transparent,
+        // 길게 누를때 나오는 컬러
+        highlightColor: Colors.transparent,
         //모든 scaffold 배경 디폴트 정하기
         scaffoldBackgroundColor: Colors.white,
         primaryColor: const Color(0xFFE9435A),
