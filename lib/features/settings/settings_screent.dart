@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -94,6 +95,67 @@ class _SettingsScreenState extends State<SettingsScreen> {
               print(booking);
             },
             title: const Text("What is your birthday?"),
+          ),
+          ListTile(
+            title: const Text(
+              "Log out (ios and android)",
+            ),
+            textColor: Colors.red,
+            onTap: () async {
+              //ios 스타일
+              await showCupertinoDialog(
+                context: context,
+                builder: ((context) => CupertinoAlertDialog(
+                      title: const Text("Are you sure?"),
+                      content: const Text("Plz don't go!!"),
+                      actions: [
+                        CupertinoDialogAction(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          child: const Text(
+                            "No",
+                            style: TextStyle(
+                              color: Colors.red,
+                            ),
+                          ),
+                        ),
+                        CupertinoDialogAction(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          //isDestructiveAction
+                          //: true면 해당 액션이 중요하다고 판단, 빨간 텍스트로 표시됨
+                          isDestructiveAction: true,
+                          child: const Text(
+                            "Yes",
+                          ),
+                        ),
+                      ],
+                    )),
+              );
+              // 커스텀(안드스탈)
+              await showDialog(
+                context: context,
+                builder: ((context) => AlertDialog(
+                      icon: const FaIcon(
+                        FontAwesomeIcons.skull,
+                      ),
+                      title: const Text("Are you sure?"),
+                      content: const Text("Plz don't go!!"),
+                      actions: [
+                        IconButton(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          icon: const FaIcon(
+                            FontAwesomeIcons.car,
+                          ),
+                        ),
+                        TextButton(
+                          onPressed: (() => Navigator.of(context).pop()),
+                          child: const Text(
+                            "Yes",
+                          ),
+                        ),
+                      ],
+                    )),
+              );
+            },
           ),
           const AboutListTile(applicationName: "TIKUTOKU"),
         ],
