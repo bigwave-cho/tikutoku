@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
 
@@ -58,40 +59,7 @@ class TikTokApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const LayoutBuilderCodeLab(), //로그인 생략위해 잠시 바꿈.
-    );
-  }
-}
-
-class LayoutBuilderCodeLab extends StatelessWidget {
-  const LayoutBuilderCodeLab({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final size = MediaQuery.of(context).size;
-    return Scaffold(
-      // LayoutBuilder는 부모요소의 너비와 높이를 받아
-      // constraints로 제공.
-      // Scaffold의 body가 화면 전체를 먹고있으니 미디어쿼리 값과 같아짐
-      // 만약 레이아웃빌더를 다른 제한된 박스로 감싸면
-      // 해당 박스의 너비와 높이를 받겠지.
-      body: LayoutBuilder(
-        builder: (context, constraints) => Container(
-          width: constraints.maxWidth,
-          height: constraints.maxHeight,
-          // width: size.width,
-          // height: size.height,
-          color: Colors.teal,
-          child: Center(
-              child: Text(
-            "미디어쿼리:${size.width},constraints: ${constraints.maxWidth}",
-            style: const TextStyle(
-              color: Colors.white,
-              fontSize: 98,
-            ),
-          )),
-        ),
-      ),
+      home: const MainNavigationScreen(), //로그인 생략위해 잠시 바꿈.
     );
   }
 }
