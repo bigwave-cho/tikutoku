@@ -185,14 +185,15 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                       ),
                       Gaps.v8,
                       const Text(
-                          "This is a very long caption for my tiktok that im upload just now currently",
-                          maxLines: 2,
-                          //overflow : 맥스라인 넘어가는 글자에 대해 적용
-                          overflow: TextOverflow.ellipsis,
-                          style: TextStyle(
+                        "This is a very long caption for my tiktok that im upload just now currently",
+                        maxLines: 2,
+                        //overflow : 맥스라인 넘어가는 글자에 대해 적용
+                        overflow: TextOverflow.ellipsis,
+                        style: TextStyle(
                             fontSize: Sizes.size16 + Sizes.size2,
                             fontWeight: FontWeight.bold,
-                          )),
+                            height: 1.1),
+                      ),
                       Gaps.v5,
                       DefaultTextStyle(
                         style: TextStyle(

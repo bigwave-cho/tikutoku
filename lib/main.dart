@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
 
@@ -37,6 +37,8 @@ class TikTokApp extends StatelessWidget {
       themeMode: ThemeMode.system, // system: 시스템설정 따라가기
 
       theme: ThemeData(
+          //Materail2에서 3적용하는 방법
+          useMaterial3: true,
           textTheme: Typography.blackMountainView,
           //A Material Design text theme with dark glyphs based on San Francisco.
           // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
@@ -64,6 +66,7 @@ class TikTokApp extends StatelessWidget {
           appBarTheme: const AppBarTheme(
             foregroundColor: Colors.black,
             backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
             elevation: 0,
             titleTextStyle: TextStyle(
               color: Colors.black,
@@ -85,6 +88,7 @@ class TikTokApp extends StatelessWidget {
           )),
       //dark일 때 설정
       darkTheme: ThemeData(
+        useMaterial3: true,
         tabBarTheme: const TabBarTheme(
           indicator: UnderlineTabIndicator(
             borderSide: BorderSide(
@@ -95,11 +99,18 @@ class TikTokApp extends StatelessWidget {
         textSelectionTheme: const TextSelectionThemeData(
           cursorColor: Color(0xffe9435a),
         ),
+
         //전역 주고
         bottomAppBarTheme: BottomAppBarTheme(
           color: Colors.grey.shade900,
         ),
         appBarTheme: AppBarTheme(
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: Sizes.size16 + Sizes.size2,
+            fontWeight: FontWeight.w600,
+          ),
+          surfaceTintColor: Colors.grey.shade900,
           backgroundColor: Colors.grey.shade900,
         ),
         scaffoldBackgroundColor: Colors.black,
@@ -107,7 +118,7 @@ class TikTokApp extends StatelessWidget {
         brightness: Brightness.dark,
         textTheme: Typography.whiteMountainView,
       ),
-      home: const MainNavigationScreen(), //로그인 생략위해 잠시 바꿈.
+      home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
     );
   }
 }
