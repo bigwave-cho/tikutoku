@@ -3,6 +3,7 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/breakpoints.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/utils.dart';
 
 final tabs = ["Top", "Users", "Videos", "Sounds", "LIVE", "Shopping", "Brands"];
 
@@ -55,35 +56,49 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               controller: _textEditingController,
               onChanged: _onSearchChanged,
               onSubmitted: _onSearchSubmitted,
+              style: TextStyle(
+                color: isDarkMode(context) ? Colors.white : Colors.black,
+              ),
               decoration: InputDecoration(
                 prefixIconConstraints: const BoxConstraints(maxWidth: 35),
-                prefixIcon: const Padding(
-                  padding: EdgeInsets.all(12),
+                prefixIcon: Padding(
+                  padding: const EdgeInsets.all(12),
                   child: FaIcon(
                     FontAwesomeIcons.magnifyingGlass,
-                    color: Colors.black,
+                    color: isDarkMode(context)
+                        ? Colors.grey.shade300
+                        : Colors.black,
                     size: Sizes.size16,
                   ),
                 ),
                 contentPadding: const EdgeInsets.symmetric(
                   vertical: 15.0,
                 ),
-                suffixIcon: Padding(
-                  padding: const EdgeInsets.all(12),
-                  child: GestureDetector(
-                    onTap: () {
-                      _textEditingController.text = "";
-                    },
-                    child: const FaIcon(
-                      FontAwesomeIcons.solidCircleXmark,
-                      color: Colors.black,
-                      size: Sizes.size16,
+                suffixIcon: Column(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    GestureDetector(
+                      onTap: () {
+                        _textEditingController.text = "";
+                      },
+                      child: FaIcon(
+                        FontAwesomeIcons.solidCircleXmark,
+                        color: isDarkMode(context)
+                            ? Colors.grey.shade300
+                            : Colors.black,
+                        size: Sizes.size16,
+                      ),
                     ),
-                  ),
+                  ],
                 ),
-                border: InputBorder.none,
+                border: OutlineInputBorder(
+                  borderRadius: BorderRadius.circular(24.0),
+                  borderSide: BorderSide.none,
+                ),
                 filled: true,
-                fillColor: Colors.grey.shade100,
+                fillColor: isDarkMode(context)
+                    ? Colors.grey.shade700
+                    : Colors.grey.shade100,
               ),
             ),
           ),
@@ -119,9 +134,6 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
               fontWeight: FontWeight.w600,
               fontSize: Sizes.size16,
             ),
-            labelColor: Colors.black,
-            unselectedLabelColor: Colors.grey.shade500,
-            indicatorColor: Colors.black,
             tabs: [
               for (var tab in tabs)
                 Tab(
@@ -130,59 +142,63 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             ],
           ),
         ),
-        body: TabBarView(children: [
-          GridView.builder(
-            // listview도 가지고 있음. 드래그 감지해서 키보드 사라지도록.
-            keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
-            padding: const EdgeInsets.all(
-              Sizes.size6,
-            ),
-            itemCount: 20,
-            //SliverGridDelegateWithFixedCrossAxisCount : 고정된 개수의 grid-col
-            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: width > Breakpoints.lg ? 5 : 2,
-              crossAxisSpacing: Sizes.size10,
-              mainAxisSpacing: Sizes.size10,
-              //자식 위젯 크기가 9/16을 벗어나기 때문에 세로를 늘려줬음
-              childAspectRatio: 9 / 20,
-            ),
-            itemBuilder: ((context, index) {
-              return LayoutBuilder(
-                builder: (context, constraints) => Column(
-                  children: [
-                    Container(
-                      clipBehavior: Clip.hardEdge,
-                      decoration: BoxDecoration(
-                        borderRadius: BorderRadius.circular(4),
+        body: GestureDetector(
+          onTap: () {
+            FocusScope.of(context).unfocus();
+          },
+          child: TabBarView(children: [
+            GridView.builder(
+              // listview도 가지고 있음. 드래그 감지해서 키보드 사라지도록.
+              keyboardDismissBehavior: ScrollViewKeyboardDismissBehavior.onDrag,
+
+              padding: const EdgeInsets.all(
+                Sizes.size6,
+              ),
+              itemCount: 20,
+              //SliverGridDelegateWithFixedCrossAxisCount : 고정된 개수의 grid-col
+              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: width > Breakpoints.lg ? 5 : 2,
+                crossAxisSpacing: Sizes.size10,
+                mainAxisSpacing: Sizes.size10,
+                //자식 위젯 크기가 9/16을 벗어나기 때문에 세로를 늘려줬음
+                childAspectRatio: 9 / 20,
+              ),
+              itemBuilder: ((context, index) {
+                return LayoutBuilder(
+                  builder: (context, constraints) => Column(
+                    children: [
+                      Container(
+                        clipBehavior: Clip.hardEdge,
+                        decoration: BoxDecoration(
+                          borderRadius: BorderRadius.circular(4),
+                        ),
+                        child: AspectRatio(
+                          //AspectRatio : 원하는 비율로 이미지를 맞춤.
+                          aspectRatio: 9 / 16,
+                          child: FadeInImage.assetNetwork(
+                              // 네트워크 이미지의 로딩 시간동안 에셋의 플레이스홀더 이미지를 보여줌
+                              fit: BoxFit.cover,
+                              placeholder: "assets/images/placeholder.jpg",
+                              image:
+                                  "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
+                        ),
                       ),
-                      child: AspectRatio(
-                        //AspectRatio : 원하는 비율로 이미지를 맞춤.
-                        aspectRatio: 9 / 16,
-                        child: FadeInImage.assetNetwork(
-                            // 네트워크 이미지의 로딩 시간동안 에셋의 플레이스홀더 이미지를 보여줌
-                            fit: BoxFit.cover,
-                            placeholder: "assets/images/placeholder.jpg",
-                            image:
-                                "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80"),
-                      ),
-                    ),
-                    Gaps.v8,
-                    Text(
-                        "${constraints.maxWidth} This is a very long caption for my tiktok that im upload just now currently",
-                        maxLines: 2,
-                        //overflow : 맥스라인 넘어가는 글자에 대해 적용
-                        overflow: TextOverflow.ellipsis,
-                        style: const TextStyle(
-                          fontSize: Sizes.size16 + Sizes.size2,
-                          fontWeight: FontWeight.bold,
-                        )),
-                    Gaps.v5,
-                    //LayoutBuilder 사용 예시 : 크기에 따라 프로필 유무 정하기
-                    if (constraints.maxWidth < 200 ||
-                        constraints.maxWidth > 250)
+                      Gaps.v8,
+                      const Text(
+                          "This is a very long caption for my tiktok that im upload just now currently",
+                          maxLines: 2,
+                          //overflow : 맥스라인 넘어가는 글자에 대해 적용
+                          overflow: TextOverflow.ellipsis,
+                          style: TextStyle(
+                            fontSize: Sizes.size16 + Sizes.size2,
+                            fontWeight: FontWeight.bold,
+                          )),
+                      Gaps.v5,
                       DefaultTextStyle(
                         style: TextStyle(
-                          color: Colors.grey.shade600,
+                          color: isDarkMode(context)
+                              ? Colors.grey.shade300
+                              : Colors.grey.shade600,
                           fontWeight: FontWeight.w600,
                         ),
                         child: Row(
@@ -214,28 +230,29 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
                           ],
                         ),
                       ),
-                  ],
-                ),
-              );
-              // 외부 url 이미지 사용
-              // return Image.network(
-              //     "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80");
+                    ],
+                  ),
+                );
+                // 외부 url 이미지 사용
+                // return Image.network(
+                //     "https://plus.unsplash.com/premium_photo-1681412205359-a803b2649d57?ixlib=rb-4.0.3&ixid=MnwxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8&auto=format&fit=crop&w=987&q=80");
 
-              // assets 이미지 사용 방법.
-              // return Image.asset("assets/images/placeholder.jpg");
-            }),
-          ),
-          //skip(int) - 해당 순서 건너뛰어라
-          for (var tab in tabs.skip(1))
-            Center(
-              child: Text(
-                tab,
-                style: const TextStyle(
-                  fontSize: Sizes.size28,
+                // assets 이미지 사용 방법.
+                // return Image.asset("assets/images/placeholder.jpg");
+              }),
+            ),
+            //skip(int) - 해당 순서 건너뛰어라
+            for (var tab in tabs.skip(1))
+              Center(
+                child: Text(
+                  tab,
+                  style: const TextStyle(
+                    fontSize: Sizes.size28,
+                  ),
                 ),
-              ),
-            )
-        ]),
+              )
+          ]),
+        ),
       ),
     );
   }
