@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:tiktok/constants/sizes.dart';
 
 class UserProfileScreen extends StatefulWidget {
   const UserProfileScreen({super.key});
@@ -22,7 +23,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           snap: true,
           floating: true,
 
-          stretch: true,
+          stretch: true, // 최상단에 있을때 아래로 스크롤하면 appbar가 늘어남
 
           //앱바인데도 스크롤 가능
           backgroundColor: Colors.teal,
@@ -46,6 +47,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title: const Text("hello!"),
           ),
         ),
+        //ListView
         SliverFixedExtentList(
           delegate: SliverChildBuilderDelegate(
             childCount: 50, //자식 몇개인지
@@ -59,6 +61,25 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           ),
           itemExtent: 100,
         ) //item 높이
+        ,
+        //GridView
+        SliverGrid(
+            delegate: SliverChildBuilderDelegate(
+              childCount: 50,
+              (context, index) => Container(
+                color: Colors.amber[100 * (index % 9)],
+                child: Align(
+                  alignment: Alignment.center,
+                  child: Text("Item $index"),
+                ),
+              ),
+            ),
+            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+              maxCrossAxisExtent: 100,
+              mainAxisSpacing: Sizes.size20,
+              crossAxisSpacing: Sizes.size20,
+              childAspectRatio: 1,
+            ))
       ],
     );
   }
