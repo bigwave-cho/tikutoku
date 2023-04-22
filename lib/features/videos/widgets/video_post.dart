@@ -1,3 +1,4 @@
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
@@ -26,7 +27,13 @@ class _VideoPostState extends State<VideoPost>
       VideoPlayerController.asset("assets/videos/video.mov");
   final Duration _animationDuration = const Duration(milliseconds: 200);
 
+  // 글자 수에 따른 더보기 기능
+  bool _isSeeMore = false;
+  final String _hashtagText = '#분위기 #좋다 #아아 ##맛없다';
+  bool _isLognerTen = false;
+
   bool _isPaused = false;
+  bool _isMuted = false;
 
   late final AnimationController _animationController;
 
@@ -45,15 +52,22 @@ class _VideoPostState extends State<VideoPost>
     setState(() {});
     // 영상 반복 재생
     await _videoPlayerController.setLooping(true);
+    /*
+    앱의 첫 시작을 video timeline으로 했을 때 웹으로 빌드하면
+    에러를 띄움. 
+    이는 브라우저가 웹이 첫 시작 페이지가 소리가 있는 영상이고 
+    이것이 자동재생되도록 설정되어있는 것을 막기 때문임.
+     */
+    //KIsWeb : 웹용으로 컴파일 되었다면 음소거!
+    if (kIsWeb) {
+      await _videoPlayerController.setVolume(0);
+      _isMuted = true;
+    }
+
     _videoPlayerController.addListener(() {
       _onVideoChange();
     });
   }
-
-  // 글자 수에 따른 더보기 기능
-  bool _isSeeMore = false;
-  final String _hashtagText = '#분위기 #좋다 #아아 ##맛없다';
-  bool _isLognerTen = false;
 
   void _seeMore() {
     setState(() {
@@ -151,6 +165,17 @@ class _VideoPostState extends State<VideoPost>
     );
     // 모달 닫히면 재생
     _togglePause();
+  }
+
+  void _onToggleVolume(BuildContext context) async {
+    if (_isMuted == false) {
+      await _videoPlayerController.setVolume(0);
+    } else {
+      await _videoPlayerController.setVolume(1);
+    }
+    setState(() {
+      _isMuted = !_isMuted;
+    });
   }
 
   @override
@@ -256,6 +281,16 @@ class _VideoPostState extends State<VideoPost>
               right: 10,
               child: Column(
                 children: [
+                  GestureDetector(
+                    onTap: () => _onToggleVolume(context),
+                    child: VideoButton(
+                      icon: _isMuted
+                          ? FontAwesomeIcons.volumeXmark
+                          : FontAwesomeIcons.volumeHigh,
+                      text: _isMuted ? "Muted" : "Enjoy!",
+                    ),
+                  ),
+                  Gaps.v20,
                   //CircleAvatar : 원 모양 아바타
                   const CircleAvatar(
                     radius: 25,
