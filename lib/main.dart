@@ -28,6 +28,10 @@ void main() async {
 class TikTokApp extends StatelessWidget {
   const TikTokApp({super.key});
 
+// ## flex_color_scheme
+// theme 적용 한방에 끝내주는 패키지
+//https://pub.dev/packages/flex_color_scheme
+//https://rydmike.com/flexcolorscheme/themesplayground-v7/
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
