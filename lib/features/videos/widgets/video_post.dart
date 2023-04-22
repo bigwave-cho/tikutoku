@@ -87,6 +87,18 @@ class _VideoPostState extends State<VideoPost>
   }
 
   void _onVisibilityChanged(VisibilityInfo info) {
+    /*
+    모든 Stateful widget에는 mounted 위젯이 존재.
+    Widget이 마운트되었는지 알려줌(위젯트리에 존재하는지)
+    
+    이 스크린이 없어지면서 controller를 dispose()하기 때문에
+    다시 스크린으로 돌아오면 없는 컨트롤러를 함수에서 호출하기 떄문에 에러가 떠버림.
+
+    그래서 앞에 mounted를 조건문으로 달아줘서 마운트 전에 함수내 코드가 실행되는 것을 방지
+     */
+
+    if (!mounted) return;
+
     if (info.visibleFraction == 1 &&
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
@@ -95,7 +107,6 @@ class _VideoPostState extends State<VideoPost>
 
     // offstage는 화면이 dispose되지 않고 탭이 변경되도 남아있는다.(계속 재생할거)
     //그래서 탭 변경하여 안보이면 멈추게 할거다.
-    if (!mounted) return;
     if (_videoPlayerController.value.isPlaying && info.visibleFraction == 0) {
       _togglePause();
     }

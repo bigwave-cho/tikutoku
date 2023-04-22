@@ -104,27 +104,62 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                         ],
                       ),
                     ),
-                    FractionallySizedBox(
-                      widthFactor: 0.33,
-                      child: Container(
-                        padding: const EdgeInsets.symmetric(
-                          vertical: Sizes.size12,
-                        ),
-                        decoration: BoxDecoration(
-                          color: Theme.of(context).primaryColor,
-                          borderRadius: const BorderRadius.all(
-                            Radius.circular(Sizes.size4),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          padding: const EdgeInsets.symmetric(
+                            vertical: Sizes.size12,
+                            horizontal: Sizes.size52,
+                          ),
+                          decoration: BoxDecoration(
+                            color: Theme.of(context).primaryColor,
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(Sizes.size4),
+                            ),
+                          ),
+                          child: const Text(
+                            "Follow",
+                            style: TextStyle(
+                              color: Colors.white,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
                           ),
                         ),
-                        child: const Text(
-                          "Follow",
-                          style: TextStyle(
-                            color: Colors.white,
-                            fontWeight: FontWeight.w600,
+                        Gaps.h3,
+                        Container(
+                          width: 42,
+                          height: 42,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(Sizes.size4),
+                            ),
                           ),
-                          textAlign: TextAlign.center,
+                          child: const FaIcon(
+                            FontAwesomeIcons.youtube,
+                            size: Sizes.size20,
+                          ),
                         ),
-                      ),
+                        Gaps.h3,
+                        Container(
+                          width: 42,
+                          height: 42,
+                          alignment: Alignment.center,
+                          decoration: BoxDecoration(
+                            border: Border.all(color: Colors.grey.shade300),
+                            borderRadius: const BorderRadius.all(
+                              Radius.circular(Sizes.size4),
+                            ),
+                          ),
+                          child: const FaIcon(
+                            FontAwesomeIcons.caretDown,
+                            size: Sizes.size12,
+                          ),
+                        ),
+                      ],
                     ),
                     Gaps.v14,
                     const Padding(
@@ -192,17 +227,20 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
                       ),
                       Positioned(
                         bottom: Sizes.size4,
+                        left: Sizes.size4,
                         child: Row(
                           children: const [
                             FaIcon(
                               FontAwesomeIcons.circlePlay,
                               color: Colors.white,
+                              size: Sizes.size20,
                             ),
                             Gaps.h6,
                             Text(
                               "4.1M",
                               style: TextStyle(
                                 color: Colors.white,
+                                fontWeight: FontWeight.w600,
                               ),
                             )
                           ],
