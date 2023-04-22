@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/constants/breakpoints.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 
@@ -31,6 +32,13 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
 
   @override
   Widget build(BuildContext context) {
+    //MediaQuery
+    final width = MediaQuery.of(context).size.width; // 실시간 감지
+    debugPrint('$width');
+    MediaQuery.of(context).platformBrightness; //system : dark or light
+    MediaQuery.of(context).padding; //아이폰 노치나 statusbar에 의해 보이지 않는 곳
+    MediaQuery.of(context).orientation; //오리엔테이션도 가능
+
     return DefaultTabController(
       length: tabs.length,
       child: Scaffold(
@@ -126,8 +134,8 @@ class _DiscoverScreenState extends State<DiscoverScreen> {
             ),
             itemCount: 20,
             //SliverGridDelegateWithFixedCrossAxisCount : 고정된 개수의 grid-col
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 2,
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: width > Breakpoints.lg ? 5 : 2,
               crossAxisSpacing: Sizes.size10,
               mainAxisSpacing: Sizes.size10,
               //자식 위젯 크기가 9/16을 벗어나기 때문에 세로를 늘려줬음
