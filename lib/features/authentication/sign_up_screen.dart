@@ -5,6 +5,7 @@ import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/username_screen.dart';
 import 'package:tiktok/features/authentication/login_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
+import 'package:tiktok/utils.dart';
 
 // font_awesome_flutter : 설치
 
@@ -58,13 +59,21 @@ class SignUpScreen extends StatelessWidget {
                     ),
                   ),
                   Gaps.v8,
-                  const Text(
-                    "Create a profile, follow other accounts, make your own videos, and more.",
-                    style: TextStyle(
-                      fontSize: Sizes.size16,
-                      color: Colors.black45,
+                  const Opacity(
+                    //방법2: 오파시티로 흰색이든 검정이든 흐릿하게 보이도록.
+                    opacity: 0.7,
+                    child: Text(
+                      "Create a profile, follow other accounts, make your own videos, and more.",
+                      style: TextStyle(
+                        fontSize: Sizes.size16,
+                        // 다크모드를 염두에 두고 해야하는 이유... 하드코딩 되버림
+                        //방법1. 아래처럼 함수를 이용해서.
+                        // color: isDarkMode(context)
+                        //     ? Colors.grey.shade300
+                        //     : Colors.black45,
+                      ),
+                      textAlign: TextAlign.center,
                     ),
-                    textAlign: TextAlign.center,
                   ),
                   Gaps.v40,
                   // collection if를 사용해서 하나가 아닌 여러개에 적용하기
@@ -119,7 +128,8 @@ class SignUpScreen extends StatelessWidget {
             ),
           ),
           bottomNavigationBar: BottomAppBar(
-            color: Colors.grey.shade50,
+            //방법3: null줘서 전역 띰을 받는 방법도..
+            color: isDarkMode(context) ? null : Colors.grey.shade50,
             elevation: 2,
             child: Padding(
               padding: const EdgeInsets.symmetric(vertical: Sizes.size32),

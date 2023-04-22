@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/main_navigation/main_navigation_screen.dart';
+import 'package:tiktok/features/authentication/sign_up_screen.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
 
@@ -33,13 +33,22 @@ class TikTokApp extends StatelessWidget {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
+      //themeMode : flutter에게 light/dark 사용 알려줌
+      themeMode: ThemeMode.system, // system: 시스템설정 따라가기
+
       theme: ThemeData(
+        brightness: Brightness.light,
         // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
         splashColor: Colors.transparent,
         // 길게 누를때 나오는 컬러
         highlightColor: Colors.transparent,
         //모든 scaffold 배경 디폴트 정하기
         scaffoldBackgroundColor: Colors.white,
+
+        //일관성을 원한다면 한번에 적용
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade50,
+        ),
         primaryColor: const Color(0xFFE9435A),
         textSelectionTheme: const TextSelectionThemeData(
           //cursorColor 설정
@@ -59,7 +68,17 @@ class TikTokApp extends StatelessWidget {
           ),
         ),
       ),
-      home: const MainNavigationScreen(), //로그인 생략위해 잠시 바꿈.
+      //dark일 때 설정
+      darkTheme: ThemeData(
+        //전역 주고
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade900,
+        ),
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: const Color(0xFFE9435A),
+        brightness: Brightness.dark,
+      ),
+      home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
     );
   }
 }
