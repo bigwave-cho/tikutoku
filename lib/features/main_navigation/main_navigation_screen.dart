@@ -51,7 +51,9 @@ class _MainNavigationScreenState extends State<MainNavigationScreen> {
       resizeToAvoidBottomInset: false,
 
       // scaffold BG 기본값이 white라 tab위치가 video Timeline일 때만 배경 black
-      backgroundColor: _selectedIndex == 0 ? Colors.black : Colors.white,
+      // user profile에는 Scaffold가 없기 때문에 mainNav Scaffold의 배경색을 따라감
+      backgroundColor:
+          _selectedIndex == 0 || isDark ? Colors.black : Colors.white,
       body: Stack(
         children: [
           Offstage(

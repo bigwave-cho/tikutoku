@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/utils.dart';
 
 class VideoComments extends StatefulWidget {
   const VideoComments({super.key});
@@ -38,7 +39,7 @@ class _VideoCommentsState extends State<VideoComments> {
       */
 
     final size = MediaQuery.of(context).size;
-
+    final isDark = isDarkMode(context);
     // showModalBottomSheet은 실제로 새로운 스크린을 push하는 것
     return Container(
       // height는 showModalBottomSheet에 isScrollControlled :true 여야 적용됨
@@ -50,10 +51,10 @@ class _VideoCommentsState extends State<VideoComments> {
         ),
       ),
       child: Scaffold(
-        backgroundColor: Colors.grey.shade50,
+        backgroundColor: isDark ? null : Colors.grey.shade50,
         appBar: AppBar(
           // appbar의 back버튼 비활성
-          backgroundColor: Colors.grey.shade50,
+          backgroundColor: isDark ? null : Colors.grey.shade50,
           automaticallyImplyLeading: false,
           title: const Text('22222 comments'),
           actions: [
@@ -84,9 +85,11 @@ class _VideoCommentsState extends State<VideoComments> {
                   itemBuilder: ((context, index) => Row(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          const CircleAvatar(
+                          CircleAvatar(
                             radius: 18,
-                            child: Text(
+                            backgroundColor:
+                                isDark ? Colors.grey.shade500 : null,
+                            child: const Text(
                               'JH',
                             ),
                           ),
@@ -136,7 +139,7 @@ class _VideoCommentsState extends State<VideoComments> {
                 width: size.width,
 
                 child: BottomAppBar(
-                  color: Colors.white,
+                  color: isDark ? null : Colors.white,
                   child: Padding(
                     padding: const EdgeInsets.symmetric(
                       horizontal: Sizes.size16,
@@ -178,7 +181,9 @@ class _VideoCommentsState extends State<VideoComments> {
                                 borderSide: BorderSide.none,
                               ),
                               filled: true,
-                              fillColor: Colors.grey.shade200,
+                              fillColor: isDark
+                                  ? Colors.grey.shade800
+                                  : Colors.grey.shade200,
                               contentPadding: const EdgeInsets.symmetric(
                                 horizontal: Sizes.size12,
                               ),
@@ -192,17 +197,23 @@ class _VideoCommentsState extends State<VideoComments> {
                                   children: [
                                     FaIcon(
                                       FontAwesomeIcons.at,
-                                      color: Colors.grey.shade900,
+                                      color: isDark
+                                          ? Colors.grey.shade500
+                                          : Colors.grey.shade900,
                                     ),
                                     Gaps.h14,
                                     FaIcon(
                                       FontAwesomeIcons.gift,
-                                      color: Colors.grey.shade900,
+                                      color: isDark
+                                          ? Colors.grey.shade500
+                                          : Colors.grey.shade900,
                                     ),
                                     Gaps.h14,
                                     FaIcon(
                                       FontAwesomeIcons.faceSmile,
-                                      color: Colors.grey.shade900,
+                                      color: isDark
+                                          ? Colors.grey.shade500
+                                          : Colors.grey.shade900,
                                     ),
                                     Gaps.h14,
                                     if (_isWriting)

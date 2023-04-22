@@ -37,50 +37,52 @@ class TikTokApp extends StatelessWidget {
       themeMode: ThemeMode.system, // system: 시스템설정 따라가기
 
       theme: ThemeData(
-        textTheme: Typography.blackMountainView,
-        //A Material Design text theme with dark glyphs based on San Francisco.
-        // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
-        brightness: Brightness.light,
+          textTheme: Typography.blackMountainView,
+          //A Material Design text theme with dark glyphs based on San Francisco.
+          // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
+          brightness: Brightness.light,
 
-        // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
-        splashColor: Colors.transparent,
-        // 길게 누를때 나오는 컬러
-        highlightColor: Colors.transparent,
-        //모든 scaffold 배경 디폴트 정하기
-        scaffoldBackgroundColor: Colors.white,
+          // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
+          splashColor: Colors.transparent,
+          // 길게 누를때 나오는 컬러
+          highlightColor: Colors.transparent,
+          //모든 scaffold 배경 디폴트 정하기
+          scaffoldBackgroundColor: Colors.white,
 
-        //일관성을 원한다면 한번에 적용
-        bottomAppBarTheme: BottomAppBarTheme(
-          color: Colors.grey.shade50,
-        ),
-        primaryColor: const Color(0xFFE9435A),
-        textSelectionTheme: const TextSelectionThemeData(
-          //cursorColor 설정
-          cursorColor: Color(0xffe9435a),
-          //텍스트 선택시 칼라 설정
-          // selectionColor: Color(0xffe9435a),
-        ),
-        // appbar 전역 설정
-        appBarTheme: const AppBarTheme(
-          foregroundColor: Colors.black,
-          backgroundColor: Colors.white,
-          elevation: 0,
-          titleTextStyle: TextStyle(
-            color: Colors.black,
-            fontSize: Sizes.size16 + Sizes.size2,
-            fontWeight: FontWeight.w600,
+          //일관성을 원한다면 한번에 적용
+          bottomAppBarTheme: BottomAppBarTheme(
+            color: Colors.grey.shade50,
           ),
-        ),
-        tabBarTheme: TabBarTheme(
-          labelColor: Colors.black,
-          unselectedLabelColor: Colors.grey.shade500,
-          indicator: const UnderlineTabIndicator(
-            borderSide: BorderSide(
+          primaryColor: const Color(0xFFE9435A),
+          textSelectionTheme: const TextSelectionThemeData(
+            //cursorColor 설정
+            cursorColor: Color(0xffe9435a),
+            //텍스트 선택시 칼라 설정
+            // selectionColor: Color(0xffe9435a),
+          ),
+          // appbar 전역 설정
+          appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            elevation: 0,
+            titleTextStyle: TextStyle(
               color: Colors.black,
+              fontSize: Sizes.size16 + Sizes.size2,
+              fontWeight: FontWeight.w600,
             ),
           ),
-        ),
-      ),
+          tabBarTheme: TabBarTheme(
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey.shade500,
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
+            ),
+          ),
+          listTileTheme: const ListTileThemeData(
+            iconColor: Colors.black,
+          )),
       //dark일 때 설정
       darkTheme: ThemeData(
         tabBarTheme: const TabBarTheme(
