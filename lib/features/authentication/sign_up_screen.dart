@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/username_screen.dart';
@@ -53,10 +54,13 @@ class SignUpScreen extends StatelessWidget {
                   Gaps.v80,
                   Text(
                     "Sign up for TikTok",
-                    //.copyWith() 전역 설정된 띰에 copyWith를 이용해서 추가 변경도 가능
-                    style: Theme.of(context).textTheme.headlineSmall!.copyWith(
-                          color: Colors.red,
-                        ),
+                    // 직접 구글폰트 적용하기
+                    style: GoogleFonts.abrilFatface(
+                      textStyle: const TextStyle(
+                        fontSize: Sizes.size24,
+                        fontWeight: FontWeight.w700,
+                      ),
+                    ),
                   ),
                   Gaps.v8,
                   const Opacity(
