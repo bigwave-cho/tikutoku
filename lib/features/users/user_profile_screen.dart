@@ -17,7 +17,7 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
         SliverAppBar(
           //floating, pinned, snap  기본값 false
           // floating: true, // 스크롤이 어디있든 스크롤 방향에 따라 나타남
-          // pinned: true, // backgroundColor와 title 보여줌
+          pinned: true, // backgroundColor와 title 보여줌
 
           // floating에 snap을 추가하면 약간만 위로 스크롤해도 appbar가 나옴
           snap: true,
@@ -47,6 +47,22 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
             title: const Text("hello!"),
           ),
         ),
+        // Sliver에 사용가능한 container같은거라고 보면 될듯.
+        /*
+        SliverToBoxAdapter는 일반 Box 위젯 (예: Container, Column, Row 등)을
+         Sliver 위젯으로 변환하는데 사용되는 특수한 위젯입니다.
+          SliverToBoxAdapter는 CustomScrollView와 같은 스크롤 가능한 영역에서 
+          일반 위젯을 사용할 수 있게 해주므로, 이를 사용하면 Sliver에 
+          사용 가능한 Container와 같은 기능을 제공
+         */
+        SliverToBoxAdapter(
+          child: Column(children: const [
+            CircleAvatar(
+              backgroundColor: Colors.red,
+              radius: 20,
+            ),
+          ]),
+        ),
         //ListView
         SliverFixedExtentList(
           delegate: SliverChildBuilderDelegate(
@@ -62,25 +78,71 @@ class _UserProfileScreenState extends State<UserProfileScreen> {
           itemExtent: 100,
         ) //item 높이
         ,
+        SliverPersistentHeader(
+          delegate: CustomDelegate(),
+          // pinned: true, // pinned true주면  sticky됨
+          floating: true,
+        ),
         //GridView
         SliverGrid(
-            delegate: SliverChildBuilderDelegate(
-              childCount: 50,
-              (context, index) => Container(
-                color: Colors.amber[100 * (index % 9)],
-                child: Align(
-                  alignment: Alignment.center,
-                  child: Text("Item $index"),
-                ),
+          delegate: SliverChildBuilderDelegate(
+            childCount: 50,
+            (context, index) => Container(
+              color: Colors.amber[100 * (index % 9)],
+              child: Align(
+                alignment: Alignment.center,
+                child: Text("Item $index"),
               ),
             ),
-            gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
-              maxCrossAxisExtent: 100,
-              mainAxisSpacing: Sizes.size20,
-              crossAxisSpacing: Sizes.size20,
-              childAspectRatio: 1,
-            ))
+          ),
+          gridDelegate: const SliverGridDelegateWithMaxCrossAxisExtent(
+            maxCrossAxisExtent: 100,
+            mainAxisSpacing: Sizes.size20,
+            crossAxisSpacing: Sizes.size20,
+            childAspectRatio: 1,
+          ),
+        ),
       ],
     );
+  }
+}
+
+// SliverPersistentHeaderDelegate을 커스터마이징해서 사용하기
+// 구현해야하는 메서드를 전구눌러서 바로 넣을 수 있음.
+class CustomDelegate extends SliverPersistentHeaderDelegate {
+  // 빌드되어 나오는 위젯
+  @override
+  Widget build(
+      BuildContext context, double shrinkOffset, bool overlapsContent) {
+    return Container(
+      color: Colors.indigo,
+      child: const FractionallySizedBox(
+        // Fracti.. : 부모만큼 영역 차지
+        heightFactor: 1,
+        child: Center(
+          child: Text(
+            "title!!@!@",
+            style: TextStyle(
+              color: Colors.white,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+
+  //최대높이 : pinned되기 전 높이
+  @override
+  double get maxExtent => 150;
+
+  //최소높이 : pinned되고나서 높이
+  @override
+  double get minExtent => 80;
+
+//shouldRebuild : maxExtent,minExtent 등의 값을 변경하고 싶으면 true
+// build에서 완전히 다른 widgetTree를 리턴하려면 false
+  @override
+  bool shouldRebuild(covariant SliverPersistentHeaderDelegate oldDelegate) {
+    return false;
   }
 }
