@@ -12,7 +12,8 @@ import 'package:go_router/go_router.dart';
 
 class SignUpScreen extends StatelessWidget {
   // path를 아래처럼 각 클래스에 static으로 선언해서 사용하면 오타 실수 방지 가능
-  static String routeName = "/";
+  static const String routeURL = "/";
+  static const routeName = "signUp";
 
   const SignUpScreen({super.key});
 
