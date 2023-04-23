@@ -6,6 +6,7 @@ import 'package:tiktok/features/authentication/login_screen.dart';
 import 'package:tiktok/features/authentication/username_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok/utils.dart';
+import 'package:go_router/go_router.dart';
 
 // font_awesome_flutter : 설치
 
@@ -16,13 +17,25 @@ class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
-    // Navigator.of(context).push(
-    //   MaterialPageRoute(
-    //     builder: (context) => const LoginScreen(),
-    //   ),
-    // );
-    final result = await Navigator.of(context).pushNamed(LoginScreen.routeName);
-    debugPrint('$result');
+    /*
+    Navigator 1 
+    pushName : 사용한 이유 -> 웹에서 path에 따라 새로고침해도 해당 스크린에 남아있기 위해..
+    push: path의 변화 없음
+
+    하지만 pushName도 웹에서 완벽하지 않음. 앞으로 가기 지원 X
+
+    Navigator2
+    GoRouter 등은 /user/:username 이런식으로도 url 컨트롤이 가능
+     */
+
+    // GoRouter 패키지가 context 객체를 확장했음.
+    context.push(LoginScreen.routeName);
+
+    /*
+    push & go
+    push : 간단히 웹에 히스토리 쌓듯이 stack을 쌓는 개념 (pop() 가능)
+    go : <a> 태그로 이동하는.. 히스토리 없이  (pop 불가)
+     */
   }
 
   void _onEmailTap(BuildContext context) async {
@@ -70,7 +83,7 @@ class SignUpScreen extends StatelessWidget {
     // print(result); //로그인화면에서 pop에 넣어둔 것이 전달.
     // // 아무것도 없으면 null
 
-    Navigator.of(context).pushNamed(UsernameScreen.routeName);
+    context.push(UsernameScreen.routeName);
   }
 
   @override

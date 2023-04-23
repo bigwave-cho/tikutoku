@@ -1,10 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/authentication/email_screen.dart';
-import 'package:tiktok/features/authentication/login_screen.dart';
-import 'package:tiktok/features/authentication/sign_up_screen.dart';
-import 'package:tiktok/features/authentication/username_screen.dart';
+import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
 
@@ -37,7 +34,9 @@ class TikTokApp extends StatelessWidget {
 //https://rydmike.com/flexcolorscheme/themesplayground-v7/
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    // Navigator 2로 마이그레이션
+    return MaterialApp.router(
+      routerConfig: router,
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
       //themeMode : flutter에게 light/dark 사용 알려줌
@@ -126,16 +125,6 @@ class TikTokApp extends StatelessWidget {
         textTheme: Typography.whiteMountainView,
       ),
       // home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
-
-      // pushNamed  -> routes 기능 사용해보기!(최신 기능)
-      initialRoute: SignUpScreen.routeName,
-      routes: {
-        // path를 아래처럼 각 클래스에 static으로 선언해서 사용하면 오타 실수 방지 가능
-        SignUpScreen.routeName: ((context) => const SignUpScreen()),
-        UsernameScreen.routeName: (context) => const UsernameScreen(),
-        LoginScreen.routeName: (context) => const LoginScreen(),
-        EmailScreen.routeName: ((context) => const EmailScreen()),
-      },
     );
   }
 }

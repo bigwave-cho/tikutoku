@@ -5,14 +5,14 @@ import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/login_form_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok/utils.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
   static String routeName = "/login";
   const LoginScreen({super.key});
 
   void _onSignupTap(BuildContext context) {
-    // pop안에 데이터 넣어놓으면 pop돼서 돌아가는 화면에 데이터가 전달됨.
-    Navigator.of(context).pop();
+    context.pop();
   }
 
   // ! statelessWidget에서는 context를 인자로 넘겨줘야 사용가능.
