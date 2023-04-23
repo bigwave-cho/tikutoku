@@ -12,22 +12,59 @@ import 'package:tiktok/utils.dart';
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
-  void _onLoginTap(BuildContext context) async {
-    final result = await Navigator.of(context).push(
+  //dart는 private public, protected가 없기 때문에 언더바 _ 로 private을 표현 가능
+  void _onLoginTap(BuildContext context) {
+    Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       ),
     );
-    print(result); //로그인화면에서 pop에 넣어둔 것이 전달.
-    // 아무것도 없으면 null
   }
 
-  void _onEmailTap(BuildContext context) {
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const UsernameScreen(),
+  void _onEmailTap(BuildContext context) async {
+    final result = await Navigator.of(context).push(
+      PageRouteBuilder(
+        pageBuilder: ((context, animation, secondaryAnimation) {
+          return const UsernameScreen();
+        }),
+        //child는 pageBuilder가 리턴하는 것
+        transitionsBuilder: (context, animation, secondaryAnimation, child) {
+          final offsetAnimation = Tween(
+            begin: const Offset(0, -1),
+            end: const Offset(0, 0),
+          ).animate(animation);
+
+          final opacityAnimation = Tween(
+            begin: 0.5,
+            end: 1.0,
+          ).animate(animation);
+
+          return SlideTransition(
+            //보통 Animation<double>이지만 이경우는 offset을 원해서
+            //위에 변수하나 만들어줌.
+            position: offsetAnimation,
+            child: ScaleTransition(
+              scale: animation,
+              // 어디서부터 스케일트랜지션 시작할지
+              // alignment: Alignment.bottomRight,
+              child: FadeTransition(
+                opacity: opacityAnimation,
+                child: child,
+              ),
+            ),
+          );
+        },
+        //push할 때 애니메이션
+        transitionDuration: const Duration(seconds: 1),
+
+        //다시 돌아올 때 애니메이션
+        reverseTransitionDuration: const Duration(
+          seconds: 1,
+        ),
       ),
     );
+    print(result); //로그인화면에서 pop에 넣어둔 것이 전달.
+    // 아무것도 없으면 null
   }
 
   @override
