@@ -8,6 +8,7 @@ import 'package:tiktok/features/authentication/widgets/form_button.dart';
 //StatelessWidget의 TextField는 입력만 가능하지 다른 기능을 못하는 상태.
 //따라서 StatefulWidget으로 전환
 class UsernameScreen extends StatefulWidget {
+  static String routeName = "/username";
   const UsernameScreen({super.key});
 
   @override
