@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/login_screen.dart';
-import 'package:tiktok/features/authentication/username_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok/utils.dart';
 import 'package:go_router/go_router.dart';
@@ -71,8 +70,8 @@ class SignUpScreen extends StatelessWidget {
     // );
     // print(result); //로그인화면에서 pop에 넣어둔 것이 전달.
     // // 아무것도 없으면 null
-
-    context.push(UsernameScreen.routeName);
+    //임시로 밑의 path로 가도록 설정.
+    context.push('/users/lynn?show=likes');
   }
 
   @override

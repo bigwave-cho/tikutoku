@@ -27,8 +27,12 @@ final router = GoRouter(
       path: '/users/:username',
       builder: (context, state) {
         final username = state.params['username'];
+
+        //쿼리 가져오는 방법
+        final tab = state.queryParams['show'];
         return UserProfileScreen(
           username: '$username',
+          tab: tab!,
         );
       },
     ),
