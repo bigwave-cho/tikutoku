@@ -17,17 +17,6 @@ class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
-    /*
-    Navigator 1 
-    pushName : 사용한 이유 -> 웹에서 path에 따라 새로고침해도 해당 스크린에 남아있기 위해..
-    push: path의 변화 없음
-
-    하지만 pushName도 웹에서 완벽하지 않음. 앞으로 가기 지원 X
-
-    Navigator2
-    GoRouter 등은 /user/:username 이런식으로도 url 컨트롤이 가능
-     */
-
     // GoRouter 패키지가 context 객체를 확장했음.
     context.push(LoginScreen.routeName);
 
