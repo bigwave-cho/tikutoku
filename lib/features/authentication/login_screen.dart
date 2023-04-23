@@ -8,7 +8,8 @@ import 'package:tiktok/utils.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
-  static String routeName = "/login";
+  static String routeURL = "login";
+  static String routeName = "login";
   const LoginScreen({super.key});
 
   void _onSignupTap(BuildContext context) {

@@ -6,7 +6,8 @@ import 'package:tiktok/features/authentication/widgets/form_button.dart';
 import 'package:go_router/go_router.dart';
 
 class UsernameScreen extends StatefulWidget {
-  static String routeName = "/username";
+  static String routeURL = "username";
+  static String routeName = "username";
   const UsernameScreen({super.key});
 
   @override
@@ -39,16 +40,19 @@ class _UsernameScreen extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-
-    context.push(
+    context.pushNamed(
       EmailScreen.routeName,
-      /* 파라미터를 숨겨서 전달하기
-         nav1과 마찬가지로 만들어둔 arg 객체를 이용
-         해당 class의 username을 바꿔준다음
-         extra에 전달
-      */
       extra: EmailScreenArgs(username: _username),
     );
+    // context.push(
+    //   EmailScreen.routeName,
+    //   /* 파라미터를 숨겨서 전달하기
+    //      nav1과 마찬가지로 만들어둔 arg 객체를 이용
+    //      해당 class의 username을 바꿔준다음
+    //      extra에 전달
+    //   */
+    //   extra: EmailScreenArgs(username: _username),
+    // );
     /*
     ## pushName으로 데이터 넘기기
     1. 메인.dart에 route 설정
