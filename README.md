@@ -1,16 +1,35 @@
 # tiktok
 
-A new Flutter project.
+- IOS 실 기기 세팅
+  https://docs.flutter.dev/get-started/install/macos#deploy-to-ios-devices
 
-## Getting Started
+  1. 개발자 모드 활성화
+  2. ... xcode 이런거 깔려있으니 생략
+  3. Runner.xcworkspace를 xcode로 오픈
+  4. Runner -> Signing&Capabilities -> Team 선택, 번들 아이덴티파이어 설정
+  5. play 버튼(빌드)
+  6. vscode에서 내 폰 선택해서 빌드하면 됨.
 
-This project is a starting point for a Flutter application.
+  //카메라 준비 : flutter pub add camera
+  /\*
 
-A few resources to get you started if this is your first Flutter project:
+- camera
+  https://pub.dev/packages/camera
 
-- [Lab: Write your first Flutter app](https://docs.flutter.dev/get-started/codelab)
-- [Cookbook: Useful Flutter samples](https://docs.flutter.dev/cookbook)
+<key>NSCameraUsageDescription</key>
+<string>your usage description here</string>
+<key>NSMicrophoneUsageDescription</key>
+<string>your usage description here</string>
 
-For help getting started with Flutter development, view the
-[online documentation](https://docs.flutter.dev/), which offers tutorials,
-samples, guidance on mobile development, and a full API reference.
+:PList에 위 코드 추가하면 camera에서 permission을 알아서 물어봐줌
+
+하지만 퍼미션을 더 쉽게 요청할 수 있는 패키지를 추가해서 사용해보자.
+
+- permission
+  https://pub.dev/packages/permission_handler
+
+젠장!! 퍼미션 요청 알림이 안뜬다
+https://velog.io/@manpkh95/Flutter-iOS-%EA%B6%8C%ED%95%9C-%EB%B0%9B%EA%B8%B0-Permission-Handler-Package
+이거 보면서 적용 해결 완료.
+
+\*/
