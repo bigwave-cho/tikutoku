@@ -12,13 +12,14 @@ import 'package:tiktok/utils.dart';
 class SignUpScreen extends StatelessWidget {
   const SignUpScreen({super.key});
 
-  //dart는 private public, protected가 없기 때문에 언더바 _ 로 private을 표현 가능
-  void _onLoginTap(BuildContext context) {
-    Navigator.of(context).push(
+  void _onLoginTap(BuildContext context) async {
+    final result = await Navigator.of(context).push(
       MaterialPageRoute(
         builder: (context) => const LoginScreen(),
       ),
     );
+    print(result); //로그인화면에서 pop에 넣어둔 것이 전달.
+    // 아무것도 없으면 null
   }
 
   void _onEmailTap(BuildContext context) {

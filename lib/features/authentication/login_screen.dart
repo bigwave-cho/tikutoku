@@ -3,7 +3,6 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/login_form_screen.dart';
-import 'package:tiktok/features/authentication/sign_up_screen.dart';
 import 'package:tiktok/features/authentication/widgets/auth_button.dart';
 import 'package:tiktok/utils.dart';
 
@@ -11,11 +10,8 @@ class LoginScreen extends StatelessWidget {
   const LoginScreen({super.key});
 
   void _onSignupTap(BuildContext context) {
-    Navigator.of(context).pop(
-      MaterialPageRoute(
-        builder: (context) => const SignUpScreen(),
-      ),
-    );
+    // pop안에 데이터 넣어놓으면 pop돼서 돌아가는 화면에 데이터가 전달됨.
+    Navigator.of(context).pop();
   }
 
   // ! statelessWidget에서는 context를 인자로 넘겨줘야 사용가능.
