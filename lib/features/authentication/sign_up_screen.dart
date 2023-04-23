@@ -22,6 +22,7 @@ class SignUpScreen extends StatelessWidget {
     //   ),
     // );
     final result = await Navigator.of(context).pushNamed(LoginScreen.routeName);
+    debugPrint('$result');
   }
 
   void _onEmailTap(BuildContext context) async {

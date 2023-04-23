@@ -4,9 +4,6 @@ import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/email_screen.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
 
-//Controller : 코드나 메서드 등으로 TextField와 같은 위젯을 컨트롤 가능하게 해줌.
-//StatelessWidget의 TextField는 입력만 가능하지 다른 기능을 못하는 상태.
-//따라서 StatefulWidget으로 전환
 class UsernameScreen extends StatefulWidget {
   static String routeName = "/username";
   const UsernameScreen({super.key});
@@ -41,11 +38,22 @@ class _UsernameScreen extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    Navigator.of(context).push(
-      MaterialPageRoute(
-        builder: (context) => const EmailScreen(),
-      ),
+    //아래처럼 줄이기도 가능
+    Navigator.pushNamed(
+      context,
+      EmailScreen.routeName,
+      arguments: EmailScreenArgs(username: _username),
     );
+    /*
+    ## pushName으로 데이터 넘기기
+    1. 메인.dart에 route 설정
+    2. 받을 페이지에 args class 만들어 주기
+    3. 넘겨줄 페이지에서 args class에 해당 데이터 넘기기
+    
+    final args = ModalRoute.of(context)!.settings.arguments as EmailScreenArgs;
+    4. 받는 페이지에서는 위처럼 ModalRoute를 이용하여 데이터 받아오기.
+    assertion 없을 경우 object로 args.username 이런식으로 접근 안되니 어설션 해주기.
+     */
   }
 
   @override
