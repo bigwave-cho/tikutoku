@@ -21,7 +21,12 @@ final router = GoRouter(
     ),
     GoRoute(
       path: EmailScreen.routeName,
-      builder: ((context, state) => const EmailScreen()),
+      builder: ((context, state) {
+        // obj라 프로퍼티에 쉽게 접근할 수 있도록 assertion
+        final args = state.extra as EmailScreenArgs;
+
+        return EmailScreen(username: args.username);
+      }),
     ),
     GoRoute(
       path: '/users/:username',

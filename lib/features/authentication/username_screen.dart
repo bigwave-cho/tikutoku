@@ -3,6 +3,7 @@ import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/email_screen.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
+import 'package:go_router/go_router.dart';
 
 class UsernameScreen extends StatefulWidget {
   static String routeName = "/username";
@@ -38,11 +39,15 @@ class _UsernameScreen extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
-    //아래처럼 줄이기도 가능
-    Navigator.pushNamed(
-      context,
+
+    context.push(
       EmailScreen.routeName,
-      arguments: EmailScreenArgs(username: _username),
+      /* 파라미터를 숨겨서 전달하기
+         nav1과 마찬가지로 만들어둔 arg 객체를 이용
+         해당 class의 username을 바꿔준다음
+         extra에 전달
+      */
+      extra: EmailScreenArgs(username: _username),
     );
     /*
     ## pushName으로 데이터 넘기기
