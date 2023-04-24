@@ -16,6 +16,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _permissionDenied = false;
   bool _isSelfieMode = false;
 
+  late FlashMode _flashMode;
+
   late CameraController _cameraController;
 
   Future<void> initCamera() async {
@@ -34,6 +36,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     );
 
     await _cameraController.initialize();
+
+    _flashMode = _cameraController.value.flashMode;
   }
 
   Future<void> initPermissions() async {
@@ -60,6 +64,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   Future<void> _toggleSelfieMode() async {
     _isSelfieMode = !_isSelfieMode;
     await initCamera();
+    setState(() {});
+  }
+
+  Future<void> _setFlashMode(FlashMode newFlashMode) async {
+    await _cameraController.setFlashMode(newFlashMode);
+    _flashMode = newFlashMode;
     setState(() {});
   }
 
@@ -112,12 +122,61 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                         Positioned(
                           top: Sizes.size40,
                           right: Sizes.size20,
-                          child: IconButton(
-                            onPressed: _toggleSelfieMode,
-                            color: Colors.white,
-                            icon: const Icon(
-                              Icons.cameraswitch,
-                            ),
+                          child: Column(
+                            children: [
+                              IconButton(
+                                onPressed: _toggleSelfieMode,
+                                color: Colors.white,
+                                icon: const Icon(
+                                  Icons.cameraswitch,
+                                ),
+                              ),
+                              Gaps.v10,
+                              IconButton(
+                                onPressed: (() => _setFlashMode(
+                                      FlashMode.off,
+                                    )),
+                                color: _flashMode == FlashMode.off
+                                    ? Colors.amber.shade300
+                                    : Colors.white,
+                                icon: const Icon(
+                                  Icons.flash_off_rounded,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: (() => _setFlashMode(
+                                      FlashMode.always,
+                                    )),
+                                color: _flashMode == FlashMode.always
+                                    ? Colors.amber.shade300
+                                    : Colors.white,
+                                icon: const Icon(
+                                  Icons.flash_on_rounded,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: (() => _setFlashMode(
+                                      FlashMode.auto,
+                                    )),
+                                color: _flashMode == FlashMode.auto
+                                    ? Colors.amber.shade300
+                                    : Colors.white,
+                                icon: const Icon(
+                                  Icons.flash_auto_rounded,
+                                ),
+                              ),
+                              IconButton(
+                                onPressed: (() => _setFlashMode(
+                                      FlashMode.torch,
+                                    )),
+                                color: _flashMode == FlashMode.torch
+                                    ? Colors.amber.shade300
+                                    : Colors.white,
+                                icon: const Icon(
+                                  Icons.flashlight_on_rounded,
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],
