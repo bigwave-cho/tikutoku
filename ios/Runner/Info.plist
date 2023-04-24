@@ -51,5 +51,7 @@
 	<string>Camera Permission is needed.</string>
 	<key>NSMicrophoneUsageDescription</key>
 	<string>Mic Permission is needed.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PhotoLibrary Permission is needed.</string>
 </dict>
 </plist>
