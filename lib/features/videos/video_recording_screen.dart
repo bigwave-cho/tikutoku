@@ -14,7 +14,7 @@ class VideoRecordingScreen extends StatefulWidget {
 }
 
 class _VideoRecordingScreenState extends State<VideoRecordingScreen>
-    with TickerProviderStateMixin {
+    with TickerProviderStateMixin, WidgetsBindingObserver {
   bool _hasPermission = false;
   bool _permissionDenied = false;
   bool _isSelfieMode = false;
@@ -66,6 +66,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     await _cameraController.prepareForVideoRecording();
 
     _flashMode = _cameraController.value.flashMode;
+
+    setState(() {});
   }
 
   Future<void> initPermissions() async {
@@ -105,6 +107,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
   void initState() {
     super.initState();
     initPermissions();
+    WidgetsBinding.instance.addObserver(this); // 유저 떠남 감지
+
     _progressAnimationController.addListener(() {
       setState(() {});
     });
@@ -119,6 +123,27 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
         _onStopRecording();
       }
     });
+  }
+
+  bool _prepareDispose = false;
+
+  @override
+  didChangeAppLifecycleState(AppLifecycleState state) {
+    if (!_hasPermission) return; // permission 되지 않은 상황일 때 리턴처리
+    if (!_cameraController.value.isInitialized) return;
+    //컨트롤러 이닛 안됐을 때도 리턴처리
+
+    print(state);
+    // 떠날 때 : inactive paused
+    // 돌아올 때 : inactive resumed
+
+    if (state == AppLifecycleState.inactive) {
+      _prepareDispose = true;
+      _cameraController.dispose();
+    } else if (state == AppLifecycleState.resumed) {
+      _prepareDispose = false;
+      initCamera();
+    }
   }
 
   Future<void> _onStartRecording(TapDownDetails _) async {
@@ -221,7 +246,9 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                       // fit: StackFit.expand,
                       alignment: Alignment.center,
                       children: [
-                        CameraPreview(_cameraController),
+                        //https://nomadcoders.co/tiktok-clone/lectures/4318/issues/4563
+                        // 계속 dispose에러.
+                        if (!_prepareDispose) CameraPreview(_cameraController),
                         Positioned(
                           top: Sizes.size40,
                           right: Sizes.size20,
@@ -345,3 +372,22 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     );
   }
 }
+
+
+/*
+## didChangeAppLifecycleState
+위 메서드는 WidgetsBindingObserver <- 여기에 있어서 mixin해줘야 함.
+시스템이 앱을 백그라운드로 보내거나 다시 돌아올 때 호출하기 때문임.
+
+
+## 어플 지우고 리빌드해보면...
+
+퍼미션 알러트 뜨면서 앱에 에러 발생
+
+camera controller가 initilize 되지 않았을 때 접근하고 있음
+
+app start -> initState : permission 가져옴 -> 컨트롤러 이니셜라이즈
+
+해결방법 : cam controller가 이니셜라이즈 되지 않음을 확인 (didChange...에서 확인)
+
+*/
