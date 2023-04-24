@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/video_preview_screen.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
@@ -54,9 +55,13 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
       imageFormatGroup: ImageFormatGroup.bgra8888,
+      // enableAudio: true, 음소거
     );
 
     await _cameraController.initialize();
+
+    //ios만 설정 필요(오디오 싱크 안맞는 문제 때문에)
+    await _cameraController.prepareForVideoRecording();
 
     _flashMode = _cameraController.value.flashMode;
   }
@@ -114,16 +119,44 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     });
   }
 
-  void _onStartRecording(TapDownDetails _) {
-    print("Start Recording");
+  Future<void> _onStartRecording(TapDownDetails _) async {
+    if (_cameraController.value.isRecordingVideo) return;
+
+    await _cameraController.startVideoRecording();
+
     _buttonAnimationController.forward();
     _progressAnimationController.forward();
   }
 
-  void _onStopRecording() {
-    print("Stop Recording");
+  Future<void> _onStopRecording() async {
+    if (!_cameraController.value.isRecordingVideo) return;
+
     _buttonAnimationController.reverse();
     _progressAnimationController.reset();
+
+    final video = await _cameraController.stopVideoRecording();
+
+    //참고: 사진찍는 경우 _camerController.takePhoto()
+
+    print(video.name);
+    //REC_D81CEDED-390A-4BA2-8A4E-345FB9079482.mp4
+    print(video.path);
+    //...경로/REC_D81CEDED-390A-4BA2-8A4E-345FB9079482.mp4
+
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: ((context) => VidoePreviewScreen(video: video)),
+      ),
+    );
+  }
+
+  @override
+  void dispose() {
+    //항상 컨트롤러는 디스포즈하자 리소스 관리!
+    _progressAnimationController.dispose();
+    _buttonAnimationController.dispose();
+    _cameraController.dispose();
+    super.dispose();
   }
 
   @override
