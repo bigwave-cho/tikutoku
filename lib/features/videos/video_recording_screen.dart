@@ -55,7 +55,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
       imageFormatGroup: ImageFormatGroup.bgra8888,
-      // enableAudio: true, 음소거
+      enableAudio: true,
+      // 음소거
     );
 
     await _cameraController.initialize();
