@@ -128,3 +128,14 @@ class TikTokApp extends StatelessWidget {
     );
   }
 }
+
+/*
+# image picker https://pub.dev/packages/image_picker/install
+ios라면 NSPhotoLibraryUsageDescription
+NSCameraUsageDescription
+NSMicrophoneUsageDescription 을 plist에 기입해야한다.
+
+하지만 camera와 gallery saver 설치하면서 넣어뒀음.
+
+안드는 ㄱㅊ
+ */

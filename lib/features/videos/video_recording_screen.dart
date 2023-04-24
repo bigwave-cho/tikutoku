@@ -1,5 +1,7 @@
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
@@ -7,7 +9,6 @@ import 'package:tiktok/features/videos/video_preview_screen.dart';
 
 class VideoRecordingScreen extends StatefulWidget {
   const VideoRecordingScreen({super.key});
-
   @override
   State<VideoRecordingScreen> createState() => _VideoRecordingScreenState();
 }
@@ -110,7 +111,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
     //addStatusListener : 애니메이션이 끝나는 시점을 알 수 있음.
     _progressAnimationController.addStatusListener((status) {
-      print(status);
+      // print(status);
       // 눌렀을때 forward
       // 완료 completed
       // 끝났을때 dismissed
@@ -139,14 +140,18 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
     //참고: 사진찍는 경우 _camerController.takePhoto()
 
-    print(video.name);
+    // print(video.name);
     //REC_D81CEDED-390A-4BA2-8A4E-345FB9079482.mp4
-    print(video.path);
+    // print(video.path);
     //...경로/REC_D81CEDED-390A-4BA2-8A4E-345FB9079482.mp4
 
+    if (!mounted) return; // async 함수에서 context 쓰는 경고 해결
     Navigator.of(context).push(
       MaterialPageRoute(
-        builder: ((context) => VidoePreviewScreen(video: video)),
+        builder: ((context) => VidoePreviewScreen(
+              video: video,
+              isPicked: false,
+            )),
       ),
     );
   }
@@ -158,6 +163,23 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     _buttonAnimationController.dispose();
     _cameraController.dispose();
     super.dispose();
+  }
+
+  Future<void> _onPickVideoPressed() async {
+    final video = await ImagePicker().pickVideo(
+      source: ImageSource.gallery, // .camera 카메라 어플 실행
+    );
+
+    if (video == null) return;
+    if (!mounted) return; // async 함수에서 context 쓰는 경고 해결
+    Navigator.of(context).push(
+      MaterialPageRoute(
+        builder: ((context) => VidoePreviewScreen(
+              video: video,
+              isPicked: true,
+            )),
+      ),
+    );
   }
 
   @override
@@ -261,36 +283,59 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                           ),
                         ),
                         Positioned(
+                          width: MediaQuery.of(context).size.width,
                           bottom: 10,
-                          child: GestureDetector(
-                            onTapDown: _onStartRecording,
-                            onTapUp: (details) => _onStopRecording(),
-                            child: ScaleTransition(
-                              scale: _buttonAnimation,
-                              child: Stack(
-                                alignment: Alignment.center,
-                                children: [
-                                  SizedBox(
-                                    width: Sizes.size80 + Sizes.size14,
-                                    height: Sizes.size80 + Sizes.size14,
-                                    child: CircularProgressIndicator(
-                                      // 우왕 벨류로 진행도 컨트롤 가능
-                                      value: _progressAnimationController.value,
-                                      color: Colors.red.shade400,
-                                      strokeWidth: Sizes.size6,
-                                    ),
+                          child: Row(
+                            children: [
+                              // 아무것도 없이 빈공간을 차지하게
+                              // 녹화버튼과 이미지버튼을 우측으로 밀어냄
+                              const Spacer(),
+                              GestureDetector(
+                                onTapDown: _onStartRecording,
+                                onTapUp: (details) => _onStopRecording(),
+                                child: ScaleTransition(
+                                  scale: _buttonAnimation,
+                                  child: Stack(
+                                    alignment: Alignment.center,
+                                    children: [
+                                      SizedBox(
+                                        width: Sizes.size80 + Sizes.size14,
+                                        height: Sizes.size80 + Sizes.size14,
+                                        child: CircularProgressIndicator(
+                                          // 우왕 벨류로 진행도 컨트롤 가능
+                                          value: _progressAnimationController
+                                              .value,
+                                          color: Colors.red.shade400,
+                                          strokeWidth: Sizes.size6,
+                                        ),
+                                      ),
+                                      Container(
+                                        width: Sizes.size80,
+                                        height: Sizes.size80,
+                                        decoration: BoxDecoration(
+                                          shape: BoxShape.circle,
+                                          color: Colors.red.shade500,
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                  Container(
-                                    width: Sizes.size80,
-                                    height: Sizes.size80,
-                                    decoration: BoxDecoration(
-                                      shape: BoxShape.circle,
-                                      color: Colors.red.shade500,
-                                    ),
-                                  ),
-                                ],
+                                ),
                               ),
-                            ),
+                              Expanded(
+                                //얘는 Exapaded돼서 우측 차지
+                                child: Container(
+                                  //Container에 넣어서 터치 가능 영역 줄이기
+                                  alignment: Alignment.center,
+                                  child: IconButton(
+                                    onPressed: _onPickVideoPressed,
+                                    icon: const FaIcon(
+                                      FontAwesomeIcons.image,
+                                      color: Colors.white,
+                                    ),
+                                  ),
+                                ),
+                              ),
+                            ],
                           ),
                         ),
                       ],

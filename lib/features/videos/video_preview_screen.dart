@@ -8,10 +8,13 @@ import 'package:video_player/video_player.dart';
 
 class VidoePreviewScreen extends StatefulWidget {
   final XFile video;
+  // 촬영 후 온건지 갤러리에서 선택했는지 여부 확인
+  final bool isPicked;
 
   const VidoePreviewScreen({
     super.key,
     required this.video,
+    required this.isPicked,
   });
 
   @override
@@ -63,12 +66,15 @@ class _VidoePreviewScreenState extends State<VidoePreviewScreen> {
       appBar: AppBar(
         title: const Text("Preview video"),
         actions: [
-          IconButton(
-            onPressed: _saveToGallery,
-            icon: FaIcon(
-              _savedVideo ? FontAwesomeIcons.check : FontAwesomeIcons.download,
+          if (!widget.isPicked)
+            IconButton(
+              onPressed: _saveToGallery,
+              icon: FaIcon(
+                _savedVideo
+                    ? FontAwesomeIcons.check
+                    : FontAwesomeIcons.download,
+              ),
             ),
-          ),
         ],
       ),
       body: _videoPlayerController.value.isInitialized
