@@ -14,8 +14,9 @@ class VideoRecordingScreen extends StatefulWidget {
 class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   bool _hasPermission = false;
   bool _permissionDenied = false;
+  bool _isSelfieMode = false;
 
-  late final CameraController _cameraController;
+  late CameraController _cameraController;
 
   Future<void> initCamera() async {
     final cameras = await availableCameras(); //camera list
@@ -27,7 +28,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
     // des : 카메라리스트 중 하나 골라
     // res : 화질 프리셋
     _cameraController = CameraController(
-      cameras[0],
+      cameras[_isSelfieMode ? 1 : 0],
       ResolutionPreset.ultraHigh,
       imageFormatGroup: ImageFormatGroup.bgra8888,
     );
@@ -45,10 +46,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
 
     final micDenied =
         micPermission.isDenied || micPermission.isPermanentlyDenied;
-    print('hiㄴㄴ');
 
     if (!cameraDenied && !micDenied) {
-      print('hi');
       _hasPermission = true;
       await initCamera();
       setState(() {});
@@ -56,6 +55,12 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
       _permissionDenied = true;
       setState(() {});
     }
+  }
+
+  Future<void> _toggleSelfieMode() async {
+    _isSelfieMode = !_isSelfieMode;
+    await initCamera();
+    setState(() {});
   }
 
   @override
@@ -68,43 +73,56 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: Colors.black,
-      body: SizedBox(
-        width: MediaQuery.of(context).size.width,
-        child: _permissionDenied
-            ? Stack(
-                children: [
-                  Container(
-                    alignment: Alignment.center,
-                    child: const Text(
-                      "camera permission is required.",
-                    ),
-                  ),
-                ],
-              )
-            : !_hasPermission || !_cameraController.value.isInitialized
-                ? Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: const [
-                      Text(
-                        "Initiallizing",
-                        style: TextStyle(
-                          color: Colors.white,
-                          fontSize: Sizes.size20,
-                        ),
+      body: SafeArea(
+        child: SizedBox(
+          width: MediaQuery.of(context).size.width,
+          child: _permissionDenied
+              ? Stack(
+                  children: [
+                    Container(
+                      alignment: Alignment.center,
+                      child: const Text(
+                        "camera permission is required.",
                       ),
-                      Gaps.v20,
-                      CircularProgressIndicator.adaptive(),
-                    ],
-                  )
-                : Stack(
-                    // 꽉채우려고 넣었는데 비율이 안맞게 늘어남.. ㅋㅋ
-                    // fit: StackFit.expand,
-                    alignment: Alignment.center,
-                    children: [
-                      CameraPreview(_cameraController),
-                    ],
-                  ),
+                    ),
+                  ],
+                )
+              : !_hasPermission || !_cameraController.value.isInitialized
+                  ? Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: const [
+                        Text(
+                          "Initiallizing",
+                          style: TextStyle(
+                            color: Colors.white,
+                            fontSize: Sizes.size20,
+                          ),
+                        ),
+                        Gaps.v20,
+                        CircularProgressIndicator.adaptive(),
+                      ],
+                    )
+                  : Stack(
+                      // 꽉채우려고 넣었는데 비율이 안맞게 늘어남.. ㅋㅋ
+                      // fit: StackFit.expand,
+                      alignment: Alignment.center,
+                      children: [
+                        CameraPreview(_cameraController),
+                        Positioned(
+                          top: Sizes.size40,
+                          right: Sizes.size20,
+                          child: IconButton(
+                            onPressed: _toggleSelfieMode,
+                            color: Colors.white,
+                            icon: const Icon(
+                              Icons.cameraswitch,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+        ),
       ),
     );
   }
