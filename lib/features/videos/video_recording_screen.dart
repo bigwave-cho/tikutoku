@@ -11,11 +11,32 @@ class VideoRecordingScreen extends StatefulWidget {
   State<VideoRecordingScreen> createState() => _VideoRecordingScreenState();
 }
 
-class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
+class _VideoRecordingScreenState extends State<VideoRecordingScreen>
+    with TickerProviderStateMixin {
   bool _hasPermission = false;
   bool _permissionDenied = false;
   bool _isSelfieMode = false;
 
+  late final AnimationController _buttonAnimationController =
+      AnimationController(
+    vsync: this,
+    duration: const Duration(
+      milliseconds: 300,
+    ),
+  );
+
+  late final Animation<double> _buttonAnimation = Tween(
+    begin: 1.0,
+    end: 1.3,
+  ).animate(_buttonAnimationController);
+
+  late final AnimationController _progressAnimationController =
+      AnimationController(
+    vsync: this,
+    duration: const Duration(seconds: 10),
+    lowerBound: 0.0,
+    upperBound: 1.0,
+  );
   late FlashMode _flashMode;
 
   late CameraController _cameraController;
@@ -77,6 +98,32 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
   void initState() {
     super.initState();
     initPermissions();
+    _progressAnimationController.addListener(() {
+      setState(() {});
+    });
+
+    //addStatusListener : 애니메이션이 끝나는 시점을 알 수 있음.
+    _progressAnimationController.addStatusListener((status) {
+      print(status);
+      // 눌렀을때 forward
+      // 완료 completed
+      // 끝났을때 dismissed
+      if (status == AnimationStatus.completed) {
+        _onStopRecording();
+      }
+    });
+  }
+
+  void _onStartRecording(TapDownDetails _) {
+    print("Start Recording");
+    _buttonAnimationController.forward();
+    _progressAnimationController.forward();
+  }
+
+  void _onStopRecording() {
+    print("Stop Recording");
+    _buttonAnimationController.reverse();
+    _progressAnimationController.reset();
   }
 
   @override
@@ -177,6 +224,39 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen> {
                                 ),
                               ),
                             ],
+                          ),
+                        ),
+                        Positioned(
+                          bottom: 10,
+                          child: GestureDetector(
+                            onTapDown: _onStartRecording,
+                            onTapUp: (details) => _onStopRecording(),
+                            child: ScaleTransition(
+                              scale: _buttonAnimation,
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  SizedBox(
+                                    width: Sizes.size80 + Sizes.size14,
+                                    height: Sizes.size80 + Sizes.size14,
+                                    child: CircularProgressIndicator(
+                                      // 우왕 벨류로 진행도 컨트롤 가능
+                                      value: _progressAnimationController.value,
+                                      color: Colors.red.shade400,
+                                      strokeWidth: Sizes.size6,
+                                    ),
+                                  ),
+                                  Container(
+                                    width: Sizes.size80,
+                                    height: Sizes.size80,
+                                    decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.red.shade500,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
                           ),
                         ),
                       ],
