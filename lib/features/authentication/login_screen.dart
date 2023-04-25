@@ -8,7 +8,7 @@ import 'package:tiktok/utils.dart';
 import 'package:go_router/go_router.dart';
 
 class LoginScreen extends StatelessWidget {
-  static String routeURL = "login";
+  static String routeURL = "/login";
   static String routeName = "login";
   const LoginScreen({super.key});
 
@@ -16,7 +16,6 @@ class LoginScreen extends StatelessWidget {
     context.pop();
   }
 
-  // ! statelessWidget에서는 context를 인자로 넘겨줘야 사용가능.
   void _onEmailLoginTap(BuildContext context) {
     Navigator.of(context).push(
       MaterialPageRoute(

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
+import 'package:go_router/go_router.dart';
 import 'package:tiktok/features/onboarding/interests_screen.dart';
 
 class BirthdayScreen extends StatefulWidget {
@@ -31,12 +32,9 @@ class _BirthdayScreen extends State<BirthdayScreen> {
   }
 
   void _onNextTap() {
-    Navigator.of(context).pushAndRemoveUntil(
-      MaterialPageRoute(
-        builder: (context) => const InterestsScreen(),
-      ),
-      ((route) => false), //마찬가지.
-    );
+    // path가 /onboarding으로 바뀌어야 하니까 (GoRoute)
+    //pushReplacementNamed : removeUntil.. 같은 기능 (뒤로가기 못하게)
+    context.pushReplacementNamed(InterestsScreen.routeName);
   }
 
   void _setTextFieldDate(DateTime date) {

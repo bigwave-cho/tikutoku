@@ -11,15 +11,13 @@ import 'package:go_router/go_router.dart';
 // font_awesome_flutter : 설치
 
 class SignUpScreen extends StatelessWidget {
-  // path를 아래처럼 각 클래스에 static으로 선언해서 사용하면 오타 실수 방지 가능
   static const String routeURL = "/";
   static const routeName = "signup";
 
   const SignUpScreen({super.key});
 
   void _onLoginTap(BuildContext context) async {
-    // GoRouter 패키지가 context 객체를 확장했음.
-    context.push(LoginScreen.routeName);
+    context.pushNamed(LoginScreen.routeName);
 
     /*
     push & go
@@ -74,8 +72,12 @@ class SignUpScreen extends StatelessWidget {
     // // 아무것도 없으면 null
     //임시로 밑의 path로 가도록 설정.
 
-    // context.pushNamed(UsernameScreen.routeName);
-    context.push('/${UsernameScreen.routeURL}');
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: ((context) => const UsernameScreen()),
+      ),
+    );
   }
 
   @override
@@ -133,7 +135,7 @@ class SignUpScreen extends StatelessWidget {
                       onTap: () => _onEmailTap(context),
                       child: const AuthButton(
                         icon: FaIcon(FontAwesomeIcons.user),
-                        text: 'Use phone or email',
+                        text: 'Use email & password',
                       ),
                     ),
                     Gaps.v16,
