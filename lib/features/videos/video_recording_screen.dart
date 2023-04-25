@@ -43,6 +43,10 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
   late CameraController _cameraController;
 
+  double _maxZoomLevel = 1;
+  double _minZoomLevel = 1;
+  double _zoomLevel = 1;
+
   Future<void> initCamera() async {
     final cameras = await availableCameras(); //camera list
 
@@ -58,8 +62,11 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       imageFormatGroup: ImageFormatGroup.bgra8888,
       enableAudio: true,
       // 음소거
-    );
 
+      //# camerAwesome 추천함. camera패키지보다 기능도 많고 쉬움
+
+      // _cameraController.getMaxZoomLevel(); .setZoomLevel.. 이용
+    );
     await _cameraController.initialize();
 
     //ios만 설정 필요(오디오 싱크 안맞는 문제 때문에)
@@ -67,6 +74,8 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
 
     _flashMode = _cameraController.value.flashMode;
 
+    _maxZoomLevel = await _cameraController.getMaxZoomLevel();
+    _minZoomLevel = await _cameraController.getMinZoomLevel();
     setState(() {});
   }
 
@@ -207,6 +216,24 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     );
   }
 
+  void _controllZoomLevel(DragUpdateDetails details) {
+    final deltaY = details.delta.dy;
+    if (deltaY >= 0) {
+      if (_zoomLevel <= _minZoomLevel) return;
+      _zoomLevel = double.parse(_zoomLevel.toStringAsFixed(2)) - 0.05;
+    } else if (deltaY < 0) {
+      if (_zoomLevel >= _maxZoomLevel) return;
+      _zoomLevel = double.parse(_zoomLevel.toStringAsFixed(2)) + 0.05;
+    }
+    print(_zoomLevel);
+
+    _cameraController.setZoomLevel(_zoomLevel);
+
+    setState(() {});
+  }
+
+  final String _last = '';
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -318,8 +345,10 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                               // 녹화버튼과 이미지버튼을 우측으로 밀어냄
                               const Spacer(),
                               GestureDetector(
+                                onVerticalDragUpdate: _controllZoomLevel,
                                 onTapDown: _onStartRecording,
                                 onTapUp: (details) => _onStopRecording(),
+                                onLongPressEnd: (details) => _onStopRecording(),
                                 child: ScaleTransition(
                                   scale: _buttonAnimation,
                                   child: Stack(
@@ -372,7 +401,6 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     );
   }
 }
-
 
 /*
 ## didChangeAppLifecycleState
