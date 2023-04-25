@@ -279,8 +279,15 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
                         //https://nomadcoders.co/tiktok-clone/lectures/4318/issues/4563
                         // 계속 dispose에러.
                         if (!_prepareDispose) CameraPreview(_cameraController),
+                        const Positioned(
+                          top: Sizes.size20,
+                          left: Sizes.size20,
+                          child: CloseButton(
+                            color: Colors.white,
+                          ),
+                        ),
                         Positioned(
-                          top: Sizes.size40,
+                          top: Sizes.size20,
                           right: Sizes.size20,
                           child: Column(
                             children: [

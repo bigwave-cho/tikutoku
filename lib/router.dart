@@ -1,3 +1,4 @@
+import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:tiktok/common/widgets/main_navigation/main_navigation_screen.dart';
 import 'package:tiktok/features/authentication/login_screen.dart';
@@ -74,7 +75,21 @@ final router = GoRouter(
     GoRoute(
       name: VideoRecordingScreen.routeName,
       path: VideoRecordingScreen.routeURL,
-      builder: ((context, state) => const VideoRecordingScreen()),
+      // GoRoute로 페이지 트랜지션 주기
+      pageBuilder: (context, state) => CustomTransitionPage(
+        transitionDuration: const Duration(milliseconds: 150),
+        child: const VideoRecordingScreen(),
+        transitionsBuilder: ((context, animation, secondaryAnimation, child) {
+          final position = Tween(
+            begin: const Offset(0, 1),
+            end: Offset.zero,
+          ).animate(animation);
+          return SlideTransition(
+            position: position,
+            child: child, // child = VidoeRecordingScreen
+          );
+        }),
+      ),
     ),
   ],
 );
