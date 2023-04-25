@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
@@ -35,7 +36,8 @@ class TikTokApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // Navigator 2로 마이그레이션
-    return MaterialApp.router(
+    return VideoConfig(
+        child: MaterialApp.router(
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
@@ -125,7 +127,7 @@ class TikTokApp extends StatelessWidget {
         textTheme: Typography.whiteMountainView,
       ),
       // home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
-    );
+    ));
   }
 }
 

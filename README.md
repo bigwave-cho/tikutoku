@@ -32,4 +32,11 @@
 https://velog.io/@manpkh95/Flutter-iOS-%EA%B6%8C%ED%95%9C-%EB%B0%9B%EA%B8%B0-Permission-Handler-Package
 이거 보면서 적용 해결 완료.
 
-\*/
+## inherited Widget
+
+inherited Widget에서 정의한 값들은 다른 하위 트리 위젯으로 드릴링 할 필요 없이
+바로 접근할 수 있다.
+
+1. inherited widget 만들기
+2. 머터리얼앱 감싸기
+3. of함수 만들어서 해당 InheritedWidget class의 값에 접근하기.

@@ -1,6 +1,7 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/videos/widgets/video_button.dart';
@@ -180,6 +181,13 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
+    //dependOnInheritedWidgetOfExactType :context에게 VideoConfig라는 타입의 inheritedWidget을 요청
+    /*final vidoeConfig = context.dependOnInheritedWidgetOfExactType<VideoConfig>();
+      이렇게 해도 되지만 VidoeConfig에 이것을 반환하는 메서드를 넣자.
+    */
+    //context가 위젯트리에서 이 위젯의 위치를 의미한다는 것이 이런거구나..
+    VideoConfig.of(context).autoMute;
+
     return VisibilityDetector(
       key: Key("${widget.index}"),
       onVisibilityChanged: _onVisibilityChanged,
@@ -224,7 +232,19 @@ class _VideoPostState extends State<VideoPost>
               ),
             ),
           ),
-          // Positioned : Stack내에서 원하는 곳에 위치 가능
+          Positioned(
+            left: 20,
+            top: 40,
+            child: IconButton(
+              onPressed: () {},
+              icon: FaIcon(
+                VideoConfig.of(context).autoMute
+                    ? FontAwesomeIcons.volumeOff
+                    : FontAwesomeIcons.volumeHigh,
+                color: Colors.white,
+              ),
+            ),
+          ),
           Positioned(
             bottom: 20,
             left: 10,
