@@ -3,6 +3,7 @@ import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
 import 'package:tiktok/features/onboarding/interests_screen.dart';
+import 'package:go_router/go_router.dart';
 
 class LoginFormScreen extends StatefulWidget {
   const LoginFormScreen({super.key});
@@ -26,13 +27,10 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
       if (_formKey.currentState!.validate()) {
         // 유효성 통과하면 해당 값 save
         _formKey.currentState!.save();
-        Navigator.of(context).pushAndRemoveUntil(
-          MaterialPageRoute(
-            builder: (context) => const InterestsScreen(),
-          ),
-          ((route) => false),
-          // true를 반환하면 이전 페이지 지우지 않음
-        );
+
+        // 뒤로가기 못하도록. 아래 메서드와 비슷.
+        //context.pushReplacementNamed(InterestsScreen.routeName);
+        context.goNamed(InterestsScreen.routeName);
       }
     }
     /*
