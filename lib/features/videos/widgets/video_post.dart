@@ -185,8 +185,12 @@ class _VideoPostState extends State<VideoPost>
     /*final vidoeConfig = context.dependOnInheritedWidgetOfExactType<VideoConfig>();
       이렇게 해도 되지만 VidoeConfig에 이것을 반환하는 메서드를 넣자.
     */
-    //context가 위젯트리에서 이 위젯의 위치를 의미한다는 것이 이런거구나..
-    VideoConfig.of(context).autoMute;
+
+    //정정 : context는 위젯트리를 의미
+    //dependOnInheritedWidgetOfExactType : 얘가 위젯트리에서 VideoConfig라고 명명된 위젯을 찾아
+    // 우리가 어디서든 값에 접근할 수 있게 된다.
+    // Theme.of(context)의 Theme을 찾아들어가봐도 config만든거랑 똑같이 생김.
+    VideoConfigData.of(context).autoMute;
 
     return VisibilityDetector(
       key: Key("${widget.index}"),
@@ -236,13 +240,13 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              onPressed: () {},
               icon: FaIcon(
-                VideoConfig.of(context).autoMute
+                VideoConfigData.of(context).autoMute
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
+              onPressed: VideoConfigData.of(context).toggleMuted,
             ),
           ),
           Positioned(

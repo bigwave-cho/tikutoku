@@ -35,7 +35,8 @@ class TikTokApp extends StatelessWidget {
 //https://rydmike.com/flexcolorscheme/themesplayground-v7/
   @override
   Widget build(BuildContext context) {
-    // Navigator 2로 마이그레이션
+    // 변경된 VideoConfig는 VideoConfigData(inherited)를 리빌드하는 위젯
+    // 토글함수가 실행돼서 얘를 리빌드하면 당연히 child에 해당하는 모든 위젯들도 rebuild
     return VideoConfig(
         child: MaterialApp.router(
       routerConfig: router,
