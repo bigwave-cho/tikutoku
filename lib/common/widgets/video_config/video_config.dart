@@ -22,6 +22,20 @@ import 'package:flutter/widgets.dart';
   -> 해당 함수가 호출되고 최상위 위젯인 stf 위젯이 리빌드됨
   -> 새 값 전달받은 Inherited Widget도 새로 반환됨
   -> 자식 위젯들도 리빌드 되면서 Inherited Widget의 새 값을 반영하게 됨.
+
+  이해를 위한 재요약
+  StatefulWidget(VideoConfig)가 최상위에서 InheritedWidget(VideoConfigData)의 인스턴스를 생성.
+  이 때 StatefulWidget은 autoMute와 toggleMuted()함수를 이 인스턴스에 전달하여 생성.
+  결국 VideoConfigDate.of(context).toggleMuted() <- 를 호출하면 이 인스턴스의 toggleMuted는 
+  StatefulWidget의 해당 함수를 참조하고 있는 상태(동일 레퍼런스값 공유)이므로 결과적으로 Stateful위젯의
+  메서드가 호출이 되고 그 메서드에는 setState 함수가 있어 위젯을 리빌드한다.
+  결국 최상위 위젯이 리빌드 되면서 다시 업데이트된 값을 가진 InheritedWidget을 빌드하여 반환하게 되고
+  당연히 자식 위젯들도 리빌드되면서 새로 만들어진 InheritedWidget을 참조하여 업데이트된 값을 받아볼 수 있는것이다.
+
+  이렇게 하지 않으면 최상위 위젯에서 프롭 드릴링으로 일일이 전달해줘야한다.
+
+  하지만 이것도 최선이 아니고 너무 장황하다. Flutter 팀에서도 Provider를 사용하라고 권장하고 있고
+  Provider나 상태관리패키지를 사용할 때 이것이 기본이 되므로 이해하고 있는 것이 중요하다.
    */
 
 class VideoConfigData extends InheritedWidget {
