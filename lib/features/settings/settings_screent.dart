@@ -1,6 +1,7 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_config.dart';
 import 'package:tiktok/common/widgets/video_config/video_config.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -47,14 +48,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           // ValueNotifier를 리슨하는 추가 방법
           ValueListenableBuilder(
-            valueListenable: videoConfig,
+            valueListenable: darkModeconfig,
             builder: (context, value, child) => SwitchListTile.adaptive(
               value: value,
               onChanged: (value) {
-                videoConfig.value = !videoConfig.value;
+                darkModeconfig.value = !darkModeconfig.value;
               },
-              title: const Text('Auto Mute videos'),
-              subtitle: const Text("videos will be muted by default."),
+              title: const Text('DarkModeEnabled'),
+              subtitle: const Text("Deep Dark Fantasy."),
             ),
           ),
           // 플랫폼에 따라 스이치 변경
