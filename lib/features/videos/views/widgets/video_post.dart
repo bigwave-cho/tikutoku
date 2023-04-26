@@ -1,14 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
-import 'package:tiktok/features/videos/widgets/video_button.dart';
-import 'package:tiktok/features/videos/widgets/vidoe_comments.dart';
+import 'package:tiktok/features/videos/views/widgets/video_button.dart';
+import 'package:tiktok/features/videos/views/widgets/vidoe_comments.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:provider/provider.dart';
 
 class VideoPost extends StatefulWidget {
   final Function onVideoFinished;
@@ -230,16 +228,14 @@ class _VideoPostState extends State<VideoPost>
             left: 20,
             top: 40,
             child: IconButton(
-              icon: FaIcon(
+              icon: const FaIcon(
                 // 프로바이더 값을 사용할 때.
-                context.watch<VideoConfig>().isMuted
+                false
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: () {
-                context.read<VideoConfig>().toggleIsMuted();
-              },
+              onPressed: () {},
             ),
           ),
           Positioned(

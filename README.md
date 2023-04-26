@@ -40,3 +40,23 @@ inherited Widget에서 정의한 값들은 다른 하위 트리 위젯으로 드
 1. inherited widget 만들기
 2. 머터리얼앱 감싸기
 3. of함수 만들어서 해당 InheritedWidget class의 값에 접근하기.
+
+## MVVM 아키텍쳐
+
+아래 것들 대문자 따서.
+
+Model : autoMuted, autePlay.. 데이터
+ViewModel : View와 model 연결부
+View : 사용자가 볼 수 있고 이벤트를 받는 부분 - screen
+
+EX)
+View - videoTimeline
+VM - API에 데이터 요청
+Model - 모델을 구성해서 Viewmodel에게
+뷰모델은 다시 뷰에게 전달
+
+뷰에서 이벤트가 발생하면
+뷰모델이 이벤트를 받아 모델을 이용해 데이터를 수정/요청하여
+다시 화면에 반영되도록 뷰에 돌려줌
+
+"+" Repository : 데이터 저장(firebase와 통신)
