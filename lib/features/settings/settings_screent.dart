@@ -1,9 +1,8 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_config.dart';
-import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -32,25 +31,28 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           SwitchListTile.adaptive(
-            value: context.watch<VideoConfig>().isMuted,
+            //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
+            value: context.watch<PlaybackConfigViewModel>().muted,
             onChanged: (value) {
-              context.read<VideoConfig>().toggleIsMuted();
+              value:
+              context.read<PlaybackConfigViewModel>().setMuted(value);
+              // read는 한번만 호출하고 끝
             },
             title: const Text('Enable Muted'),
             subtitle: const Text("Silent keep you calm."),
           ),
-          // ValueNotifier를 리슨하는 추가 방법
-          ValueListenableBuilder(
-            valueListenable: darkModeconfig,
-            builder: (context, value, child) => SwitchListTile.adaptive(
-              value: value,
-              onChanged: (value) {
-                darkModeconfig.value = !darkModeconfig.value;
-              },
-              title: const Text('DarkModeEnabled'),
-              subtitle: const Text("Deep Dark Fantasy."),
-            ),
+          SwitchListTile.adaptive(
+            //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
+            value: context.watch<PlaybackConfigViewModel>().autoplay,
+            onChanged: (value) {
+              value:
+              context.read<PlaybackConfigViewModel>().setAutoplay(value);
+              // read는 한번만 호출하고 끝
+            },
+            title: const Text('Enable Muted'),
+            subtitle: const Text("Silent keep you calm."),
           ),
+
           // 플랫폼에 따라 스이치 변경
           Switch.adaptive(
               value: _notifications, onChanged: _onNotificationsChanged),

@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
-import 'package:tiktok/common/widgets/video_config/video_config.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/repos/video_playback_config_repo.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
@@ -24,7 +26,19 @@ void main() async {
     SystemUiOverlayStyle.dark, //폰 시스템(상태창 ui 흰색 검은색)
   );
 
-  runApp(const TikTokApp());
+  //SharedPreferences의 인스턴스를 불러와서 레포 생성
+  final preferences = await SharedPreferences.getInstance();
+  final repository = VideoPlaybackConfigRepository(preferences);
+
+  // TikTokApp을 멀티프로바이더로 감싸고 repository를 뷰모델에 전달
+  // -> 디스크에 있는 데이터로 뷰모델이 초기화된다.
+  runApp(
+    MultiProvider(providers: [
+      ChangeNotifierProvider(
+        create: (context) => PlaybackConfigViewModel(repository),
+      ),
+    ], child: const TikTokApp()),
+  );
 }
 
 class TikTokApp extends StatelessWidget {
@@ -32,102 +46,94 @@ class TikTokApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiProvider(
-      providers: [
-        ChangeNotifierProvider(
-          create: ((context) => VideoConfig()),
-        ),
-      ],
-      child: MaterialApp.router(
-        routerConfig: router,
-        debugShowCheckedModeBanner: false,
-        title: 'TikTok',
-        themeMode:
-            false ? ThemeMode.dark : ThemeMode.light, // system: 시스템설정 따라가기
-        theme: ThemeData(
-            //Materail2에서 3적용하는 방법
-            useMaterial3: true,
-            textTheme: Typography.blackMountainView,
-            //A Material Design text theme with dark glyphs based on San Francisco.
-            // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
-            brightness: Brightness.light,
-
-            // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
-            splashColor: Colors.transparent,
-            // 길게 누를때 나오는 컬러
-            highlightColor: Colors.transparent,
-            //모든 scaffold 배경 디폴트 정하기
-            scaffoldBackgroundColor: Colors.white,
-
-            //일관성을 원한다면 한번에 적용
-            bottomAppBarTheme: BottomAppBarTheme(
-              color: Colors.grey.shade50,
-            ),
-            primaryColor: const Color(0xFFE9435A),
-            textSelectionTheme: const TextSelectionThemeData(
-              //cursorColor 설정
-              cursorColor: Color(0xffe9435a),
-              //텍스트 선택시 칼라 설정
-              // selectionColor: Color(0xffe9435a),
-            ),
-            // appbar 전역 설정
-            appBarTheme: const AppBarTheme(
-              foregroundColor: Colors.black,
-              backgroundColor: Colors.white,
-              surfaceTintColor: Colors.white,
-              elevation: 0,
-              titleTextStyle: TextStyle(
-                color: Colors.black,
-                fontSize: Sizes.size16 + Sizes.size2,
-                fontWeight: FontWeight.w600,
-              ),
-            ),
-            tabBarTheme: TabBarTheme(
-              labelColor: Colors.black,
-              unselectedLabelColor: Colors.grey.shade500,
-              indicator: const UnderlineTabIndicator(
-                borderSide: BorderSide(
-                  color: Colors.black,
-                ),
-              ),
-            ),
-            listTileTheme: const ListTileThemeData(
-              iconColor: Colors.black,
-            )),
-        //dark일 때 설정
-        darkTheme: ThemeData(
+    return MaterialApp.router(
+      routerConfig: router,
+      debugShowCheckedModeBanner: false,
+      title: 'TikTok',
+      themeMode: false ? ThemeMode.dark : ThemeMode.light, // system: 시스템설정 따라가기
+      theme: ThemeData(
+          //Materail2에서 3적용하는 방법
           useMaterial3: true,
-          tabBarTheme: const TabBarTheme(
-            indicator: UnderlineTabIndicator(
-              borderSide: BorderSide(
-                color: Colors.white,
-              ),
-            ),
-          ),
-          textSelectionTheme: const TextSelectionThemeData(
-            cursorColor: Color(0xffe9435a),
-          ),
+          textTheme: Typography.blackMountainView,
+          //A Material Design text theme with dark glyphs based on San Francisco.
+          // Typography는 font와 color만을 제공하지 size나 기타 속성들은 건드리지 않음
+          brightness: Brightness.light,
 
-          //전역 주고
+          // 머터리얼 클릭이벤트 시 나오는 물결 이벤트 색 투명하게해서 안보이게!
+          splashColor: Colors.transparent,
+          // 길게 누를때 나오는 컬러
+          highlightColor: Colors.transparent,
+          //모든 scaffold 배경 디폴트 정하기
+          scaffoldBackgroundColor: Colors.white,
+
+          //일관성을 원한다면 한번에 적용
           bottomAppBarTheme: BottomAppBarTheme(
-            color: Colors.grey.shade900,
+            color: Colors.grey.shade50,
           ),
-          appBarTheme: AppBarTheme(
-            titleTextStyle: const TextStyle(
-              color: Colors.white,
+          primaryColor: const Color(0xFFE9435A),
+          textSelectionTheme: const TextSelectionThemeData(
+            //cursorColor 설정
+            cursorColor: Color(0xffe9435a),
+            //텍스트 선택시 칼라 설정
+            // selectionColor: Color(0xffe9435a),
+          ),
+          // appbar 전역 설정
+          appBarTheme: const AppBarTheme(
+            foregroundColor: Colors.black,
+            backgroundColor: Colors.white,
+            surfaceTintColor: Colors.white,
+            elevation: 0,
+            titleTextStyle: TextStyle(
+              color: Colors.black,
               fontSize: Sizes.size16 + Sizes.size2,
               fontWeight: FontWeight.w600,
             ),
-            surfaceTintColor: Colors.grey.shade900,
-            backgroundColor: Colors.grey.shade900,
           ),
-          scaffoldBackgroundColor: Colors.black,
-          primaryColor: const Color(0xFFE9435A),
-          brightness: Brightness.dark,
-          textTheme: Typography.whiteMountainView,
+          tabBarTheme: TabBarTheme(
+            labelColor: Colors.black,
+            unselectedLabelColor: Colors.grey.shade500,
+            indicator: const UnderlineTabIndicator(
+              borderSide: BorderSide(
+                color: Colors.black,
+              ),
+            ),
+          ),
+          listTileTheme: const ListTileThemeData(
+            iconColor: Colors.black,
+          )),
+      //dark일 때 설정
+      darkTheme: ThemeData(
+        useMaterial3: true,
+        tabBarTheme: const TabBarTheme(
+          indicator: UnderlineTabIndicator(
+            borderSide: BorderSide(
+              color: Colors.white,
+            ),
+          ),
         ),
-        // home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
+        textSelectionTheme: const TextSelectionThemeData(
+          cursorColor: Color(0xffe9435a),
+        ),
+
+        //전역 주고
+        bottomAppBarTheme: BottomAppBarTheme(
+          color: Colors.grey.shade900,
+        ),
+        appBarTheme: AppBarTheme(
+          titleTextStyle: const TextStyle(
+            color: Colors.white,
+            fontSize: Sizes.size16 + Sizes.size2,
+            fontWeight: FontWeight.w600,
+          ),
+          surfaceTintColor: Colors.grey.shade900,
+          backgroundColor: Colors.grey.shade900,
+        ),
+        scaffoldBackgroundColor: Colors.black,
+        primaryColor: const Color(0xFFE9435A),
+        brightness: Brightness.dark,
+        textTheme: Typography.whiteMountainView,
       ),
+      // home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
     );
   }
 }
