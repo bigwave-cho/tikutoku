@@ -46,6 +46,8 @@ dependencies:
   image_picker: 0.8.6+1
   provider: 6.0.5
   shared_preferences: ^2.1.0
+  flutter_riverpod: ^2.3.1
+  #riverpod_annotation: ^2.0.1 코드알아서 생성해주는데 이번엔 끄고 시작
 
 dev_dependencies:
   flutter_test:

@@ -60,3 +60,12 @@ Model - 모델을 구성해서 Viewmodel에게
 다시 화면에 반영되도록 뷰에 돌려줌
 
 "+" Repository : 데이터 저장(firebase와 통신)
+
+## Riverpod
+
+https://docs-v2.riverpod.dev/docs/getting_started
+
+Riverpod은 Provider의 애너그램이다.
+프로바이더의 업글 버전
+
+리버팟은 위젯트리 밖에서도 존재할 수 있어 플러터와 독립적 관계이다.
