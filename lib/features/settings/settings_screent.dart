@@ -29,14 +29,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
-          //이거 추천함. ㅋ
-          SwitchListTile.adaptive(
-            value: VideoConfigData.of(context).autoMute,
-            onChanged: (value) {
-              VideoConfigData.of(context).toggleMuted();
-            },
-            title: const Text('Auto Mute videos'),
-            subtitle: const Text("videos will be muted by default."),
+          // 방법1. AnimatedBuilder
+          // 공식문서에 CangeNotifier와 AnimatedBuilder를 함께 쓰라고 돼있음.
+          // 안쓰면 변화 안일어남
+          // 또한 AnimatedBuilder로 감싸져있는 부분만 리빌드 됨.
+          // inherited with statefulWidget은 앱 전체를 리빌드했었음.
+          AnimatedBuilder(
+            animation: videoConfig,
+            builder: (context, child) => SwitchListTile.adaptive(
+              value: videoConfig.autoMute,
+              onChanged: (value) {
+                videoConfig.toggleAutoMute();
+              },
+              title: const Text('Auto Mute videos'),
+              subtitle: const Text("videos will be muted by default."),
+            ),
           ),
           // 플랫폼에 따라 스이치 변경
           Switch.adaptive(

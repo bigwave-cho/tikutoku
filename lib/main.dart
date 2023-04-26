@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
@@ -37,8 +36,7 @@ class TikTokApp extends StatelessWidget {
   Widget build(BuildContext context) {
     // 변경된 VideoConfig는 VideoConfigData(inherited)를 리빌드하는 위젯
     // 토글함수가 실행돼서 얘를 리빌드하면 당연히 child에 해당하는 모든 위젯들도 rebuild
-    return VideoConfig(
-        child: MaterialApp.router(
+    return MaterialApp.router(
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
@@ -128,7 +126,7 @@ class TikTokApp extends StatelessWidget {
         textTheme: Typography.whiteMountainView,
       ),
       // home: const SignUpScreen(), //로그인 생략위해 잠시 바꿈.
-    ));
+    );
   }
 }
 

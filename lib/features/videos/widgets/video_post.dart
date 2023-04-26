@@ -36,6 +36,8 @@ class _VideoPostState extends State<VideoPost>
   bool _isPaused = false;
   bool _isMuted = false;
 
+  bool _autoMute = videoConfig.autoMute;
+
   late final AnimationController _animationController;
 
   void _onVideoChange() {
@@ -88,6 +90,13 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
+
+    // 방법2. addListener
+    videoConfig.addListener(() {
+      setState(() {
+        _autoMute = videoConfig.autoMute;
+      });
+    });
 
     if (_hashtagText.length > 10) {
       _isLognerTen = true;
@@ -181,17 +190,6 @@ class _VideoPostState extends State<VideoPost>
 
   @override
   Widget build(BuildContext context) {
-    //dependOnInheritedWidgetOfExactType :context에게 VideoConfig라는 타입의 inheritedWidget을 요청
-    /*final vidoeConfig = context.dependOnInheritedWidgetOfExactType<VideoConfig>();
-      이렇게 해도 되지만 VidoeConfig에 이것을 반환하는 메서드를 넣자.
-    */
-
-    //정정 : context는 위젯트리를 의미
-    //dependOnInheritedWidgetOfExactType : 얘가 위젯트리에서 VideoConfig라고 명명된 위젯을 찾아
-    // 우리가 어디서든 값에 접근할 수 있게 된다.
-    // Theme.of(context)의 Theme을 찾아들어가봐도 config만든거랑 똑같이 생김.
-    VideoConfigData.of(context).autoMute;
-
     return VisibilityDetector(
       key: Key("${widget.index}"),
       onVisibilityChanged: _onVisibilityChanged,
@@ -241,12 +239,14 @@ class _VideoPostState extends State<VideoPost>
             top: 40,
             child: IconButton(
               icon: FaIcon(
-                VideoConfigData.of(context).autoMute
+                _autoMute
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
-              onPressed: VideoConfigData.of(context).toggleMuted,
+              onPressed: () {
+                videoConfig.toggleAutoMute();
+              },
             ),
           ),
           Positioned(
