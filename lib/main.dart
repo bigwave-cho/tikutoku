@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
+import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_repo.dart';
+import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_vm.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/videos/repos/video_playback_config_repo.dart';
 import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
@@ -29,15 +31,22 @@ void main() async {
   //SharedPreferences의 인스턴스를 불러와서 레포 생성
   final preferences = await SharedPreferences.getInstance();
   final repository = VideoPlaybackConfigRepository(preferences);
+  final darkRepository = DarkModeRepository(preferences);
 
   // TikTokApp을 멀티프로바이더로 감싸고 repository를 뷰모델에 전달
   // -> 디스크에 있는 데이터로 뷰모델이 초기화된다.
   runApp(
-    MultiProvider(providers: [
-      ChangeNotifierProvider(
-        create: (context) => PlaybackConfigViewModel(repository),
-      ),
-    ], child: const TikTokApp()),
+    MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: (context) => PlaybackConfigViewModel(repository),
+        ),
+        ChangeNotifierProvider(
+          create: (context) => DarkModeViewModel(darkRepository),
+        ),
+      ],
+      child: const TikTokApp(),
+    ),
   );
 }
 
@@ -50,7 +59,9 @@ class TikTokApp extends StatelessWidget {
       routerConfig: router,
       debugShowCheckedModeBanner: false,
       title: 'TikTok',
-      themeMode: false ? ThemeMode.dark : ThemeMode.light, // system: 시스템설정 따라가기
+      themeMode: context.watch<DarkModeViewModel>().isDark
+          ? ThemeMode.dark
+          : ThemeMode.light, // system: 시스템설정 따라가기
       theme: ThemeData(
           //Materail2에서 3적용하는 방법
           useMaterial3: true,

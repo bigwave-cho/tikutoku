@@ -2,6 +2,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:provider/provider.dart';
+import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_vm.dart';
 import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
 class SettingsScreen extends StatefulWidget {
@@ -48,6 +49,15 @@ class _SettingsScreenState extends State<SettingsScreen> {
               value:
               context.read<PlaybackConfigViewModel>().setAutoplay(value);
               // read는 한번만 호출하고 끝
+            },
+            title: const Text('Enable Autoplay'),
+            subtitle: const Text("Enable it, if you want autoplay!"),
+          ),
+          SwitchListTile.adaptive(
+            value: context.watch<DarkModeViewModel>().isDark,
+            onChanged: (value) {
+              value:
+              context.read<DarkModeViewModel>().setIsDark(value);
             },
             title: const Text('Enable Autoplay'),
             subtitle: const Text("Enable it, if you want autoplay!"),
