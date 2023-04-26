@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_config.dart';
+import 'package:provider/provider.dart';
+import 'package:tiktok/common/widgets/video_config/video_config.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
@@ -29,24 +30,20 @@ void main() async {
 class TikTokApp extends StatelessWidget {
   const TikTokApp({super.key});
 
-// ## flex_color_scheme
-// theme 적용 한방에 끝내주는 패키지
-//https://pub.dev/packages/flex_color_scheme
-//https://rydmike.com/flexcolorscheme/themesplayground-v7/
   @override
   Widget build(BuildContext context) {
-    // 변경된 VideoConfig는 VideoConfigData(inherited)를 리빌드하는 위젯
-    // 토글함수가 실행돼서 얘를 리빌드하면 당연히 child에 해당하는 모든 위젯들도 rebuild
-    return ValueListenableBuilder(
-      valueListenable: darkModeconfig,
-      builder: (context, value, child) => MaterialApp.router(
+    return MultiProvider(
+      providers: [
+        ChangeNotifierProvider(
+          create: ((context) => VideoConfig()),
+        ),
+      ],
+      child: MaterialApp.router(
         routerConfig: router,
         debugShowCheckedModeBanner: false,
         title: 'TikTok',
-        //themeMode : flutter에게 light/dark 사용 알려줌
         themeMode:
-            value ? ThemeMode.dark : ThemeMode.light, // system: 시스템설정 따라가기
-
+            false ? ThemeMode.dark : ThemeMode.light, // system: 시스템설정 따라가기
         theme: ThemeData(
             //Materail2에서 3적용하는 방법
             useMaterial3: true,

@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_config.dart';
 import 'package:tiktok/common/widgets/video_config/video_config.dart';
+import 'package:provider/provider.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -30,21 +31,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
       ),
       body: ListView(
         children: [
-          // 방법1. AnimatedBuilder
-          // 공식문서에 CangeNotifier와 AnimatedBuilder를 함께 쓰라고 돼있음.
-          // 안쓰면 변화 안일어남
-          // 또한 AnimatedBuilder로 감싸져있는 부분만 리빌드 됨.
-          // inherited with statefulWidget은 앱 전체를 리빌드했었음.
-          AnimatedBuilder(
-            animation: videoConfig,
-            builder: (context, child) => SwitchListTile.adaptive(
-              value: videoConfig.value,
-              onChanged: (value) {
-                videoConfig.value = !videoConfig.value;
-              },
-              title: const Text('Auto Mute videos'),
-              subtitle: const Text("videos will be muted by default."),
-            ),
+          SwitchListTile.adaptive(
+            value: context.watch<VideoConfig>().isMuted,
+            onChanged: (value) {
+              context.read<VideoConfig>().toggleIsMuted();
+            },
+            title: const Text('Enable Muted'),
+            subtitle: const Text("Silent keep you calm."),
           ),
           // ValueNotifier를 리슨하는 추가 방법
           ValueListenableBuilder(
