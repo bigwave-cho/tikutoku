@@ -36,7 +36,7 @@ class _VideoPostState extends State<VideoPost>
   bool _isPaused = false;
   bool _isMuted = false;
 
-  bool _autoMute = videoConfig.autoMute;
+  bool _autoMute = videoConfig.value;
 
   late final AnimationController _animationController;
 
@@ -94,7 +94,7 @@ class _VideoPostState extends State<VideoPost>
     // 방법2. addListener
     videoConfig.addListener(() {
       setState(() {
-        _autoMute = videoConfig.autoMute;
+        _autoMute = videoConfig.value;
       });
     });
 
@@ -245,7 +245,7 @@ class _VideoPostState extends State<VideoPost>
                 color: Colors.white,
               ),
               onPressed: () {
-                videoConfig.toggleAutoMute();
+                videoConfig.value = !videoConfig.value;
               },
             ),
           ),

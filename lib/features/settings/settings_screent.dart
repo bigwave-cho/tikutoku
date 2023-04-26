@@ -37,9 +37,21 @@ class _SettingsScreenState extends State<SettingsScreen> {
           AnimatedBuilder(
             animation: videoConfig,
             builder: (context, child) => SwitchListTile.adaptive(
-              value: videoConfig.autoMute,
+              value: videoConfig.value,
               onChanged: (value) {
-                videoConfig.toggleAutoMute();
+                videoConfig.value = !videoConfig.value;
+              },
+              title: const Text('Auto Mute videos'),
+              subtitle: const Text("videos will be muted by default."),
+            ),
+          ),
+          // ValueNotifier를 리슨하는 추가 방법
+          ValueListenableBuilder(
+            valueListenable: videoConfig,
+            builder: (context, value, child) => SwitchListTile.adaptive(
+              value: value,
+              onChanged: (value) {
+                videoConfig.value = !videoConfig.value;
               },
               title: const Text('Auto Mute videos'),
               subtitle: const Text("videos will be muted by default."),
