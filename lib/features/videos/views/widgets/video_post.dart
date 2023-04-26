@@ -89,6 +89,9 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
+    final bool autoplay = context.read<PlaybackConfigViewModel>().autoplay;
+    _isPaused = autoplay ? false : true;
+    _isMuted = context.read<PlaybackConfigViewModel>().muted;
 
     context
         .read<PlaybackConfigViewModel>()
@@ -248,15 +251,13 @@ class _VideoPostState extends State<VideoPost>
             top: 40,
             child: IconButton(
               icon: FaIcon(
-                context.watch<PlaybackConfigViewModel>().muted
+                _isMuted
                     ? FontAwesomeIcons.volumeOff
                     : FontAwesomeIcons.volumeHigh,
                 color: Colors.white,
               ),
               onPressed: () {
-                context
-                    .read<PlaybackConfigViewModel>()
-                    .setMuted(!context.read<PlaybackConfigViewModel>().muted);
+                _onToggleVolume(context);
               },
             ),
           ),
@@ -316,15 +317,6 @@ class _VideoPostState extends State<VideoPost>
               right: 10,
               child: Column(
                 children: [
-                  GestureDetector(
-                    onTap: () => _onToggleVolume(context),
-                    child: VideoButton(
-                      icon: _isMuted
-                          ? FontAwesomeIcons.volumeXmark
-                          : FontAwesomeIcons.volumeHigh,
-                      text: _isMuted ? "Muted" : "Enjoy!",
-                    ),
-                  ),
                   Gaps.v20,
                   //CircleAvatar : 원 모양 아바타
                   const CircleAvatar(

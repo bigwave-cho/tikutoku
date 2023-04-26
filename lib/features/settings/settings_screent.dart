@@ -39,7 +39,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
               // read는 한번만 호출하고 끝
             },
             title: const Text('Enable Muted'),
-            subtitle: const Text("Silent keep you calm."),
+            subtitle: const Text("Muted keep you calm."),
           ),
           SwitchListTile.adaptive(
             //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
@@ -49,8 +49,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
               context.read<PlaybackConfigViewModel>().setAutoplay(value);
               // read는 한번만 호출하고 끝
             },
-            title: const Text('Enable Muted'),
-            subtitle: const Text("Silent keep you calm."),
+            title: const Text('Enable Autoplay'),
+            subtitle: const Text("Enable it, if you want autoplay!"),
           ),
 
           // 플랫폼에 따라 스이치 변경
