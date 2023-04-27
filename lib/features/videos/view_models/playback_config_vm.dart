@@ -24,7 +24,10 @@ class PlaybackConfigViewModel extends Notifier<PlaybackConfigModel> {
       부분 수정을 하게 되면 불변성을 깨뜨리는 것이며 이는 사이드이펙트를 발생시켜 안정성을 감소시킴.
       그래서 Model그대로 value를 할당하여 인스턴스를 만들어 기존의 인스턴스를 덮어씌우는 것!
      */
-    state = PlaybackConfigModel(muted: state.muted, autoplay: value);
+    state = PlaybackConfigModel(
+      muted: state.muted,
+      autoplay: value,
+    );
   }
 
   @override

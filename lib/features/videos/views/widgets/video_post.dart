@@ -1,5 +1,6 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
@@ -8,9 +9,10 @@ import 'package:tiktok/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok/features/videos/views/widgets/vidoe_comments.dart';
 import 'package:video_player/video_player.dart';
 import 'package:visibility_detector/visibility_detector.dart';
-import 'package:provider/provider.dart';
 
-class VideoPost extends StatefulWidget {
+//ConsumerStatefulWidget은 ref를 build 뿐만 아니라 아무데서나 사용 가능
+// stateful은 context를 어디서든 stateless는 build에서만 접근가능한 것과 비슷
+class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
   final int index;
   const VideoPost({
@@ -20,10 +22,10 @@ class VideoPost extends StatefulWidget {
   });
 
   @override
-  State<VideoPost> createState() => _VideoPostState();
+  VideoPostState createState() => VideoPostState();
 }
 
-class _VideoPostState extends State<VideoPost>
+class VideoPostState extends ConsumerState<VideoPost>
     with SingleTickerProviderStateMixin {
   final VideoPlayerController _videoPlayerController =
       VideoPlayerController.asset("assets/videos/video.mov");
@@ -66,6 +68,13 @@ class _VideoPostState extends State<VideoPost>
       _isMuted = true;
     }
 
+    _isMuted = ref.read(playbackConfigProivder).muted;
+    if (ref.read(playbackConfigProivder).muted) {
+      await _videoPlayerController.setVolume(0);
+    } else {
+      await _videoPlayerController.setVolume(1);
+    }
+
     _videoPlayerController.addListener(() {
       _onVideoChange();
     });
@@ -104,8 +113,7 @@ class _VideoPostState extends State<VideoPost>
 
   void _onPlaybackConfigChanged() {
     if (!mounted) return; // 영상을 넘겼을때 이전 영상들이 죽으면 아래 코드들이 실행 X
-    const muted = false;
-    if (muted) {
+    if (ref.read(playbackConfigProivder).muted) {
       _videoPlayerController.setVolume(0);
     } else {
       _videoPlayerController.setVolume(1);
@@ -128,7 +136,7 @@ class _VideoPostState extends State<VideoPost>
     if (info.visibleFraction == 1 &&
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      if (false) {
+      if (ref.read(playbackConfigProivder).autoplay) {
         _videoPlayerController.play();
       }
     } // 일시정지 후 새로고침하면 재생버튼이 보이는채로 영상재생되는 버그 수정
