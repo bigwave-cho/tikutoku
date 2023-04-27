@@ -1,25 +1,17 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
-class SettingsScreen extends StatefulWidget {
+class SettingsScreen extends ConsumerWidget {
   const SettingsScreen({super.key});
 
+  //business logic은 이론상 따로 둬야함. 삭제 and stf -> stl
+  // Riverpod의 두 가지 위젯 : ConsumerWidget / ConsumerStatefulWidget
   @override
-  State<SettingsScreen> createState() => _SettingsScreenState();
-}
-
-class _SettingsScreenState extends State<SettingsScreen> {
-  bool _notifications = false;
-  void _onNotificationsChanged(bool? newValue) {
-    if (newValue == null) return;
-    setState(() {
-      _notifications = newValue;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
+    //ref : Provider를 읽거나 수정 레퍼런스
     return Scaffold(
       appBar: AppBar(
         title: const Text(
@@ -29,54 +21,30 @@ class _SettingsScreenState extends State<SettingsScreen> {
       body: ListView(
         children: [
           SwitchListTile.adaptive(
-            //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
-            value: false,
-            onChanged: (value) {
-              // read는 한번만 호출하고 끝
-            },
+            //ref.watch(provider).값
+            value: ref.watch(playbackConfigProivder).muted,
+            onChanged: (value) =>
+                ref.read(playbackConfigProivder.notifier).setMuted(value),
             title: const Text('Enable Muted'),
             subtitle: const Text("Muted keep you calm."),
           ),
           SwitchListTile.adaptive(
             //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
-            value: false,
-            onChanged: (value) {},
+            value: ref.watch(playbackConfigProivder).autoplay,
+            onChanged: (value) =>
+                ref.read(playbackConfigProivder.notifier).setAutoplay(value),
+            /*
+              ref.read(playbackConfigProivder) : provider에 접근
+              ref.read(playbackConfigProivder.notifire) : notifire class(VM)에 접근
+              */
             title: const Text('Enable Autoplay'),
             subtitle: const Text("Enable it, if you want autoplay!"),
           ),
           SwitchListTile.adaptive(
             value: false,
             onChanged: (value) {},
-            title: const Text('Enable Autoplay'),
-            subtitle: const Text("Enable it, if you want autoplay!"),
-          ),
-
-          // 플랫폼에 따라 스이치 변경
-          Switch.adaptive(
-              value: _notifications, onChanged: _onNotificationsChanged),
-          //애플스타일 스위치
-          CupertinoSwitch(
-              value: _notifications, onChanged: _onNotificationsChanged),
-          SwitchListTile(
-              value: _notifications,
-              onChanged: _onNotificationsChanged,
-              title: const Text("Enable notifications")),
-          //안드스타일 스위치
-          Switch(value: _notifications, onChanged: _onNotificationsChanged),
-          //그냥 체크박스
-          Checkbox(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-          ),
-          //리스트타일 스타일 체크박스
-          CheckboxListTile(
-            value: _notifications,
-            onChanged: _onNotificationsChanged,
-            title: const Text(
-              "Enable notifications",
-            ),
-            checkColor: Colors.white,
-            activeColor: Colors.black,
+            title: const Text('Enable Darkmode'),
+            subtitle: const Text("dark dark!!"),
           ),
           ListTile(
             onTap: () async {
