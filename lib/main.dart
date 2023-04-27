@@ -5,6 +5,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_repo.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/videos/repos/video_playback_config_repo.dart';
+import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
@@ -34,8 +35,14 @@ void main() async {
   // TikTokApp을 멀티프로바이더로 감싸고 repository를 뷰모델에 전달
   // -> 디스크에 있는 데이터로 뷰모델이 초기화된다.
   runApp(
-    const ProviderScope(
-      child: TikTokApp(),
+    ProviderScope(
+      // SharePrefereces 작동을 기다리고 만들어진 repository를 전달해서 덮어씌움.(overrides)
+      overrides: [
+        playbackConfigProivder.overrideWith(
+          () => PlaybackConfigViewModel(repository),
+        ),
+      ],
+      child: const TikTokApp(),
     ),
   );
 }

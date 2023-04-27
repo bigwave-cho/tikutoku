@@ -1,33 +1,51 @@
-import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/features/videos/models/playback_config_model.dart';
 import 'package:tiktok/features/videos/repos/video_playback_config_repo.dart';
 
-class PlaybackConfigViewModel extends ChangeNotifier {
-// 이 뷰모델을 통하지 않고 모델이나 레포에 접근해서 값 수정하는 것을 막기 위해서 private로 선언
+// Notifier<model> : Notifier에게 model데이터를 반환할 것이라고 알려줌
+class PlaybackConfigViewModel extends Notifier<PlaybackConfigModel> {
   final VideoPlaybackConfigRepository _repository;
 
-  late final PlaybackConfigModel _model = PlaybackConfigModel(
-      muted: _repository.isMuted(), autoplay: _repository.isAutoplay());
-
-  // 이 constructor는 class의 인스턴스가 생성될 때 실행되며
-  // 생성되고나서 변수들을 이니셜라이즈한다.
   PlaybackConfigViewModel(this._repository);
 
-// 오직 뷰모델을 통해서만 값에 접근가능하도록 메서드를 선언.
-// 아래 get/set메서드들에만 접근할 수 있다.
-  bool get muted => _model.muted;
-
-  bool get autoplay => _model.autoplay;
-
   void setMuted(bool value) {
-    _repository.setMuted(value); // 레포에게는 디스크에 값 업뎃하라고 하고
-    _model.muted = value; // model의 값도 업데이트
-    notifyListeners();
+    _repository.setMuted(value);
+    state = PlaybackConfigModel(muted: value, autoplay: state.autoplay);
   }
 
   void setAutoplay(bool value) {
     _repository.setAutoplay(value);
-    _model.autoplay = value;
-    notifyListeners();
+    // state.autoplay = value;
+    /* 위와 같이 state의 값을 직접 수정하지 않고 덮어씌우는 이유
+      Riverpod은 불변성(immutable)을 중요시함.
+      부분 수정을 하게 되면 불변성을 깨뜨리는 것이며 이는 사이드이펙트를 발생시켜 안정성을 감소시킴.
+      그래서 Model그대로 value를 할당하여 인스턴스를 만들어 기존의 인스턴스를 덮어씌우는 것!
+     */
+    state = PlaybackConfigModel(muted: state.muted, autoplay: value);
+  }
+
+  @override
+  build() {
+    // 사용자가 초기에 볼 데이터를 이니셜라이즈해서 state로 반환
+    // state로 데이터에 접근, 수정이 가능
+    return PlaybackConfigModel(
+      muted: _repository.isMuted(),
+      autoplay: _repository.isAutoplay(),
+    );
   }
 }
+
+//마지막 NotifireProvider<뷰모델, 모델>
+// final playbackConfigProivder =
+//     NotifierProvider<PlaybackConfigViewModel, PlaybackConfigModel>(
+//   () => PlaybackConfigViewModel(),
+// );
+
+//현 상황 : repository가 필요함.. SharePreferences는 메인에서 await으로 작동
+//그래서 이번만 throw error해서 해결해보자
+// 일단은 playbackConfigProvider가 에러 반환하도록 해놓고
+// 메인에서 override해서 뷰모델을 반환할 것
+final playbackConfigProivder =
+    NotifierProvider<PlaybackConfigViewModel, PlaybackConfigModel>(
+  () => throw UnimplementedError(),
+);
