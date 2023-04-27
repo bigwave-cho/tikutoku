@@ -89,13 +89,6 @@ class _VideoPostState extends State<VideoPost>
       value: 1.5,
       duration: _animationDuration,
     );
-    final bool autoplay = context.read<PlaybackConfigViewModel>().autoplay;
-    _isPaused = autoplay ? false : true;
-    _isMuted = context.read<PlaybackConfigViewModel>().muted;
-
-    context
-        .read<PlaybackConfigViewModel>()
-        .addListener(_onPlaybackConfigChanged);
 
     if (_hashtagText.length > 10) {
       _isLognerTen = true;
@@ -111,7 +104,7 @@ class _VideoPostState extends State<VideoPost>
 
   void _onPlaybackConfigChanged() {
     if (!mounted) return; // 영상을 넘겼을때 이전 영상들이 죽으면 아래 코드들이 실행 X
-    final muted = context.read<PlaybackConfigViewModel>().muted;
+    const muted = false;
     if (muted) {
       _videoPlayerController.setVolume(0);
     } else {
@@ -135,8 +128,7 @@ class _VideoPostState extends State<VideoPost>
     if (info.visibleFraction == 1 &&
         !_isPaused &&
         !_videoPlayerController.value.isPlaying) {
-      final autoplay = context.read<PlaybackConfigViewModel>().autoplay;
-      if (autoplay) {
+      if (false) {
         _videoPlayerController.play();
       }
     } // 일시정지 후 새로고침하면 재생버튼이 보이는채로 영상재생되는 버그 수정

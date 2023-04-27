@@ -1,9 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
-import 'package:provider/provider.dart';
-import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_vm.dart';
-import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 
 class SettingsScreen extends StatefulWidget {
   const SettingsScreen({super.key});
@@ -33,10 +30,8 @@ class _SettingsScreenState extends State<SettingsScreen> {
         children: [
           SwitchListTile.adaptive(
             //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
-            value: context.watch<PlaybackConfigViewModel>().muted,
+            value: false,
             onChanged: (value) {
-              value:
-              context.read<PlaybackConfigViewModel>().setMuted(value);
               // read는 한번만 호출하고 끝
             },
             title: const Text('Enable Muted'),
@@ -44,21 +39,14 @@ class _SettingsScreenState extends State<SettingsScreen> {
           ),
           SwitchListTile.adaptive(
             //watch는 값을 리슨하고 있다가 변화가 있으면 리빌드
-            value: context.watch<PlaybackConfigViewModel>().autoplay,
-            onChanged: (value) {
-              value:
-              context.read<PlaybackConfigViewModel>().setAutoplay(value);
-              // read는 한번만 호출하고 끝
-            },
+            value: false,
+            onChanged: (value) {},
             title: const Text('Enable Autoplay'),
             subtitle: const Text("Enable it, if you want autoplay!"),
           ),
           SwitchListTile.adaptive(
-            value: context.watch<DarkModeViewModel>().isDark,
-            onChanged: (value) {
-              value:
-              context.read<DarkModeViewModel>().setIsDark(value);
-            },
+            value: false,
+            onChanged: (value) {},
             title: const Text('Enable Autoplay'),
             subtitle: const Text("Enable it, if you want autoplay!"),
           ),
