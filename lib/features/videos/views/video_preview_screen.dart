@@ -2,11 +2,13 @@ import 'dart:io';
 
 import 'package:camera/camera.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gallery_saver/gallery_saver.dart';
+import 'package:tiktok/features/videos/view_models/timeline_view_model.dart';
 import 'package:video_player/video_player.dart';
 
-class VidoePreviewScreen extends StatefulWidget {
+class VidoePreviewScreen extends ConsumerStatefulWidget {
   final XFile video;
   // 촬영 후 온건지 갤러리에서 선택했는지 여부 확인
   final bool isPicked;
@@ -18,10 +20,10 @@ class VidoePreviewScreen extends StatefulWidget {
   });
 
   @override
-  State<VidoePreviewScreen> createState() => _VidoePreviewScreenState();
+  VidoePreviewScreenState createState() => VidoePreviewScreenState();
 }
 
-class _VidoePreviewScreenState extends State<VidoePreviewScreen> {
+class VidoePreviewScreenState extends ConsumerState<VidoePreviewScreen> {
   bool _savedVideo = false;
 
   late final VideoPlayerController _videoPlayerController;
@@ -41,6 +43,7 @@ class _VidoePreviewScreenState extends State<VidoePreviewScreen> {
   void initState() {
     super.initState();
     _initVideo();
+    _videoPlayerController.setVolume(0);
   }
 
   @override
@@ -59,6 +62,10 @@ class _VidoePreviewScreenState extends State<VidoePreviewScreen> {
     setState(() {});
   }
 
+  void _onUploadPressed() {
+    ref.read(timelineProvider.notifier).uploadVideo();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +82,16 @@ class _VidoePreviewScreenState extends State<VidoePreviewScreen> {
                     : FontAwesomeIcons.download,
               ),
             ),
+          IconButton(
+            onPressed: ref.watch(timelineProvider).isLoading
+                ? () {}
+                : _onUploadPressed,
+            icon: ref.watch(timelineProvider).isLoading // 로딩상태인지 접근 bool 반환
+                ? const CircularProgressIndicator.adaptive()
+                : const FaIcon(
+                    FontAwesomeIcons.cloudArrowUp,
+                  ),
+          ),
         ],
       ),
       body: _videoPlayerController.value.isInitialized
