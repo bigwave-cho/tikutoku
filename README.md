@@ -69,3 +69,16 @@ Riverpod은 Provider의 애너그램이다.
 프로바이더의 업글 버전
 
 리버팟은 위젯트리 밖에서도 존재할 수 있어 플러터와 독립적 관계이다.
+
+## firebase CLI
+
+flutterfire configure로 파베 연동을 하고
+
+필요한 파베 플러그인..(ex. firestore)을 설치하고 나면
+
+flutterfire configure를 다시 실행 시켜서 업뎃 확인
+
+https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android
+
+/_이 명령어를 실행하면 Flutter 앱의 Firebase 구성이 최신 상태인지 확인하고
+Android의 Crashlytics 및 Performance Monitoring의 경우 필수 Gradle 플러그인이 앱에 추가됩니다. _/

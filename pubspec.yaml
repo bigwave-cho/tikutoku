@@ -47,6 +47,10 @@ dependencies:
   provider: 6.0.5
   shared_preferences: ^2.1.0
   flutter_riverpod: ^2.3.1
+  firebase_core: ^2.10.0
+  firebase_auth: ^4.4.2
+  cloud_firestore: ^4.5.3
+  firebase_storage: ^11.1.1
   #riverpod_annotation: ^2.0.1 코드알아서 생성해주는데 이번엔 끄고 시작
 
 dev_dependencies:

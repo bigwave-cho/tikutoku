@@ -1,3 +1,4 @@
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
@@ -6,6 +7,7 @@ import 'package:tiktok/common/widgets/dark_mode_config/dark_mode_repo.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/videos/repos/video_playback_config_repo.dart';
 import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
+import 'package:tiktok/firebase_options.dart';
 import 'package:tiktok/router.dart';
 //# 프로젝트 구조를 스크린별로가 아닌 기능 별로 나누고
 // 그 아래에 스크린과 공용 위젯으로 분리
@@ -13,6 +15,10 @@ import 'package:tiktok/router.dart';
 void main() async {
   // 프레임워크와 플러터엔진을 연결(runApp)하기 전에 모든 것들을 초기화..
   WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
 
   // 방법2: 아예 고정시켜버리기.
   await SystemChrome.setPreferredOrientations(
