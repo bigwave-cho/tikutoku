@@ -38,7 +38,7 @@ final routerProvider = Provider((ref) {
    */
 
   // StreamProvider를 watch해서 상태 변화를 감지
-  ref.watch(authState);
+  // ref.watch(authState);
 
   return GoRouter(
     // 임시로 리로드해도 바로 home으로 가게 설정
