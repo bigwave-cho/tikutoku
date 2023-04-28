@@ -1,6 +1,10 @@
 import 'dart:async';
+import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok/features/onboarding/interests_screen.dart';
+import 'package:tiktok/utils.dart';
+import 'package:go_router/go_router.dart';
 
 // https://docs-v2.riverpod.dev/docs/providers/notifier_provider
 class SignUpViewModel extends AsyncNotifier<void> {
@@ -11,7 +15,7 @@ class SignUpViewModel extends AsyncNotifier<void> {
     _authRepo = ref.read(authRepo);
   }
 
-  Future<void> signUp() async {
+  Future<void> signUp(BuildContext context) async {
     state = const AsyncValue.loading(); //로딩중
 
     // signupForm의 데이터를 받아와서.
@@ -30,6 +34,11 @@ class SignUpViewModel extends AsyncNotifier<void> {
         form["password"],
       ),
     );
+    if (state.hasError) {
+      showFirebaseErrorSnack(context, state.error);
+    } else {
+      context.goNamed(InterestsScreen.routeName);
+    }
   }
 }
 

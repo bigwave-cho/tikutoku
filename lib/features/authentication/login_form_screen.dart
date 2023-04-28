@@ -1,18 +1,18 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/authentication/view_models/login_view_model.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
-import 'package:tiktok/features/onboarding/interests_screen.dart';
-import 'package:go_router/go_router.dart';
 
-class LoginFormScreen extends StatefulWidget {
+class LoginFormScreen extends ConsumerStatefulWidget {
   const LoginFormScreen({super.key});
 
   @override
-  State<LoginFormScreen> createState() => _LoginFormScreenState();
+  ConsumerState<LoginFormScreen> createState() => _LoginFormScreenState();
 }
 
-class _LoginFormScreenState extends State<LoginFormScreen> {
+class _LoginFormScreenState extends ConsumerState<LoginFormScreen> {
   //globalKey
   // 고유식별자, 폼의 state에 접근, 폼의 메서드 실행
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
@@ -30,7 +30,12 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
 
         // 뒤로가기 못하도록. 아래 메서드와 비슷.
         //context.pushReplacementNamed(InterestsScreen.routeName);
-        context.goNamed(InterestsScreen.routeName);
+        // context.goNamed(InterestsScreen.routeName);
+        ref.read(loginProvider.notifier).login(
+              formData["email"]!,
+              formData["password"]!,
+              context,
+            );
       }
     }
     /*
@@ -92,7 +97,9 @@ class _LoginFormScreenState extends State<LoginFormScreen> {
                 // FormButton의 text는 next고정이라 다른 버튼 커스터마이징 해볼까?
                 GestureDetector(
                   onTap: _onSubmitTap,
-                  child: const FormButton(disabled: false),
+                  child: FormButton(
+                    disabled: ref.watch(loginProvider).isLoading,
+                  ),
                 ),
                 // customized button. (그냥 formbutton 써야겠다.)
                 /*
