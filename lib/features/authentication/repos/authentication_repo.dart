@@ -13,10 +13,25 @@ class AuthenticationRepository {
   //현재 유저 정보
   User? get user => _firebaseAuth.currentUser;
 
+  Stream<User?> authStateChanges() => _firebaseAuth.authStateChanges();
+
   Future<void> signUp(String email, String password) async {
     await _firebaseAuth.createUserWithEmailAndPassword(
         email: email, password: password);
   }
+
+  Future<void> signOut() async {
+    await _firebaseAuth.signOut();
+  }
 }
 
 final authRepo = Provider((ref) => AuthenticationRepository());
+
+//StreamProvider : stream을 프로바이드
+final authState = StreamProvider(
+  (ref) {
+    final repo = ref.read(authRepo);
+    // authStateChange를 프로바이드 하는데 얘는 서버와 계속 연결되는 Stream.
+    return repo.authStateChanges();
+  },
+);

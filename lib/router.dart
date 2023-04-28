@@ -29,6 +29,17 @@ final routerProvider = Provider((ref) {
   // 참고: 다른 프로바이더도 접근 가능
   // ex) ref.read(timelineProvider)
 
+  /*
+  Provider 내에 다른 provider를 watch하게 되면
+  watch 중인 프로바이더의 상태가 변경되면 관찰중인 프로바이더 또한 리빌드 된다.
+
+  아래는 authState에 따라 라우터 프로바이더가 리빌드되어 
+  로그인 여부에 따라 리다이렉트가 작동한다.
+   */
+
+  // StreamProvider를 watch해서 상태 변화를 감지
+  ref.watch(authState);
+
   return GoRouter(
     // 임시로 리로드해도 바로 home으로 가게 설정
     initialLocation: "/home",

@@ -2,6 +2,7 @@ import 'dart:async';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/features/authentication/repos/authentication_repo.dart';
 
+// https://docs-v2.riverpod.dev/docs/providers/notifier_provider
 class SignUpViewModel extends AsyncNotifier<void> {
   late final AuthenticationRepository _authRepo;
 
@@ -38,7 +39,8 @@ final signupForm = StateProvider(
   (ref) => {},
 );
 
-//
+//signupProvider를 통해서 해당 뷰모델의 메서드에 접근이 가능해진다.
+// view - viewmodel - repo 인 상태
 final signupProvider = AsyncNotifierProvider<SignUpViewModel, void>(
   () => SignUpViewModel(),
 );
