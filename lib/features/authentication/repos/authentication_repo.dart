@@ -12,6 +12,11 @@ class AuthenticationRepository {
 
   //현재 유저 정보
   User? get user => _firebaseAuth.currentUser;
+
+  Future<void> signUp(String email, String password) async {
+    await _firebaseAuth.createUserWithEmailAndPassword(
+        email: email, password: password);
+  }
 }
 
 final authRepo = Provider((ref) => AuthenticationRepository());

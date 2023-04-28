@@ -1,19 +1,19 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
-import 'package:go_router/go_router.dart';
-import 'package:tiktok/features/onboarding/interests_screen.dart';
 
-class BirthdayScreen extends StatefulWidget {
+class BirthdayScreen extends ConsumerStatefulWidget {
   const BirthdayScreen({super.key});
 
   @override
-  State<BirthdayScreen> createState() => _BirthdayScreen();
+  ConsumerState<BirthdayScreen> createState() => _BirthdayScreen();
 }
 
-class _BirthdayScreen extends State<BirthdayScreen> {
+class _BirthdayScreen extends ConsumerState<BirthdayScreen> {
   final TextEditingController _birthdayController = TextEditingController();
 
   DateTime initialDate = DateTime.now();
@@ -32,9 +32,12 @@ class _BirthdayScreen extends State<BirthdayScreen> {
   }
 
   void _onNextTap() {
+    ref.read(signupProvider.notifier).signUp();
+    print(ref.read(signupForm));
+
     // path가 /onboarding으로 바뀌어야 하니까 (GoRoute)
     //pushReplacementNamed : removeUntil.. 같은 기능 (뒤로가기 못하게)
-    context.pushReplacementNamed(InterestsScreen.routeName);
+    // context.pushReplacementNamed(InterestsScreen.routeName);
   }
 
   void _setTextFieldDate(DateTime date) {
@@ -95,7 +98,7 @@ class _BirthdayScreen extends State<BirthdayScreen> {
             Gaps.v16,
             GestureDetector(
               onTap: _onNextTap,
-              child: const FormButton(disabled: false),
+              child: FormButton(disabled: ref.watch(signupProvider).isLoading),
             )
           ],
         ),
