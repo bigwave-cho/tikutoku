@@ -82,3 +82,22 @@ https://firebase.google.com/docs/flutter/setup?hl=ko&platform=android
 
 /_이 명령어를 실행하면 Flutter 앱의 Firebase 구성이 최신 상태인지 확인하고
 Android의 Crashlytics 및 Performance Monitoring의 경우 필수 Gradle 플러그인이 앱에 추가됩니다. _/
+
+## Github OAuth
+
+https://github.com/settings/applications/new
+
+1. 파이어베이스 Sing-in method 깃헙 추가
+2. 파베 콜백 url을 깃헙 OAuth에 복붙
+3. 부여받은 클라아이디와 키를 파베에 붙여넣기.
+
+https://firebase.google.com/docs/auth/flutter/federated-auth?hl=ko&authuser=0
+
+- IOS는 Runner.xcworkspace를 xocde로 열어서 info탭의
+  url types에 문서에 따라 넣기
+
+- 안드로이드는 /android 경로로 들어가기
+  -> ./gradlew signinReport 터미널에 실행
+  -> SHA1 값(파이어베이스에 제공할 시그니쳐)
+  -> 파베 SHA 이증서 지문에 붙여넣기.
+  : 디버그 모드에서만 적용되기 때문에 나중에 앱 배포할때는 따로 설정요

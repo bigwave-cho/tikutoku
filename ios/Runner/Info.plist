@@ -22,10 +22,27 @@
 	<string>$(FLUTTER_BUILD_NAME)</string>
 	<key>CFBundleSignature</key>
 	<string>????</string>
+	<key>CFBundleURLTypes</key>
+	<array>
+		<dict>
+			<key>CFBundleTypeRole</key>
+			<string>Editor</string>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>app-1-49200158446-ios-f506e1531d7ed293f145ff</string>
+			</array>
+		</dict>
+	</array>
 	<key>CFBundleVersion</key>
 	<string>$(FLUTTER_BUILD_NUMBER)</string>
 	<key>LSRequiresIPhoneOS</key>
 	<true/>
+	<key>NSCameraUsageDescription</key>
+	<string>Camera Permission is needed.</string>
+	<key>NSMicrophoneUsageDescription</key>
+	<string>Mic Permission is needed.</string>
+	<key>NSPhotoLibraryUsageDescription</key>
+	<string>PhotoLibrary Permission is needed.</string>
 	<key>UIApplicationSupportsIndirectInputEvents</key>
 	<true/>
 	<key>UILaunchStoryboardName</key>
@@ -47,11 +64,5 @@
 	</array>
 	<key>UIViewControllerBasedStatusBarAppearance</key>
 	<false/>
-	<key>NSCameraUsageDescription</key>
-	<string>Camera Permission is needed.</string>
-	<key>NSMicrophoneUsageDescription</key>
-	<string>Mic Permission is needed.</string>
-	<key>NSPhotoLibraryUsageDescription</key>
-	<string>PhotoLibrary Permission is needed.</string>
 </dict>
 </plist>
