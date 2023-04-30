@@ -28,6 +28,11 @@ class AuthenticationRepository {
     await _firebaseAuth.signInWithEmailAndPassword(
         email: email, password: password);
   }
+
+  Future<void> githubSingIn() async {
+    // 대부분 이런식으로 provider에 해당 소셜 프로바이더를 인자로 전달.(단 사용전 필요 세팅은 다름)
+    await _firebaseAuth.signInWithProvider(GithubAuthProvider());
+  }
 }
 
 final authRepo = Provider((ref) => AuthenticationRepository());
