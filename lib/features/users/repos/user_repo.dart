@@ -11,7 +11,13 @@ class UserRepository {
     // repo에 해당 형식으로 받을 수 있는 메서드 생성해야.
     await _db.collection('users').doc(profile.uid).set(profile.toJson());
   }
+
   //get profile
+  Future<Map<String, dynamic>?> findProfile(String uid) async {
+    final doc = await _db.collection("users").doc(uid).get();
+    return doc.data();
+  }
+
   //update profile
 }
 

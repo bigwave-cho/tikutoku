@@ -22,6 +22,14 @@ class UserProfileModel {
         bio = "",
         link = "";
 
+  //파이어스토어에서 가져온 json을 이용해서 model 초기화
+  UserProfileModel.fromJson(Map<String, dynamic> json)
+      : uid = json["uid"],
+        email = json["email"],
+        name = json["name"],
+        bio = json["bio"],
+        link = json["link"];
+
   //파이어스토어는 json을 받으므로 json 변환 메서드
   Map<String, String> toJson() {
     return {
