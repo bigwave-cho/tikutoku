@@ -21,4 +21,15 @@ class UserProfileModel {
         name = "",
         bio = "",
         link = "";
+
+  //파이어스토어는 json을 받으므로 json 변환 메서드
+  Map<String, String> toJson() {
+    return {
+      "uid": uid,
+      "email": email,
+      "name": name,
+      "bio": bio,
+      "link": link,
+    };
+  }
 }

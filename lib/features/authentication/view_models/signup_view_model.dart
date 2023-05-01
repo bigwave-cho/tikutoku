@@ -38,7 +38,9 @@ class SignUpViewModel extends AsyncNotifier<void> {
           form["password"],
         );
         // 반환 받은 크레덴셜로 usersProvider(VM)의 state를 업뎃.
-        await users.createAccount(userCredential);
+        // auth뿐만 아니라 firestore에도 user데이터를 올려줘야
+        // 나중에 다른 유저의 프로파일 정보에 접근이 가능하기 때문임.
+        await users.createProfile(userCredential);
       },
     );
     if (state.hasError) {
