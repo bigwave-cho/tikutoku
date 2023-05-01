@@ -68,6 +68,23 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     });
     if (state.hasError) {}
   }
+
+  Future<void> onUpdateBioAndLink({
+    required String bio,
+    required String link,
+  }) async {
+    if (state.value == null) return;
+
+    state = AsyncValue.data(state.value!.copyWith(
+      bio: bio,
+      link: link,
+    ));
+
+    await _usersRepository.updateUser(state.value!.uid, {
+      "bio": bio,
+      "link": link,
+    });
+  }
 }
 
 final usersProvider = AsyncNotifierProvider<UsersViewModel, UserProfileModel>(

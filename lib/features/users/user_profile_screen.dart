@@ -4,10 +4,11 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/settings/settings_screent.dart';
+import 'package:tiktok/features/users/bio_link_edit_screen.dart';
 import 'package:tiktok/features/users/view_models/users_view_model.dart';
 import 'package:tiktok/features/users/views/widgets/accounted_users.dart';
 import 'package:tiktok/features/users/views/widgets/avatar.dart';
-import 'package:tiktok/features/users/widgets/persistent_tabbar.dart';
+import 'package:tiktok/features/users/views/widgets/persistent_tabbar.dart';
 
 class UserProfileScreen extends ConsumerStatefulWidget {
   final String username;
@@ -24,6 +25,14 @@ void _onGearPressed(BuildContext context) {
     MaterialPageRoute(
       builder: (context) => const SettingsScreen(),
     ),
+  );
+}
+
+void _onEditBioAndLink(BuildContext context) {
+  showModalBottomSheet(
+    isScrollControlled: true,
+    context: context,
+    builder: (context) => const BioLinkEditScreen(),
   );
 }
 
@@ -55,6 +64,13 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                           data.name,
                         ),
                         actions: [
+                          IconButton(
+                            onPressed: () => _onEditBioAndLink(context),
+                            icon: const FaIcon(
+                              FontAwesomeIcons.penToSquare,
+                              size: Sizes.size20,
+                            ),
+                          ),
                           IconButton(
                             onPressed: () => _onGearPressed(context),
                             icon: const FaIcon(
@@ -192,27 +208,27 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                               ],
                             ),
                             Gaps.v14,
-                            const Padding(
-                              padding: EdgeInsets.symmetric(
+                            Padding(
+                              padding: const EdgeInsets.symmetric(
                                 horizontal: Sizes.size10,
                               ),
                               child: Text(
-                                "All highlights and where to watch live matches on FIFA+ I wonder how it woludf",
+                                data.bio,
                                 textAlign: TextAlign.center,
                               ),
                             ),
                             Gaps.v14,
                             Row(
                               mainAxisAlignment: MainAxisAlignment.center,
-                              children: const [
-                                FaIcon(
+                              children: [
+                                const FaIcon(
                                   FontAwesomeIcons.link,
                                   size: Sizes.size12,
                                 ),
                                 Gaps.h4,
                                 Text(
-                                  "https://www.fifa.com/fifaplus/en/home",
-                                  style: TextStyle(
+                                  data.link,
+                                  style: const TextStyle(
                                     fontWeight: FontWeight.w600,
                                   ),
                                 ),
