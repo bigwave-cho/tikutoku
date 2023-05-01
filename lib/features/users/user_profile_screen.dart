@@ -70,6 +70,8 @@ class _UserProfileScreenState extends ConsumerState<UserProfileScreen> {
                             Gaps.v20,
                             Avatar(
                               name: data.name,
+                              hasAvatar: data.hasAvatar,
+                              uid: data.uid,
                             ),
                             Gaps.v20,
                             Row(

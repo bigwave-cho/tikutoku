@@ -28,6 +28,10 @@ class UserRepository {
     final task = await fileRef.putFile(file);
     // task 로 취소, 재개, 완료 등등 제어 가능
   }
+
+  Future<void> updateUser(String uid, Map<String, dynamic> data) async {
+    await _db.collection("users").doc(uid).update(data);
+  }
 }
 
 final userRepo = Provider(

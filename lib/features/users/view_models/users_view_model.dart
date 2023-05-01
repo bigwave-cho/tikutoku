@@ -12,10 +12,6 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
 
   @override
   FutureOr<UserProfileModel> build() async {
-    await Future.delayed(
-      const Duration(seconds: 3),
-    );
-
     _usersRepository = ref.read(userRepo);
     _authenticationRepository = ref.read(authRepo);
 
@@ -46,6 +42,7 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
     state = const AsyncValue.loading();
     // 크레덴셜과 네임 bio를 받아서 profile 인스턴스 생성
     final profile = UserProfileModel(
+      hasAvatar: false,
       bio: bio,
       link: "undefined",
       uid: credential.user!.uid,
@@ -58,6 +55,18 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
 
     // 완료 후 state에는 해당 프로필내용 업뎃!
     state = AsyncValue.data(profile);
+  }
+
+  Future<void> onAvatarUpload() async {
+    if (state.value == null) return;
+
+    state = AsyncValue.data(
+      state.value!.copyWith(hasAvatar: true),
+    );
+    await _usersRepository.updateUser(state.value!.uid, {
+      "hasAvatar": true,
+    });
+    if (state.hasError) {}
   }
 }
 
