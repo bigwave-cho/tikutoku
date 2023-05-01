@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:gallery_saver/gallery_saver.dart';
-import 'package:tiktok/features/videos/view_models/timeline_view_model.dart';
+import 'package:tiktok/features/videos/view_models/upload_video_view_model.dart';
 import 'package:video_player/video_player.dart';
 
 class VidoePreviewScreen extends ConsumerStatefulWidget {
@@ -63,7 +63,10 @@ class VidoePreviewScreenState extends ConsumerState<VidoePreviewScreen> {
   }
 
   void _onUploadPressed() {
-    ref.read(timelineProvider.notifier).uploadVideo();
+    ref.read(uploadVideoProvider.notifier).uploadVideo(
+          File(widget.video.path),
+          context,
+        );
   }
 
   @override
@@ -83,10 +86,10 @@ class VidoePreviewScreenState extends ConsumerState<VidoePreviewScreen> {
               ),
             ),
           IconButton(
-            onPressed: ref.watch(timelineProvider).isLoading
+            onPressed: ref.watch(uploadVideoProvider).isLoading
                 ? () {}
                 : _onUploadPressed,
-            icon: ref.watch(timelineProvider).isLoading // 로딩상태인지 접근 bool 반환
+            icon: ref.watch(uploadVideoProvider).isLoading // 로딩상태인지 접근 bool 반환
                 ? const CircularProgressIndicator.adaptive()
                 : const FaIcon(
                     FontAwesomeIcons.cloudArrowUp,

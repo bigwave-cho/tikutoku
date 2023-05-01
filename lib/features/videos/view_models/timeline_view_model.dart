@@ -5,7 +5,7 @@ import 'package:tiktok/features/videos/models/video_model.dart';
 
 //AsyncNotifier : api로부터 데이터를 받기 때문에 async
 class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
-  List<VideoModel> _list = [VideoModel(title: "First video")];
+  List<VideoModel> _list = [];
 
   void uploadVideo() async {
     // Async 모델이 처음에 로딩완료된 상태라서
@@ -14,9 +14,8 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
 
     await Future.delayed(const Duration(seconds: 2));
 
-    final newVideo = VideoModel(title: "${DateTime.now()}");
     // _list.add(newVideo);
-    _list = [..._list, newVideo];
+    _list = [..._list];
 
     //마찬가지로 state 덮어씌우기 : AsnycNoti는 아래처럼
     state = AsyncValue.data(_list);
