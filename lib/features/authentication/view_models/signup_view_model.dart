@@ -3,6 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/features/authentication/repos/authentication_repo.dart';
 import 'package:tiktok/features/onboarding/interests_screen.dart';
+import 'package:tiktok/features/users/view_models/users_view_model.dart';
 import 'package:tiktok/utils.dart';
 import 'package:go_router/go_router.dart';
 
@@ -20,7 +21,7 @@ class SignUpViewModel extends AsyncNotifier<void> {
 
     // signupForm의 데이터를 받아와서.
     final form = ref.read(signupForm);
-
+    final users = ref.read(usersProvider.notifier);
     /*
     await _authRepo.signUp(form["email"], form["password"]); // 이메일패스워드 처리 끝나면
     state = AsyncValue.data(null); // null(로딩처리끝) : 아무것도 expose 하지 않기 때문
@@ -29,10 +30,16 @@ class SignUpViewModel extends AsyncNotifier<void> {
     //위 코드 역할 하는 AsyncValue.guard : try catch해서 에러 핸들링도 해줌
     //form을 이용해서 firebaseauth에 전달(레포)
     state = await AsyncValue.guard(
-      () async => await _authRepo.signUp(
-        form["email"],
-        form["password"],
-      ),
+      () async {
+        // authRepo의 emailSignUp메서드로 계정생성을 하고
+        // userCredential을 반환받음.
+        final userCredential = await _authRepo.emailSignUp(
+          form["email"],
+          form["password"],
+        );
+        // 반환 받은 크레덴셜로 usersProvider(VM)의 state를 업뎃.
+        await users.createAccount(userCredential);
+      },
     );
     if (state.hasError) {
       showFirebaseErrorSnack(context, state.error);
