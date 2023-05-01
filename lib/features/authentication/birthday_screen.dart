@@ -32,9 +32,14 @@ class _BirthdayScreen extends ConsumerState<BirthdayScreen> {
   }
 
   void _onNextTap() {
+    final state = ref.read(signupForm.notifier).state;
+    ref.read(signupForm.notifier).state = {
+      ...state,
+      "bio": _birthdayController.value.text,
+    };
+
     ref.read(signupProvider.notifier).signUp(context); // signUp 메서드를 호출
     // guard가 작동해서 error 유무에 따라 다음 스크린으로 이동시킬 것이다.
-    print(ref.read(signupForm));
 
     // path가 /onboarding으로 바뀌어야 하니까 (GoRoute)
     //pushReplacementNamed : removeUntil.. 같은 기능 (뒤로가기 못하게)

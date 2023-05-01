@@ -1,17 +1,19 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/email_screen.dart';
+import 'package:tiktok/features/authentication/view_models/signup_view_model.dart';
 import 'package:tiktok/features/authentication/widgets/form_button.dart';
 
-class UsernameScreen extends StatefulWidget {
+class UsernameScreen extends ConsumerStatefulWidget {
   const UsernameScreen({super.key});
 
   @override
-  State<UsernameScreen> createState() => _UsernameScreen();
+  ConsumerState<UsernameScreen> createState() => _UsernameScreen();
 }
 
-class _UsernameScreen extends State<UsernameScreen> {
+class _UsernameScreen extends ConsumerState<UsernameScreen> {
   final TextEditingController _usernameController = TextEditingController();
   // 내용 유무에 따라 버튼 활성화
   String _username = "";
@@ -37,6 +39,11 @@ class _UsernameScreen extends State<UsernameScreen> {
 
   void _onNextTap() {
     if (_username.isEmpty) return;
+    final state = ref.read(signupForm.notifier).state;
+    ref.read(signupForm.notifier).state = {
+      ...state,
+      "displayName": _username,
+    };
 
     Navigator.push(
       context,

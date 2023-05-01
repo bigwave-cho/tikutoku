@@ -16,21 +16,28 @@ class UsersViewModel extends AsyncNotifier<UserProfileModel> {
   }
 
   //계정 생성 시 userCredential을 받아 새 인스턴스 생성해서 state에 할당
-  Future<void> createProfile(UserCredential credential) async {
+  Future<void> createProfile({
+    required UserCredential credential,
+    required String bio,
+    required String displayName,
+  }) async {
     if (credential.user == null) {
       throw Exception("Account not created");
     }
     state = const AsyncValue.loading();
-
+    // 크레덴셜과 네임 bio를 받아서 profile 인스턴스 생성
     final profile = UserProfileModel(
-      bio: "undefined",
+      bio: bio,
       link: "undefined",
       uid: credential.user!.uid,
-      name: credential.user!.displayName ?? "Anon",
+      name: credential.user!.displayName ?? displayName,
       email: credential.user!.email ?? "Anon@anon.com",
     );
+    // 생성된 profile인스턴스를 _repo에 전달해서
+    // 파이어스토어에 create!!
     await _repository.createProfile(profile);
 
+    // 완료 후 state에는 해당 프로필내용 업뎃!
     state = AsyncValue.data(profile);
   }
 }

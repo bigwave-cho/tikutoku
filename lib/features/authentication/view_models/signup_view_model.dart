@@ -40,7 +40,13 @@ class SignUpViewModel extends AsyncNotifier<void> {
         // 반환 받은 크레덴셜로 usersProvider(VM)의 state를 업뎃.
         // auth뿐만 아니라 firestore에도 user데이터를 올려줘야
         // 나중에 다른 유저의 프로파일 정보에 접근이 가능하기 때문임.
-        await users.createProfile(userCredential);
+
+        // signup을 하면서 users profile 데이터 생성
+        await users.createProfile(
+          credential: userCredential,
+          bio: form['bio'],
+          displayName: form['displayName'],
+        );
       },
     );
     if (state.hasError) {
