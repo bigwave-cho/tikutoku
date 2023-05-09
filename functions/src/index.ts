@@ -19,11 +19,43 @@ export const onVideoCreated = functions.firestore
       'scale=150:-1',
       `/tmp/${snapshot.id}.jpg`,
     ]);
+
     const storage = admin.storage();
-    await storage.bucket().upload(`/tmp/${snapshot.id}.jpg`, {
+
+    const [file, _] = await storage.bucket().upload(`/tmp/${snapshot.id}.jpg`, {
       destination: `thumbnails/${snapshot.id}.jpg`,
     });
+
+    // 비디오 업로드 시 파이어스토어의 유저 콜렉션에 비디오에 관한 복사본 콜렉션 추가해주기.
+    await file.makePublic();
+
+    await snapshot.ref.update({ thumbnailUrl: file.publicUrl() });
+
+    const db = admin.firestore();
+    // db.collection('videos').where('creatorUid', '==', 123); // 이렇게 하면 모든 비디오를 색인해야해서 비효율
+    // /videos/123
+    //따라서 /users/:userId/videos/123/thumbailUrl
+    // 위처럼 유저에 비디오 아이디와 썸네일만 가진 복사본을 저장해두면 더 효율적
+
+    await db
+      .collection('users')
+      .doc(video.creatorUid)
+      .collection('videos')
+      .doc(snapshot.id)
+      .set({
+        thumbnailUrl: file.publicUrl(),
+        videoId: snapshot.id,
+      });
+
+    //삭제할 때는 videos 콜렉션에서 삭제하면서 해당 user id를 가져와서
+    //user내의 복사본 콜렉션의 비디오도 동시에 삭제해주면 된다.
   });
+
+/*
+추가 https://firebase.google.com/docs/functions/firestore-events?hl=ko&authuser=0
+functions은 위처럼 background에서 작동하고록 trigger하거나
+직접 엔드포인트를 만들어서 호출할수도 있다.
+*/
 
 // 비디오가 업로드되면 아래 function 작동
 /*
