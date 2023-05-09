@@ -101,3 +101,12 @@ https://firebase.google.com/docs/auth/flutter/federated-auth?hl=ko&authuser=0
   -> SHA1 값(파이어베이스에 제공할 시그니쳐)
   -> 파베 SHA 이증서 지문에 붙여넣기.
   : 디버그 모드에서만 적용되기 때문에 나중에 앱 배포할때는 따로 설정요
+
+## firebase functions
+
+https://pub.dev/packages/cloud_functions/install
+
+flutter pub add cloud_functions
+flutterfire configure -> 기존플젝 선택 -> override yes.
+firebase init functions-> 플젝선택 -> TS ->eslint (no)
+functions 폴더 생김
