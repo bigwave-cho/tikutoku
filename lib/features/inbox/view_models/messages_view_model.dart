@@ -23,7 +23,7 @@ class MessagesViewModel extends AsyncNotifier<void> {
       final message = MessageModel(
         text: text,
         userId: user!.uid,
-        createAt: DateTime.now().millisecondsSinceEpoch,
+        createdAt: DateTime.now().millisecondsSinceEpoch,
       );
       _repo.sendMessage(message);
     });
@@ -34,7 +34,12 @@ final messagesProvider = AsyncNotifierProvider<MessagesViewModel, void>(
   () => MessagesViewModel(),
 );
 
-final chatProvider = StreamProvider<List<MessageModel>>(
+/*
+riverpod은 위젯트리가 아닌 전역에 존재하므로
+autoDispose를 설정하지 않으면 화면에 상관없이 계속 StreamProvider가 
+살아있음.
+ */
+final chatProvider = StreamProvider.autoDispose<List<MessageModel>>(
   (ref) {
     final db = FirebaseFirestore.instance;
 
@@ -51,6 +56,8 @@ final chatProvider = StreamProvider<List<MessageModel>>(
                   doc.data(),
                 ),
               )
+              .toList()
+              .reversed
               .toList(),
         );
   },

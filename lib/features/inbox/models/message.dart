@@ -1,24 +1,24 @@
 class MessageModel {
   final String text;
   final String userId;
-  final int createAt;
+  final int createdAt;
 
   MessageModel({
     required this.text,
     required this.userId,
-    required this.createAt,
+    required this.createdAt,
   });
 
   MessageModel.fromJson(Map<String, dynamic> json)
       : text = json['text'],
-        createAt = json['createAt'],
+        createdAt = json['createdAt'],
         userId = json['userId'];
 
   Map<String, dynamic> toJson() {
     return {
       "text": text,
       "userId": userId,
-      "createdAt": createAt,
+      "createdAt": createdAt,
     };
   }
 }

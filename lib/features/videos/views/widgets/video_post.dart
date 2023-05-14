@@ -221,7 +221,6 @@ class VideoPostState extends ConsumerState<VideoPost>
             "${widget.videoData.id}000${ref.read(authRepo).user!.uid}"))
         .when(
           data: (like) {
-            print(like);
             return VisibilityDetector(
               key: Key("${widget.index}"),
               onVisibilityChanged: _onVisibilityChanged,
