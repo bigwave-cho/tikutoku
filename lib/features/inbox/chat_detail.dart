@@ -1,9 +1,11 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/inbox/view_models/messages_view_model.dart';
 
-class ChatDetailScreen extends StatefulWidget {
+class ChatDetailScreen extends ConsumerStatefulWidget {
   static const String routeName = "chatDetail";
   // Nested route는 "/" 없어도 됨.
   static const String routeURL = ":chatId";
@@ -13,12 +15,25 @@ class ChatDetailScreen extends StatefulWidget {
   const ChatDetailScreen({super.key, required this.chatId});
 
   @override
-  State<ChatDetailScreen> createState() => _ChatDetailScreenState();
+  ConsumerState<ChatDetailScreen> createState() => _ChatDetailScreenState();
 }
 
-class _ChatDetailScreenState extends State<ChatDetailScreen> {
+class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
+  final TextEditingController _editingController = TextEditingController();
+
+  void _onSendPressed() {
+    final text = _editingController.text;
+    if (text == "") {
+      return;
+    }
+    ref.read(messagesProvider.notifier).sendMessage(text, context);
+    _editingController.text = "";
+  }
+
   @override
   Widget build(BuildContext context) {
+    final isLoading = ref.watch(messagesProvider).isLoading;
+
     return Scaffold(
       appBar: AppBar(
         title: ListTile(
@@ -138,6 +153,7 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                           vertical: 10,
                         ),
                         child: TextField(
+                          controller: _editingController,
                           decoration: InputDecoration(
                             contentPadding: const EdgeInsets.symmetric(
                               vertical: Sizes.size10,
@@ -172,9 +188,14 @@ class _ChatDetailScreenState extends State<ChatDetailScreen> {
                         color: Colors.grey.shade400,
                       ),
                       padding: const EdgeInsets.all(9),
-                      child: const FaIcon(
-                        FontAwesomeIcons.solidPaperPlane,
-                        color: Colors.white,
+                      child: GestureDetector(
+                        onTap: isLoading ? null : _onSendPressed,
+                        child: FaIcon(
+                          isLoading
+                              ? FontAwesomeIcons.hourglass
+                              : FontAwesomeIcons.solidPaperPlane,
+                          color: Colors.white,
+                        ),
                       ),
                     ),
                     Gaps.h20,
