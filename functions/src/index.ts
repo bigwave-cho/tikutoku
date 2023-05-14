@@ -123,3 +123,29 @@ mp4 -> avi, 워터마크 추가, 썸네일 뽑기 등 여러 기능 가능
 ### child process promise
 https://www.npmjs.com/package/child-process-promise 
 */
+
+export const onLikedCreated = functions.firestore
+  .document('likes/{likeId}')
+  .onCreate(async (snapshot, context) => {
+    const db = admin.firestore();
+    //userId 쓸 일 있으면 아래처럼
+    // const [videoId, userId] = snapshot.id.split('000');
+    const [videoId, _] = snapshot.id.split('000');
+
+    await db
+      .collection('videos')
+      .doc(videoId)
+      .update({ likes: admin.firestore.FieldValue.increment(1) });
+  });
+
+export const onLikedRemoved = functions.firestore
+  .document('likes/{likeId}')
+  .onDelete(async (snapshot, context) => {
+    const db = admin.firestore();
+    const [videoId, _] = snapshot.id.split('000');
+
+    await db
+      .collection('videos')
+      .doc(videoId)
+      .update({ likes: admin.firestore.FieldValue.increment(-1) });
+  });
