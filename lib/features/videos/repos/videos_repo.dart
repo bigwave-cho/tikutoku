@@ -54,6 +54,12 @@ class VideosRepository {
      */
   }
 
+  Future<bool> isLiked(String videoId, String userId) async {
+    final query = _db.collection("likes").doc("${videoId}000$userId");
+    final like = await query.get();
+    return like.exists;
+  }
+
   Future<void> likeVideo(String videoId, String userId) async {
     /*
    firebase 한계

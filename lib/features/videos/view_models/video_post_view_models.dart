@@ -1,25 +1,42 @@
 import 'dart:async';
 
 import 'package:flutter_riverpod/flutter_riverpod.dart';
-import 'package:tiktok/features/authentication/repos/authentication_repo.dart';
 import 'package:tiktok/features/videos/repos/videos_repo.dart';
 
-class VideoPostViewModel extends FamilyAsyncNotifier<void, String> {
+// FamilyAsyncNotifier : 빌드 시 arg를 받을 수 있음.
+// 제너릭의 다음 타입으로 추가해줘야 함.
+
+class VideoPostViewModel extends FamilyAsyncNotifier<bool, String> {
   late final VideosRepository _repository;
-  late final _videoId;
+  late final String _videoId;
+  late final String _userId;
+
+  bool _isLiked = false;
+  int likedCounts = 0;
+
   @override
-  FutureOr<void> build(String videoId) {
-    _videoId = videoId;
+  FutureOr<bool> build(String arg) {
+    final idsArr = arg.split("000");
+    _videoId = idsArr[0];
+    _userId = idsArr[1];
     _repository = ref.read(videosRepo);
+
+    return isLikedVideo();
+  }
+
+  Future<bool> isLikedVideo() async {
+    _isLiked = await _repository.isLiked(_videoId, _userId);
+    return _isLiked;
   }
 
   likeVideo() async {
-    final user = ref.read(authRepo).user;
-    await _repository.likeVideo(_videoId, user!.uid);
+    await _repository.likeVideo(_videoId, _userId);
+    _isLiked = !_isLiked;
+    state = AsyncValue.data(_isLiked);
   }
 }
 
 final videoPostProvider =
-    AsyncNotifierProvider.family<VideoPostViewModel, void, String>(
+    AsyncNotifierProvider.family<VideoPostViewModel, bool, String>(
   () => VideoPostViewModel(),
 );
