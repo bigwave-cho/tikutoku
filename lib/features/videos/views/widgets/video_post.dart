@@ -220,8 +220,8 @@ class VideoPostState extends ConsumerState<VideoPost>
         .watch(videoPostProvider(
             "${widget.videoData.id}000${ref.read(authRepo).user!.uid}"))
         .when(
-          data: (isLiked) {
-            print(isLiked);
+          data: (like) {
+            print(like);
             return VisibilityDetector(
               key: Key("${widget.index}"),
               onVisibilityChanged: _onVisibilityChanged,
@@ -354,8 +354,9 @@ class VideoPostState extends ConsumerState<VideoPost>
                             onTap: _onLikeTap,
                             child: VideoButton(
                               icon: FontAwesomeIcons.solidHeart,
-                              text: "${widget.videoData.likes}",
-                              color: isLiked ? Colors.red : Colors.white,
+                              text: "${like.likeCounts}",
+                              color:
+                                  like.isLikedVideo ? Colors.red : Colors.white,
                             ),
                           ),
                           Gaps.v20,
