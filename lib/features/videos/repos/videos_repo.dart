@@ -55,10 +55,34 @@ class VideosRepository {
   }
 
   Future<void> likeVideo(String videoId, String userId) async {
-    await _db.collection("likes").add({
-      "videoId": videoId,
-      "userId": userId,
-    });
+    /*
+   firebase 한계
+   기존처럼 그냥 likes를 add 해버리면 
+   지금 유저가 또 누르는 건지 찾기 위해 (예를들어) 수백만개의 likes를
+   검색하게 되고 firebase에 이에 대한 작업의 cost를 지불해야함.
+    await _db
+        .collection("likes")
+        .where(
+          'videoId',
+          isEqualTo: videoId,
+        )
+        .where("userId", isEqualTo: userId);
+  */
+    //doc id로 비디오와 유저아이디로 지정, 필드값은 해당 시간만
+    // 이렇게하면 중복으로 좋아요 추가가 불가
+
+    /*
+  추가로 좋아요누른 리스트 보여주기는
+  functions 백그라운드 함수 사용해라.
+  user내에 likes 콜렉션을 만드는 식으로
+   */
+    final query = _db.collection("likes").doc("${videoId}000$userId");
+    final like = await query.get();
+    if (!like.exists) {
+      await query.set({
+        "createdAt": DateTime.now().millisecondsSinceEpoch,
+      });
+    }
   }
 }
 
