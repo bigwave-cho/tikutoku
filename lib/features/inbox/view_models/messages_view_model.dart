@@ -15,7 +15,11 @@ class MessagesViewModel extends AsyncNotifier<void> {
     _repo = ref.read(messagesRepo);
   }
 
-  Future<void> sendMessage(String text, BuildContext context) async {
+  Future<void> sendMessage(
+    String text,
+    BuildContext context,
+    String chatId,
+  ) async {
     final user = ref.read(authRepo).user;
 
     state = const AsyncValue.loading();
@@ -25,7 +29,7 @@ class MessagesViewModel extends AsyncNotifier<void> {
         userId: user!.uid,
         createdAt: DateTime.now().millisecondsSinceEpoch,
       );
-      _repo.sendMessage(message);
+      _repo.sendMessage(message, chatId);
     });
   }
 }
@@ -39,13 +43,14 @@ riverpod은 위젯트리가 아닌 전역에 존재하므로
 autoDispose를 설정하지 않으면 화면에 상관없이 계속 StreamProvider가 
 살아있음.
  */
-final chatProvider = StreamProvider.autoDispose<List<MessageModel>>(
-  (ref) {
+final chatProvider =
+    StreamProvider.autoDispose.family<List<MessageModel>, String>(
+  (ref, chatroomId) {
     final db = FirebaseFirestore.instance;
 
     return db
         .collection('chat_rooms')
-        .doc("ab0M7ht1Risa95L2UB79")
+        .doc(chatroomId)
         .collection("texts")
         .orderBy('createdAt')
         .snapshots()

@@ -32,6 +32,10 @@ class UserRepository {
   Future<void> updateUser(String uid, Map<String, dynamic> data) async {
     await _db.collection("users").doc(uid).update(data);
   }
+
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchUsers() async {
+    return _db.collection("users").orderBy("uid").get();
+  }
 }
 
 final userRepo = Provider(

@@ -4,7 +4,9 @@ import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
 import 'package:tiktok/features/authentication/repos/authentication_repo.dart';
+import 'package:tiktok/features/inbox/models/message.dart';
 import 'package:tiktok/features/inbox/view_models/messages_view_model.dart';
+import 'package:tiktok/features/users/view_models/users_view_model.dart';
 
 class ChatDetailScreen extends ConsumerStatefulWidget {
   static const String routeName = "chatDetail";
@@ -21,18 +23,37 @@ class ChatDetailScreen extends ConsumerStatefulWidget {
 
 class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
   final TextEditingController _editingController = TextEditingController();
-
+  late String oppoUserName = "";
   void _onSendPressed() {
     final text = _editingController.text;
     if (text == "") {
       return;
     }
-    ref.read(messagesProvider.notifier).sendMessage(text, context);
+    ref
+        .read(messagesProvider.notifier)
+        .sendMessage(text, context, widget.chatId);
     _editingController.text = "";
+  }
+
+  _getUserInfo() async {
+    final userList = await ref.read(usersProvider.notifier).getUserList();
+    final a = userList
+        .where((element) => element.uid == widget.chatId.split("000")[1])
+        .toList()[0]
+        .name;
+    oppoUserName = a;
+    setState(() {});
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _getUserInfo();
   }
 
   @override
   Widget build(BuildContext context) {
+    late List<MessageModel> messageList;
     final isLoading = ref.watch(messagesProvider).isLoading;
 
     return Scaffold(
@@ -70,7 +91,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
             ],
           ),
           title: Text(
-            "JH ${widget.chatId}",
+            oppoUserName,
             style: const TextStyle(
               fontWeight: FontWeight.w600,
             ),
@@ -96,8 +117,9 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
       ),
       body: Stack(
         children: [
-          ref.watch(chatProvider).when(
+          ref.watch(chatProvider(widget.chatId)).when(
               data: ((data) {
+                messageList = List.from(data);
                 return ListView.separated(
                   reverse: true,
                   padding: EdgeInsets.only(
@@ -108,7 +130,7 @@ class _ChatDetailScreenState extends ConsumerState<ChatDetailScreen> {
                         MediaQuery.of(context).padding.bottom + Sizes.size96,
                   ),
                   itemBuilder: ((context, index) {
-                    final message = data[index];
+                    final message = messageList[index];
                     final isMine =
                         message.userId == ref.watch(authRepo).user!.uid;
                     return Row(

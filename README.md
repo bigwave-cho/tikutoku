@@ -110,3 +110,8 @@ flutter pub add cloud_functions
 flutterfire configure -> 기존플젝 선택 -> override yes.
 firebase init functions-> 플젝선택 -> TS ->eslint (no)
 functions 폴더 생김
+
+## challenge
+
+1. - 누르면 사용자 목록 보여주고 사용자 클릭하면 해당 유저와 채팅룸 생성
+2. 메시지 길게 누르면 삭제 기능

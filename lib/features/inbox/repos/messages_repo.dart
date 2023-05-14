@@ -5,10 +5,10 @@ import 'package:tiktok/features/inbox/models/message.dart';
 class MessagesRepo {
   final FirebaseFirestore _db = FirebaseFirestore.instance;
 
-  Future<void> sendMessage(MessageModel message) async {
+  Future<void> sendMessage(MessageModel message, String chatId) async {
     await _db
         .collection("chat_rooms")
-        .doc("ab0M7ht1Risa95L2UB79")
+        .doc(chatId)
         .collection("texts")
         .add(message.toJson());
   }
