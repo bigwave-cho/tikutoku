@@ -145,7 +145,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     if (!_cameraController.value.isInitialized) return;
     //컨트롤러 이닛 안됐을 때도 리턴처리
 
-    print(state);
+    // print(state);
     // 떠날 때 : inactive paused
     // 돌아올 때 : inactive resumed
 
@@ -198,6 +198,7 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
     //항상 컨트롤러는 디스포즈하자 리소스 관리!
     _progressAnimationController.dispose();
     _buttonAnimationController.dispose();
+
     _cameraController.dispose();
     super.dispose();
   }
@@ -228,14 +229,14 @@ class _VideoRecordingScreenState extends State<VideoRecordingScreen>
       if (_zoomLevel >= _maxZoomLevel) return;
       _zoomLevel = double.parse(_zoomLevel.toStringAsFixed(2)) + 0.05;
     }
-    print(_zoomLevel);
+    // print(_zoomLevel);
 
     _cameraController.setZoomLevel(_zoomLevel);
 
     setState(() {});
   }
 
-  final String _last = '';
+  // final String _last = '';
 
   @override
   Widget build(BuildContext context) {

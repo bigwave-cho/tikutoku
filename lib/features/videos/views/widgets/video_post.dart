@@ -4,6 +4,7 @@ import 'package:flutter_riverpod/flutter_riverpod.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 import 'package:tiktok/constants/gaps.dart';
 import 'package:tiktok/constants/sizes.dart';
+import 'package:tiktok/features/videos/models/video_model.dart';
 import 'package:tiktok/features/videos/view_models/playback_config_vm.dart';
 import 'package:tiktok/features/videos/views/widgets/video_button.dart';
 import 'package:tiktok/features/videos/views/widgets/vidoe_comments.dart';
@@ -15,8 +16,11 @@ import 'package:visibility_detector/visibility_detector.dart';
 class VideoPost extends ConsumerStatefulWidget {
   final Function onVideoFinished;
   final int index;
+  final VideoModel videoData;
+
   const VideoPost({
     super.key,
+    required this.videoData,
     required this.onVideoFinished,
     required this.index,
   });
@@ -210,8 +214,9 @@ class VideoPostState extends ConsumerState<VideoPost>
           Positioned.fill(
             child: _videoPlayerController.value.isInitialized
                 ? VideoPlayer(_videoPlayerController)
-                : Container(
-                    color: Colors.teal,
+                : Image.network(
+                    widget.videoData.thumbnailUrl,
+                    fit: BoxFit.cover,
                   ),
           ),
           Positioned.fill(
@@ -267,18 +272,18 @@ class VideoPostState extends ConsumerState<VideoPost>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                const Text(
-                  '@JH',
-                  style: TextStyle(
+                Text(
+                  '@${widget.videoData.creator}',
+                  style: const TextStyle(
                     fontSize: Sizes.size20,
                     color: Colors.white,
                     fontWeight: FontWeight.bold,
                   ),
                 ),
                 Gaps.v10,
-                const Text(
-                  "Delicious Coffee!@@!",
-                  style: TextStyle(
+                Text(
+                  widget.videoData.description,
+                  style: const TextStyle(
                     fontSize: Sizes.size16,
                     color: Colors.white,
                   ),
@@ -319,26 +324,26 @@ class VideoPostState extends ConsumerState<VideoPost>
                 children: [
                   Gaps.v20,
                   //CircleAvatar : 원 모양 아바타
-                  const CircleAvatar(
+                  CircleAvatar(
                     radius: 25,
                     backgroundColor: Colors.black,
                     foregroundColor: Colors.white,
                     foregroundImage: NetworkImage(
-                      "https://avatars.githubusercontent.com/u/105909665?v=4",
+                      "https://firebasestorage.googleapis.com/v0/b/tikutoku-jh124.appspot.com/o/avatars%2F${widget.videoData.creatorUid}?alt=media",
                     ),
-                    child: Text('JH'),
+                    child: Text(widget.videoData.creator),
                   ),
                   Gaps.v20,
-                  const VideoButton(
+                  VideoButton(
                     icon: FontAwesomeIcons.solidHeart,
-                    text: "2.9M",
+                    text: '${widget.videoData.likes}',
                   ),
                   Gaps.v20,
                   GestureDetector(
                     onTap: () => _onCommentsTap(context),
-                    child: const VideoButton(
+                    child: VideoButton(
                       icon: FontAwesomeIcons.solidComment,
-                      text: "33K",
+                      text: "${widget.videoData.comments}",
                     ),
                   ),
                   Gaps.v20,
