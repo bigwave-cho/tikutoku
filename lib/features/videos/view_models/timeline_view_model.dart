@@ -9,25 +9,38 @@ class TimelineViewModel extends AsyncNotifier<List<VideoModel>> {
   late final VideosRepository _repository;
   List<VideoModel> _list = [];
 
-  //FutureOr
-  //: Notifire<model>은 오직 모델만을 반환
-  // 이거는 Future도 반환하기 때문에 FutureOr을 쓰는 것
-  @override
-  FutureOr<List<VideoModel>> build() async {
-    // await Future.delayed(const Duration(seconds: 5));
-
-    // throw Exception("can't fetch"); // 임시로 에러 반환해서 에러 텍스트 확인용
-
-    _repository = ref.read(videosRepo);
-    final result = await _repository.fetchVideos();
-    final newList = result.docs.map(
+  // 관심사 분리: build메서드와 fetchNextPage의 공통 코드 분리
+  Future<List<VideoModel>> _fetchVideos({
+    int? lastItemCreatedAt,
+  }) async {
+    final result = await _repository.fetchVideos(
+      lastItemCreatedAt: lastItemCreatedAt,
+    );
+    final vidoes = result.docs.map(
       (doc) => VideoModel.fromJson(
         doc.data(),
       ),
     );
-    _list = newList.toList();
-    print(newList);
+    return vidoes.toList();
+  }
+
+  //첫 빌드시에는 null을 전달해서 fetch 받고.
+  @override
+  FutureOr<List<VideoModel>> build() async {
+    _repository = ref.read(videosRepo);
+    _list = await _fetchVideos(lastItemCreatedAt: null);
     return _list;
+  }
+
+//nextPage 요청 받을 때는 마지막 요소의 createdAt 다음 순번 비디오를 가지고 온다.
+  fetchNextPage() async {
+    final nextPage = await _fetchVideos(
+      lastItemCreatedAt: _list.last.createdAt,
+    );
+
+    _list = [..._list, ...nextPage];
+    state = AsyncValue.data(_list);
+    // state = AsyncValue.data([..._list, ...nextPage]);
   }
 }
 

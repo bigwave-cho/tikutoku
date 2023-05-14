@@ -23,14 +23,35 @@ class VideosRepository {
     await _db.collection("videos").add(data.toJson());
   }
 
-  Future<QuerySnapshot<Map<String, dynamic>>> fetchVideos() async {
-    return _db
+  Future<QuerySnapshot<Map<String, dynamic>>> fetchVideos({
+    int? lastItemCreatedAt,
+  }) async {
+    final query = _db
         .collection("videos")
         .orderBy(
           "createdAt",
           descending: true,
         )
-        .get();
+        .limit(2);
+    if (lastItemCreatedAt == null) {
+      return query.get();
+    } else {
+      return query.startAfter([lastItemCreatedAt]).get();
+    }
+
+    /*
+   startAfter([3])
+   orderBy에 의해 1,2,3,4... 가져오는중
+   3번 요소 다음부터 가져오고 싶다.  4,5...
+
+   배열을 인자로 넣는 이유는 또다른 orderBy추가할 경우 다음 요소로 넣으면 됨.
+   ([3, 'creatorUid'])
+
+   fetchVideos(null);
+   1,2
+   fetchVideos(2);
+   3,4
+     */
   }
 }
 
