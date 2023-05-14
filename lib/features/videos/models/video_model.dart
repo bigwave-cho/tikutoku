@@ -8,6 +8,7 @@ class VideoModel {
   final int likes;
   final int comments;
   final int createdAt;
+  final String id;
 
   VideoModel({
     required this.title,
@@ -19,9 +20,11 @@ class VideoModel {
     required this.comments,
     required this.createdAt,
     required this.creator,
+    required this.id,
   });
 
-  VideoModel.fromJson(Map<String, dynamic> json)
+  VideoModel.fromJson(
+      {required Map<String, dynamic> json, required String videoId})
       : title = json["title"],
         description = json["description"],
         fileUrl = json["fileUrl"],
@@ -30,6 +33,7 @@ class VideoModel {
         likes = json["likes"],
         comments = json["comments"],
         createdAt = json["createdAt"],
+        id = videoId,
         creator = json["creator"];
 
   // #3. 모델을 만들자.
@@ -44,6 +48,7 @@ class VideoModel {
       "comments": comments,
       "createdAt": createdAt,
       "creator": creator,
+      "id": id,
     };
   }
 }

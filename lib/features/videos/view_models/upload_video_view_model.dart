@@ -34,6 +34,7 @@ class UploadVideoViewModel extends AsyncNotifier<void> {
           // #4. 레포에 모델을 초기화해서 보내주면 완성.
           await _repository.saveVideo(
             VideoModel(
+              id: "",
               title: "From Flutter",
               description: "미리보기에 form추가해서 타이틀 설명 추가해보자",
               fileUrl: await task.ref.getDownloadURL(),
