@@ -115,3 +115,7 @@ functions 폴더 생김
 
 1. - 누르면 사용자 목록 보여주고 사용자 클릭하면 해당 유저와 채팅룸 생성
 2. 메시지 길게 누르면 삭제 기능
+
+## push noti
+
+https://firebase.google.com/docs/cloud-messaging/flutter/client?hl=ko#upload_your_apns_authentication_key
