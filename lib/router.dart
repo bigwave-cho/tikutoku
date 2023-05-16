@@ -9,6 +9,7 @@ import 'package:tiktok/features/inbox/activity_screen.dart';
 import 'package:tiktok/features/inbox/chat_detail.dart';
 import 'package:tiktok/features/inbox/chats_screen.dart';
 import 'package:tiktok/features/inbox/select_chat_screen.dart';
+import 'package:tiktok/features/notifications/notifications_provider.dart';
 import 'package:tiktok/features/onboarding/interests_screen.dart';
 import 'package:tiktok/features/videos/views/video_recording_screen.dart';
 
@@ -42,97 +43,115 @@ final routerProvider = Provider((ref) {
   // ref.watch(authState);
 
   return GoRouter(
-    // 임시로 리로드해도 바로 home으로 가게 설정
-    initialLocation: "/home",
+      // 임시로 리로드해도 바로 home으로 가게 설정
+      initialLocation: "/home",
+      redirect: (context, state) {
+        final isLoggedIn = ref.read(authRepo).isLoggedIn;
 
-    redirect: (context, state) {
-      final isLoggedIn = ref.read(authRepo).isLoggedIn;
-
-      if (!isLoggedIn) {
-        //로그인하지 않고
-        if (state.subloc != SignUpScreen.routeURL &&
-            state.subloc != LoginScreen.routeURL) {
-          // path( /signup) 가 사인업이나 로그인이 아니라면
-          // "/" <- signup path
-          // 회원가입 스크린으로 리다이렉트 시킨다.
-          return SignUpScreen.routeURL;
+        if (!isLoggedIn) {
+          //로그인하지 않고
+          if (state.subloc != SignUpScreen.routeURL &&
+              state.subloc != LoginScreen.routeURL) {
+            // path( /signup) 가 사인업이나 로그인이 아니라면
+            // "/" <- signup path
+            // 회원가입 스크린으로 리다이렉트 시킨다.
+            return SignUpScreen.routeURL;
+          }
         }
-      }
-      return null;
-    },
+        return null;
+      },
+      routes: [
+        ShellRoute(
+          builder: (context, state, child) {
+            //아직 라우터가 생성되기 전에 context를 넘겨주고 있어서 context.go 등을 사용 불가
+            // 라우터가 이니셜라이즈 된 다음 실행되야 사용 가능
 
-    routes: [
-      GoRoute(
-        name: SignUpScreen.routeName,
-        path: SignUpScreen.routeURL,
-        builder: (context, state) => const SignUpScreen(),
-      ),
-      GoRoute(
-        name: LoginScreen.routeName,
-        path: LoginScreen.routeURL,
-        builder: ((context, state) => const LoginScreen()),
-      ),
-      GoRoute(
-        name: InterestsScreen.routeName,
-        path: InterestsScreen.routeURL,
-        builder: ((context, state) => const InterestsScreen()),
-      ),
-      // 아래 지정된 path일 때만 화면 보여줌
-      GoRoute(
-        name: MainNavigationScreen.routeName,
-        path: "/:tab(home|discover|inbox|profile)",
-        builder: (context, state) {
-          //path에 있는 tab 전달
-          final tab = state.params["tab"]!;
-          return MainNavigationScreen(tab: tab);
-        },
-      ),
-      GoRoute(
-        name: ActivityScreen.routeName,
-        path: ActivityScreen.routeURL,
-        builder: ((context, state) => const ActivityScreen()),
-      ),
-      GoRoute(
-        name: ChatsScreen.routeName,
-        path: ChatsScreen.routeURL,
-        builder: ((context, state) => const ChatsScreen()),
-        routes: [
-          GoRoute(
-            name: ChatDetailScreen.routeName,
-            path: ChatDetailScreen.routeURL,
-            builder: (context, state) {
-              final id = state.params["chatId"]!;
-              return ChatDetailScreen(
-                chatId: id,
-              );
-            },
-          )
-        ],
-      ),
-      GoRoute(
-        name: VideoRecordingScreen.routeName,
-        path: VideoRecordingScreen.routeURL,
-        // GoRoute로 페이지 트랜지션 주기
-        pageBuilder: (context, state) => CustomTransitionPage(
-          transitionDuration: const Duration(milliseconds: 150),
-          child: const VideoRecordingScreen(),
-          transitionsBuilder: ((context, animation, secondaryAnimation, child) {
-            final position = Tween(
-              begin: const Offset(0, 1),
-              end: Offset.zero,
-            ).animate(animation);
-            return SlideTransition(
-              position: position,
-              child: child, // child = VidoeRecordingScreen
-            );
-          }),
+            /*
+            shell route
+            ref.watch를 shellroute로 이동
+
+            SignUpScreen일때 child에 해당 라우트가 전달
+             */
+            ref.read(notificationsProvider(context));
+
+            // 추가팁: return Scaffold해서 공통 레이아웃안에 child를 부여하면
+            // 모든 라우트에 공통적으로 해당 레이아웃을 적용할수도 있음.
+            return child;
+          },
+          routes: [
+            GoRoute(
+              name: SignUpScreen.routeName,
+              path: SignUpScreen.routeURL,
+              builder: (context, state) => const SignUpScreen(),
+            ),
+            GoRoute(
+              name: LoginScreen.routeName,
+              path: LoginScreen.routeURL,
+              builder: (context, state) => const LoginScreen(),
+            ),
+            GoRoute(
+              name: InterestsScreen.routeName,
+              path: InterestsScreen.routeURL,
+              builder: (context, state) => const InterestsScreen(),
+            ),
+            // 아래 지정된 path일 때만 화면 보여줌
+            GoRoute(
+              name: MainNavigationScreen.routeName,
+              path: "/:tab(home|discover|inbox|profile)",
+              builder: (context, state) {
+                //path에 있는 tab 전달
+                final tab = state.params["tab"]!;
+                return MainNavigationScreen(tab: tab);
+              },
+            ),
+            GoRoute(
+              name: ActivityScreen.routeName,
+              path: ActivityScreen.routeURL,
+              builder: (context, state) => const ActivityScreen(),
+            ),
+            GoRoute(
+              name: ChatsScreen.routeName,
+              path: ChatsScreen.routeURL,
+              builder: (context, state) => const ChatsScreen(),
+              routes: [
+                GoRoute(
+                  name: ChatDetailScreen.routeName,
+                  path: ChatDetailScreen.routeURL,
+                  builder: (context, state) {
+                    final id = state.params["chatId"]!;
+                    return ChatDetailScreen(
+                      chatId: id,
+                    );
+                  },
+                )
+              ],
+            ),
+            GoRoute(
+              name: VideoRecordingScreen.routeName,
+              path: VideoRecordingScreen.routeURL,
+              // GoRoute로 페이지 트랜지션 주기
+              pageBuilder: (context, state) => CustomTransitionPage(
+                transitionDuration: const Duration(milliseconds: 150),
+                child: const VideoRecordingScreen(),
+                transitionsBuilder:
+                    ((context, animation, secondaryAnimation, child) {
+                  final position = Tween(
+                    begin: const Offset(0, 1),
+                    end: Offset.zero,
+                  ).animate(animation);
+                  return SlideTransition(
+                    position: position,
+                    child: child, // child = VidoeRecordingScreen
+                  );
+                }),
+              ),
+            ),
+            GoRoute(
+              path: SelectChatScreen.routeUrl,
+              name: SelectChatScreen.routeName,
+              builder: (context, state) => const SelectChatScreen(),
+            )
+          ],
         ),
-      ),
-      GoRoute(
-        path: SelectChatScreen.routeUrl,
-        name: SelectChatScreen.routeName,
-        builder: (context, state) => const SelectChatScreen(),
-      )
-    ],
-  );
+      ]);
 });
