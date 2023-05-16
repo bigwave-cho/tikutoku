@@ -66,7 +66,11 @@ class VideoPostState extends ConsumerState<VideoPost>
   }
 
   void _initVideoPlayer() async {
-    await _videoPlayerController.initialize();
+    try {
+      await _videoPlayerController.initialize();
+    } catch (e) {
+      print("Error: $e");
+    }
     setState(() {});
     // 영상 반복 재생
     await _videoPlayerController.setLooping(true);
