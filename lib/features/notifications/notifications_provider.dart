@@ -20,11 +20,28 @@ class NotificationsProvider extends AsyncNotifier {
     if (permission.authorizationStatus == AuthorizationStatus.denied) {
       return;
     }
-    //foreground
+    //Foreground
     FirebaseMessaging.onMessage.listen((RemoteMessage event) {
       print("I just got a message and I'm in the the foreground");
       print(event.notification?.title);
     });
+
+    //BackGround
+    FirebaseMessaging.onMessageOpenedApp.listen((notification) {
+      //background noti는 아예 캠페인 완료해서 전송
+      // ['키'] <= 에 값 설정하고 보내고 아래 코드로 확인 가능
+      //noti에 데이터 담아 보내기 가능하단거
+      print(notification.data['screen']);
+    });
+
+    //Terminated
+    // 위의 포/백그라운드 노티는 stream(이벤트리스너)지만
+    // termi는 아님. 그냥 app이 noti에 의해 실행됐는지만 알려줌.
+    final notification = await _messaging.getInitialMessage();
+
+    if (notification != null) {
+      print(notification.data['screen']);
+    }
   }
 
   @override
